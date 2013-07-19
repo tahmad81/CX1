@@ -14,6 +14,7 @@ using Telerik.OpenAccess.FetchOptimization;
 using AuthorizeNet;
 using CaseXL.Auth_Service;
 using CaseXL.Infrastructure;
+using CaseXL.Data;
 namespace SafetyPlus.WebUI_WebAPI.Controllers
 {
     public class AccountController : Controller
@@ -47,7 +48,7 @@ namespace SafetyPlus.WebUI_WebAPI.Controllers
                 if (MembershipService.ValidateUser(model.UserName, model.Password))
                 {
                     FormsService.SignIn(model.UserName, model.RememberMe);
-                    
+
                     return RedirectToAction("Main", "Home");
                 }
                 else
@@ -59,7 +60,7 @@ namespace SafetyPlus.WebUI_WebAPI.Controllers
             return View(model);
         }
 
-       
+
         // **************************************
         // URL: /Account/LogOff
         // **************************************
@@ -85,53 +86,93 @@ namespace SafetyPlus.WebUI_WebAPI.Controllers
         [HttpPost]
         public ActionResult Register(RegisterModel model)
         {
-            if (ModelState.IsValid)
+            if (base.ModelState.IsValid)
             {
-                // Attempt to register the user
-                // MembershipCreateStatus createStatus = MembershipService.CreateUser(model.UserName, model.Password, model.Email);
-
-                //if (createStatus == MembershipCreateStatus.Success)
+                string msg = string.Empty;
+                MembershipCreateStatus createStatus = this.MembershipService.CreateUser(model.UserName, model.Password, model.Email);
+                if (createStatus == MembershipCreateStatus.Success)
                 {
-                    //FormsService.SignIn(model.UserName, false /* createPersistentCookie */);
-                    var res = CreateTransaction(model);
-                    if (res.Approved)
+                    if (this.CreateUser(model, out msg))
                     {
-                        var ress = CreateSubscription(model);
-                        if (ress.resultCode == MessageTypeEnum.Ok)
+                        IGatewayResponse response = this.CreateTransaction(model);
+                        if (response.Approved)
                         {
-                            CreateUser(model, ress.subscriptionId);
-                            FormsService.SignIn(model.UserName, false /* createPersistentCookie */);
-                           
-                            return RedirectToAction("Welcome", new { @subId = ress.subscriptionId, @name = model.FirstName + " " + model.LastName });
-
+                            ARBCreateSubscriptionResponseType type = this.CreateSubscription(model);
+                            if (type.resultCode == MessageTypeEnum.Ok)
+                            {
+                                this.FormsService.SignIn(model.UserName, false);
+                                this.AddSubscriptionNo(model, msg, type.subscriptionId);
+                                return base.RedirectToAction("Welcome", new { subId = type.subscriptionId, name = model.FirstName + " " + model.LastName });
+                            }
+                            ModelState.AddModelError("", "Subscription error: " + type.messages[0].text);
+                            Membership.DeleteUser(model.UserName);
+                            this.DeleteUser(model, out msg);
+                            return base.View(model);
                         }
-                        else
-                        {
-                            ModelState.AddModelError("", ress.messages[0].text);
-                            return View(model);
-                        }
-
-                    }
-                    else
-                    {
-                        ModelState.AddModelError("", res.Message);
+                        ModelState.AddModelError("", "Transaction error: " + response.Message[0]);
+                        Membership.DeleteUser(model.UserName);
+                        this.DeleteUser(model, out msg);
                         return View(model);
                     }
-
-                    return RedirectToAction("Index", "Home");
-
-
+                    base.ModelState.AddModelError("", "Unable to create user (" + msg + ")");
+                    Membership.DeleteUser(model.UserName);
+                    return View(model);
                 }
-                ////  else
-                //  {
-                //      ModelState.AddModelError("", AccountValidation.ErrorCodeToString(createStatus));
-                //  }
+                ModelState.AddModelError("", AccountValidation.ErrorCodeToString(createStatus));
             }
-
-            // If we got this far, something failed, redisplay form
-            ViewBag.PasswordLength = MembershipService.MinPasswordLength;
+            ((dynamic)base.ViewBag).PasswordLength = this.MembershipService.MinPasswordLength;
             return View(model);
         }
+
+        //public ActionResult Register(RegisterModel model)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        // Attempt to register the user
+        //        // MembershipCreateStatus createStatus = MembershipService.CreateUser(model.UserName, model.Password, model.Email);
+
+        //        //if (createStatus == MembershipCreateStatus.Success)
+        //        {
+        //            //FormsService.SignIn(model.UserName, false /* createPersistentCookie */);
+        //            var res = CreateTransaction(model);
+        //            if (res.Approved)
+        //            {
+        //                var ress = CreateSubscription(model);
+        //                if (ress.resultCode == MessageTypeEnum.Ok)
+        //                {
+        //                    CreateUser(model, ress.subscriptionId);
+        //                    FormsService.SignIn(model.UserName, false /* createPersistentCookie */);
+
+        //                    return RedirectToAction("Welcome", new { @subId = ress.subscriptionId, @name = model.FirstName + " " + model.LastName });
+
+        //                }
+        //                else
+        //                {
+        //                    ModelState.AddModelError("", ress.messages[0].text);
+        //                    return View(model);
+        //                }
+
+        //            }
+        //            else
+        //            {
+        //                ModelState.AddModelError("", res.Message);
+        //                return View(model);
+        //            }
+
+        //            return RedirectToAction("Index", "Home");
+
+
+        //        }
+        //        ////  else
+        //        //  {
+        //        //      ModelState.AddModelError("", AccountValidation.ErrorCodeToString(createStatus));
+        //        //  }
+        //    }
+
+        //    // If we got this far, something failed, redisplay form
+        //    ViewBag.PasswordLength = MembershipService.MinPasswordLength;
+        //    return View(model);
+        //}
 
         // **************************************
         // URL: /Account/ChangePassword
@@ -274,5 +315,83 @@ namespace SafetyPlus.WebUI_WebAPI.Controllers
 
             }
         }
+        private bool CreateUser(RegisterModel model, out string msg)
+        {
+            msg = string.Empty;
+            using (CaseXLEntities entities = new CaseXLEntities())
+            {
+                Firm firm = (from a in entities.Firms
+                             where a.Firm_Code == model.Firm_Code
+                             select a).FirstOrDefault<Firm>();
+                if (firm == null)
+                {
+                    msg = "Not valid firm code";
+                    return false;
+                }
+                try
+                {
+                    App_User entity = new App_User
+                    {
+                        Email = model.Email,
+                        CreditCard = model.CCNumber,
+                        CVNNo = model.CVNNumber,
+                        FirmId = (firm == null) ? 0 : firm.ID,
+                        FirstName = model.FirstName,
+                        LastName = model.LastName,
+                        SubscriptionNo = 0L,
+                        SignOnDate = DateTime.Today,
+                        UserName = model.UserName
+                    };
+                    entities.Add(entity);
+                    entities.SaveChanges();
+                }
+                catch
+                {
+                    msg = "some problem during creating user";
+                    return false;
+                }
+            }
+            return true;
+        }
+        private bool DeleteUser(RegisterModel model, out string msg)
+        {
+            msg = string.Empty;
+            using (CaseXLEntities entities = new CaseXLEntities())
+            {
+                App_User entity = (from a in entities.App_Users
+                                   where a.UserName == model.UserName
+                                   select a).FirstOrDefault<App_User>();
+                if (entity != null)
+                {
+                    entities.Delete(entity);
+                    entities.SaveChanges();
+                    return true;
+                }
+            }
+            return false;
+        }
+        private bool AddSubscriptionNo(RegisterModel model, string msg, long subId)
+        {
+            using (CaseXLEntities entities = new CaseXLEntities())
+            {
+                App_User user = (from a in entities.App_Users
+                                 where a.UserName == model.UserName
+                                 select a).FirstOrDefault<App_User>();
+                if (user != null)
+                {
+                    user.SubscriptionNo = subId;
+                    entities.SaveChanges();
+                    return true;
+                }
+            }
+            return false;
+        }
+
+
+
+
+
+
+
     }
 }
