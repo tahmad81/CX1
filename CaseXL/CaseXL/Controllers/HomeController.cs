@@ -246,6 +246,8 @@ namespace CaseXL.Controllers
                 var data = context.Witnesses.Where(a => a.Id == model.WitnessId).FirstOrDefault();
                 data.Email = model.Email;
                 data.Name = model.FullName;
+                data.Docs_Authored = model.Docs_Authored;
+                data.Docs_Received = model.Docs_Received;
                 context.SaveChanges();
 
             }
@@ -259,6 +261,8 @@ namespace CaseXL.Controllers
                 witness.Email = model.Email;
                 witness.Name = model.FullName;
                 witness.CaseId = int.Parse(Session["caseid"].ToString());
+                witness.Docs_Authored = model.Docs_Authored;
+                witness.Docs_Received = model.Docs_Received;
                 context.Add(witness);
                 context.SaveChanges();
                 model.WitnessId = model.ID = witness.Id;
@@ -497,7 +501,8 @@ namespace CaseXL.Controllers
                     Doc_Type = 1,
                     Doc_Name = model.Name,
                     Doc_Url = model.Link,
-                    Doc_ParentId = exbId.Value
+                    Doc_ParentId = exbId.Value,
+
 
                 };
                 context.Add(doc);
@@ -555,7 +560,8 @@ namespace CaseXL.Controllers
                     Question = model.Question,
                     Answer = model.Answer,
                     Witness_Fact_Id = model.Fact_Id,
-                    Asked = model.Asked
+                    Asked = model.Asked,
+                    Question_Number = model.Question_No
                 };
                 context.Add(entity);
                 context.SaveChanges();
@@ -574,6 +580,7 @@ namespace CaseXL.Controllers
                 question.Question = model.Question;
                 question.Answer = model.Answer;
                 question.Asked = model.Asked;
+                question.Question_Number = model.Question_No;
                 entities.SaveChanges();
             }
             return Json(new[] { model }.ToDataSourceResult(request, ModelState));

@@ -18,6 +18,8 @@ namespace CaseXL.ViewModels
         // Properties
         [Display(Name = "Asked ?")]
         public bool Asked { get; set; }
+        [Display(Name = "Question#")]
+        public double Question_No  { get; set; }
     }
 
 

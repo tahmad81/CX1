@@ -76,6 +76,32 @@ namespace CaseXL.Data
 			}
 		}
 		
+		private string _docs_Received;
+		public virtual string Docs_Received
+		{
+			get
+			{
+				return this._docs_Received;
+			}
+			set
+			{
+				this._docs_Received = value;
+			}
+		}
+		
+		private string _docs_Authored;
+		public virtual string Docs_Authored
+		{
+			get
+			{
+				return this._docs_Authored;
+			}
+			set
+			{
+				this._docs_Authored = value;
+			}
+		}
+		
 		private IList<Question> _questions = new List<Question>();
 		public virtual IList<Question> Questions
 		{

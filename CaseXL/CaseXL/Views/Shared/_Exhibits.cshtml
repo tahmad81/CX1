@@ -29,7 +29,7 @@
       .Pageable()
         .Groupable()
                 .Sortable()
-                
+
                 .Selectable()
                      .Reorderable(red => red.Columns(true))
                 .Navigatable(nav => nav.Enabled(true))
@@ -47,8 +47,8 @@
      <div align="center" style="font-weight:bold">Documents</div>
         @Html.Partial("_greenBar")
   
-<input type="button" class="k-button" value="Choose File(s) from Dropbox" onclick="Choose()" name="selected-file" id="db-chooser" />
-@(Html.Kendo().Grid<CaseXL.ViewModels.DocsVM>().Name("grddocs")
+<input type="button" class="k-button" value="Choose File(s) from Dropbox" onclick="Choose('grddocs-#=Exhibit_Id#')" name="selected-file" id="db-chooser" />
+@(Html.Kendo().Grid<CaseXL.ViewModels.DocsVM>().Name("grddocs-#=Exhibit_Id#")
 
     .Columns(columns =>
     {
@@ -63,7 +63,7 @@
                 .DataSource(dataSource => dataSource
                     .Ajax()
                     .Model(model => model.Id(m => m.Id))
-                       .Create(cr => cr.Action("_CreateDoc", "Home",new { @exbId = "#=Exhibit_Id#" }))
+                       .Create(cr => cr.Action("_CreateDoc", "Home", new { @exbId = "#=Exhibit_Id#" }))
                        .Destroy(des => des.Action("_DeleteDoc", "Home"))
                        .Read(red => red.Action("_ExbDocs", "Home", new { @exbId = "#=Exhibit_Id#" }))
                 )
@@ -93,8 +93,9 @@
 </script>
 <script type="text/javascript">
     function refresh() {
-        $("#grddocs").data("kendoGrid").dataSource.read();
+        $("#exGrid").data("kendoGrid").dataSource.read();
     }
+    var cgrid;
     var options = {
         linkType: "preview",
         // "preview" (default) is a preview link to the document for sharing,
@@ -105,26 +106,20 @@
         // true enables multiple file selection.
         success: function (files) {
             // Required. Called when a user selects an item in the Chooser
-
-            var grid = $("#grddocs").data("kendoGrid");
-            
+            var grid = $("#" + cgrid).data("kendoGrid");
             for (var ctr = 0; ctr < files.length; ctr++) {
-                
                 grid.dataSource.add({ Name: files[ctr].name, Link: files[ctr].link });
-             
             }
-
             grid.dataSource.sync();
-            debugger;
-
-            debugger;
         },
         cancel: function () {
             // Called when the user closes the dialog
             // without selecting a file and does not include any parameters.
         }
     };
-    function Choose() {
+    function Choose(id) {
+
+        cgrid = id;
         Dropbox.choose(options);
     }
 </script>

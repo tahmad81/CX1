@@ -241,6 +241,12 @@
         <orm:field name="_caseId" property="CaseId" behavior="readwrite" uniqueId="537bb47d-b004-419e-8e18-ba63fb3d0e4a" type="System.Nullable`1[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]">
           <orm:column name="CaseId" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
         </orm:field>
+        <orm:field name="_docs_Received" property="Docs_Received" behavior="readwrite" uniqueId="8311675f-fdf3-4f1e-a211-609e4165a6a2" type="System.String">
+          <orm:column nullable="true" length="10" name="Docs_Received" scale="0" sql-type="nvarchar" ado-type="UnicodeStringVariableLength" />
+        </orm:field>
+        <orm:field name="_docs_Authored" property="Docs_Authored" behavior="readwrite" uniqueId="7baacde8-2ea6-4d32-81b3-0d2918c11afd" type="System.String">
+          <orm:column nullable="true" length="10" name="Docs_Authored" scale="0" sql-type="nvarchar" ado-type="UnicodeStringVariableLength" />
+        </orm:field>
         <orm:field name="_questions" property="Questions" behavior="readwrite" uniqueId="71c3203e-655d-44e1-901c-5528be042a83" type="CaseXL.Data.Question">
           <orm:collection element-class="CaseXL.Data.Question" inverse-field="_witness" order-by="" uniqueId="cf1a6051-fee2-4c45-9f60-8256bd9341c1" />
         </orm:field>
@@ -616,16 +622,16 @@
         </orm:identity>
         <orm:concurrency strategy="changed" />
         <orm:field name="_id" property="Id" behavior="readwrite" uniqueId="59d6c031-5f17-4468-8b5c-e8bfbd5a678b" type="System.Int32">
-          <orm:column nullable="false" primary-key="true" length="0" name="Id" scale="0" sql-type="int" backend-calculated="true" ado-type="Int32" />
+          <orm:column name="Id" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
         </orm:field>
         <orm:field name="_caseId" property="CaseId" behavior="readwrite" uniqueId="0de48ebb-74dd-4d3d-8c2d-4a90e56e998a" type="System.Nullable`1[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]">
-          <orm:column nullable="true" length="0" name="CaseId" scale="0" sql-type="int" ado-type="Int32" />
+          <orm:column name="CaseId" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
         </orm:field>
         <orm:field name="_factId" property="FactId" behavior="readwrite" uniqueId="9429a5b8-83a3-40fb-985c-eac9ec9a97af" type="System.Nullable`1[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]">
-          <orm:column nullable="true" length="0" name="FactId" scale="0" sql-type="int" ado-type="Int32" />
+          <orm:column name="FactId" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
         </orm:field>
         <orm:field name="_witnessId" property="WitnessId" behavior="readwrite" uniqueId="bc1cebda-25d1-46e7-89a1-b3e7d0ec3f7b" type="System.Nullable`1[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]">
-          <orm:column nullable="true" length="0" name="WitnessId" scale="0" sql-type="int" ado-type="Int32" />
+          <orm:column name="WitnessId" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
         </orm:field>
         <orm:field name="_witness" property="Witness" behavior="readwrite" uniqueId="a66f911e-f30f-4c01-8d9e-70e9c4e91358" type="CaseXL.Data.Witness">
           <orm:reference uniqueId="8c9db35f-075f-47d0-887e-e5e72f8c8375">
@@ -641,7 +647,7 @@
         </orm:field>
         <orm:index name="idx_Witness_Facts_WitnessId">
           <orm:columnMapping>
-            <orm:column nullable="true" length="0" name="WitnessId" scale="0" sql-type="int" ado-type="Int32" />
+            <orm:column name="WitnessId" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
           </orm:columnMapping>
         </orm:index>
       </orm:class>
@@ -730,6 +736,8 @@
         <orm:column name="Name" sql-type="varchar" nullable="true" length="255" scale="0" ado-type="StringVariableLength" />
         <orm:column name="Email" sql-type="nvarchar" nullable="true" length="50" scale="0" ado-type="UnicodeStringVariableLength" />
         <orm:column name="CaseId" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        <orm:column nullable="true" length="10" name="Docs_Received" scale="0" sql-type="nvarchar" ado-type="UnicodeStringVariableLength" />
+        <orm:column nullable="true" length="10" name="Docs_Authored" scale="0" sql-type="nvarchar" ado-type="UnicodeStringVariableLength" />
       </orm:table>
       <orm:table name="Exhibits">
         <orm:column name="Id" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
@@ -854,25 +862,25 @@
         <orm:column name="Answer" sql-type="nvarchar" nullable="false" length="550" scale="0" ado-type="UnicodeStringVariableLength" />
         <orm:column name="Asked" sql-type="bit" nullable="false" length="0" scale="0" ado-type="Bit" />
         <orm:column name="Question_Number" sql-type="float" nullable="true" length="0" scale="0" ado-type="Double" />
-        <orm:constraint name="FK_Fact_Witness_Questions_Witness_Facts">
+        <orm:constraint name="FK_Fact_Witness_Questions_Witness_Facts" destination-table="Witness_Facts">
           <orm:column name="Witness_Fact_Id" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
         </orm:constraint>
       </orm:table>
       <orm:table name="Witness_Facts">
-        <orm:column nullable="false" primary-key="true" length="0" name="Id" scale="0" sql-type="int" backend-calculated="true" ado-type="Int32" />
-        <orm:column nullable="true" length="0" name="CaseId" scale="0" sql-type="int" ado-type="Int32" />
-        <orm:column nullable="true" length="0" name="FactId" scale="0" sql-type="int" ado-type="Int32" />
-        <orm:column nullable="true" length="0" name="WitnessId" scale="0" sql-type="int" ado-type="Int32" />
+        <orm:column name="Id" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        <orm:column name="CaseId" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        <orm:column name="FactId" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        <orm:column name="WitnessId" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
         <orm:index name="idx_Witness_Facts_WitnessId">
           <orm:columnMapping>
-            <orm:column nullable="true" length="0" name="WitnessId" scale="0" sql-type="int" ado-type="Int32" />
+            <orm:column name="WitnessId" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
           </orm:columnMapping>
         </orm:index>
         <orm:constraint name="FK_Witness_Facts_Witnesses" destination-table="Witnesses">
-          <orm:column nullable="true" length="0" name="WitnessId" scale="0" sql-type="int" ado-type="Int32" />
+          <orm:column name="WitnessId" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
         </orm:constraint>
         <orm:constraint name="FK_Witness_Facts_Facts" destination-table="Facts">
-          <orm:column nullable="true" length="0" name="FactId" scale="0" sql-type="int" ado-type="Int32" />
+          <orm:column name="FactId" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
         </orm:constraint>
       </orm:table>
     </orm:schema>
@@ -1075,6 +1083,8 @@
       <Property Id="7a0b8ed7-8ce7-434a-829b-f47576866420" name="Name" label="Name : String" kind="Persistent" fieldName="_name" />
       <Property Id="37039b1e-ffc0-46e6-8370-e5cbe72512cb" name="Email" label="Email : String" kind="Persistent" fieldName="_email" />
       <Property Id="537bb47d-b004-419e-8e18-ba63fb3d0e4a" name="CaseId" type="Int32" label="CaseId : Int32" nullable="true" kind="Persistent" fieldName="_caseId" />
+      <Property Id="8311675f-fdf3-4f1e-a211-609e4165a6a2" name="Docs_Received" label="Docs_Received : String" kind="Persistent" fieldName="_docs_Received" />
+      <Property Id="7baacde8-2ea6-4d32-81b3-0d2918c11afd" name="Docs_Authored" label="Docs_Authored : String" kind="Persistent" fieldName="_docs_Authored" />
       <navigationalProperties>
         <classHasNavigationalProperties Id="e92ee3b5-3163-4ec7-a862-f9bd8cc044f0">
           <NavigationalProperty Id="71c3203e-655d-44e1-901c-5528be042a83" name="Questions" type="IList&lt;Question&gt;" label="Questions : IList&lt;Question&gt;" nullable="true" kind="Persistent" fieldName="_questions" isDependent="false" isManaged="false" />

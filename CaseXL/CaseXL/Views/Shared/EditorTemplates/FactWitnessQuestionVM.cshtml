@@ -26,10 +26,19 @@
             @Html.CheckBoxFor(m => m.Asked, new {@style="font-weight:bold" })
         </td>
     </tr>
+    <tr>
+
+        <td>
+            @Html.LabelFor(m => m.Question_No,new {@style="font-weight:bold" })
+        </td>
+        <td>
+            @Html.Kendo().NumericTextBoxFor(m => m.Question_No)
+        </td>
+    </tr>
 </table>
 
 <style>
     .k-widget.k-window {
-        width: 550px;
+        width: 600px;
     }
 </style>

@@ -231,6 +231,8 @@ namespace CaseXL.Common
                                       Email = lnked.Email,
                                       FullName = lnked.Name,
                                       WitnessId = lnked.Id,
+                                      Docs_Authored = lnked.Docs_Authored,
+                                      Docs_Received = lnked.Docs_Received
                                   }).ToList();
                 return allwitness;
             }
@@ -384,7 +386,7 @@ namespace CaseXL.Common
             {
                 return (from quest in context.Fact_Witness_Questions
                         where quest.Witness_Fact_Id == Id
-                        select new FactWitnessQuestionVM { Id = quest.Id, Answer = quest.Answer, Question = quest.Question, Asked = quest.Asked }).ToList();
+                        select new FactWitnessQuestionVM { Id = quest.Id, Answer = quest.Answer, Question = quest.Question, Asked = quest.Asked, Question_No = quest.Question_Number.GetValueOrDefault() }).ToList();
             }
         }
 

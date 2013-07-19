@@ -32,15 +32,16 @@
            columns.Bound(c => c.Id).Visible(false);
            columns.Bound(c => c.Witness_Id).Visible(false);
            columns.Bound(c => c.Fact_Id).Visible(false);
-           columns.Bound(o => o.Question).Width(300).ClientTemplate(@"<a class=""k-button-icontext k-grid-edit"" href=""#=Question#"">#=Question#</a>");
-           columns.Bound(c => c.Answer).Width(300);
-
+           columns.Bound(o => o.Question).Width(350).ClientTemplate(@"<a class=""k-button-icontext k-grid-edit"" href=""#=Question#"">#=Question#</a>");
+           columns.Bound(c => c.Answer).Width(350);
+           columns.Bound(c => c.Question_No).Width(5);
+           
            columns.Bound(o => o.Asked).HeaderHtmlAttributes(new { style = "text-align:center" }).HtmlAttributes(new { style = "text-align:center" }).Width("1%")
           .ClientTemplate("<input type='checkbox' #= Asked ? 'checked' : '' # id='checkbox-1-1e-#=Id#'  class='regular-checkbox' /><label for='checkbox-1-1-#=Id#'></label>");
 
            
-           columns.Bound(c => c.Id).Title("").Width(32).Filterable(false).Sortable(false).Template(@<text></text>)
-           .ClientTemplate(@"<img src='../Images/delete-icon.png' title=""Delete Question"" style='width:32px; height:18px;cursor:pointer' class=""k-button-icontext k-grid-delete""/>");
+           columns.Bound(c => c.Id).Title("").Width(38).Filterable(false).Sortable(false).Template(@<text></text>)
+           .ClientTemplate(@"<img src='../Images/delete-icon.png' title=""Delete Question"" style='width:38px; height:18px;cursor:pointer' class=""k-button-icontext k-grid-delete""/>");
            
 
        })
