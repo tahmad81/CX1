@@ -1,0 +1,197 @@
+﻿@model CaseXL.ViewModels.IssuesVM
+@{
+    ViewBag.Title = "Evaluate";
+}
+<h2>Evaluate</h2>
+@using (Html.BeginForm("Evaluate_Save", "Issues", FormMethod.Post))
+{
+    <table>
+        <tr>
+            <td>Select Case
+            </td>
+            <td>
+                @Html.HiddenFor(m => m.Issue_ID, new { @id = "hdid" })
+                @Html.HiddenFor(m => m.Case_ID, new { @id = "hdCaseid" })
+                @Html.HiddenFor(m => m.Issue_Evaluation, new { @id = "hdeva" })
+                @(Html.Kendo().DropDownList().Name("Cases")
+    .Events(eve => eve
+    .Change("CaseChanged")
+    )
+    .BindTo(ViewBag.Cases)
+
+    )
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div>Issues</div>
+            </td>
+            <td>
+                <div class="treeview-back">
+
+
+                    @(Html.Kendo().TreeView().DragAndDrop(true)
+            .Name("tv")
+            .HtmlAttributes(new { @style = "height:300px; width:200px" })
+            .DataTextField("Issue_Name")
+           .DataSource(source =>
+               {
+                   source.Read("_Issues", "Issues");
+
+               })
+               .Events(eve =>
+                   {
+                       eve.Select("Selected");
+
+                   })
+
+                        )
+                </div>
+            </td>
+            <td>
+                <table>
+                    <tr>
+                        <td>Issue Name</td>
+                        <td>@Html.TextBoxFor(m => m.Issue_Name, new { @id = "txtName" })
+                            <br />
+                            @Html.ValidationMessageFor(m => m.Issue_Name)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Issue Explanation</td>
+                        <td>
+                            @Html.TextAreaFor(m => m.Issue_Exp, new { @id = "txtExpl", @style = "width:300px; height:100px" })
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Issue Question</td>
+                        <td>
+                            @Html.TextAreaFor(m => m.Issue_Question, new { @id = "txtQuest", @style = "width:300px; height:100px" })
+
+                        </td>
+                    </tr>
+                </table>
+
+            </td>
+            <td colspan="4">
+                <div style="font-weight: bold">
+                    This Issue is :
+                   
+                </div>
+                <br />
+                @Html.RadioButtonFor(m => m.Issue_Evaluation, "Heavily For US", new { @id = "hvfus" })
+                Heavily For US
+                <br />
+                <br />
+                @Html.RadioButtonFor(m => m.Issue_Evaluation, "For US", new { @id = "fus" })
+                For US
+                <br />
+                <br />
+                @Html.RadioButtonFor(m => m.Issue_Evaluation, "Neutral", new { @id = "neut" })
+                Neutral
+                <br />
+                <br />
+                @Html.RadioButtonFor(m => m.Issue_Evaluation, "Against US", new { @id = "aus" })
+                Against US 
+                <br />
+                <br />
+                @Html.RadioButtonFor(m => m.Issue_Evaluation, "Heavily Against US", new { @id = "haus" })
+                Heavily Against US
+                <br />
+                <br />
+                @Html.RadioButtonFor(m => m.Issue_Evaluation, "TBD", new { @id = "tbd" })
+                TBD
+                <br />
+                <br />
+
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                <input type="submit" class="k-button" value="Save" style="width: 100px" />
+            </td>
+
+        </tr>
+    </table>
+    <div id="contextMenu"></div>
+
+}
+<style scoped="scoped">
+    .treeview-back {
+        float: left;
+        width: 220px;
+        margin: 0px;
+        padding: 0px;
+        -moz-box-shadow: 0 1px 2px rgba(0,0,0,0.45), inset 0 0 30px rgba(0,0,0,0.07);
+        -webkit-box-shadow: 0 1px 2px rgba(0,0,0,0.45), inset 0 0 30px rgba(0,0,0,0.07);
+        box-shadow: 0 1px 2px rgba(0,0,0,0.45), inner 0 0 30px rgba(0,0,0,0.07);
+        -webkit-border-radius: 8px;
+        -moz-border-radius: 8px;
+        border-radius: 8px;
+    }
+</style>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('input[type=radio]').change(function () {
+            debugger;
+            var ev = $(this).val();
+            $('#hdeva').val(ev);
+
+        });
+        debugger;
+        var tv = $("#tv");
+        var cm = $('#contextMenu').kendoMenuEx({
+            dataSource: [{
+                text: 'Properties', click: function (event) {
+                    debugger;
+                    var e = event;
+                    var rr = tv.data('kendoTreeView').dataItem(this.target);
+                    alert(rr);
+                    // alert("Tree item data.\r\nid: " + tv.data('kendoTreeView').dataItem(this.target).data.Case_ID + "\r\nproperties: " + tv.data('kendoTreeView').dataItem(this.target).data.properties);
+                }
+            }], anchor: '#tv', delay: 1000
+        });
+
+    });
+
+
+    function CaseChanged(e) {
+        debugger;
+        var id = e.sender.dataItem().Value;
+        location.href = "/Issues/Evaluate?caseID=" + id;
+
+    }
+    function Selected(e) {
+
+        var item = this.dataItem(e.node);
+        $('#txtExpl').val(item.Issue_Exp);
+        $('#txtQuest').val(item.Issue_Question);
+        $('#txtName').val(item.Issue_Name);
+        $('#hdid').val(item.Issue_ID);
+        $('#hdCaseid').val(item.Case_ID);
+        var expl = item.Issue_Evaluation;
+
+        //  alert(expl);
+        if (expl == "Heavily For US") {
+            $("#hvfus").attr('checked', 'checked');
+
+        }
+        else if (expl == "For US") {
+            $("#fus").attr('checked', 'checked');
+        }
+        else if (expl == "Neutral") {
+            $("#neut").attr('checked', 'checked');
+        }
+        else if (expl == "Against US") {
+            $("#aus").attr('checked', 'checked');
+        }
+        else if (expl == "Heavily Against US") {
+            $("#haus").attr('checked', 'checked');
+        }
+        else if (expl == "TBD") {
+            $("#tbd").attr('checked', 'checked');
+        }
+    }
+</script>

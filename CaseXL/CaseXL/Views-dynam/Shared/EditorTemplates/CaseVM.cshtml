@@ -1,0 +1,36 @@
+﻿@model CaseXL.ViewModels.CaseVM
+<table>
+    <tr>
+        <td>
+            @Html.LabelFor(m =>m.Caption)
+
+        </td>
+        <td>
+            @Html.TextBoxFor(m => m.Caption)
+        </td>
+    </tr>
+    <tr>
+        <td>
+            @Html.LabelFor(m => m.Case_Number)
+        </td>
+        <td>
+           @Html.TextBoxFor(m => m.Case_Number)
+            
+        </td>
+    </tr>
+    <tr>
+        <td>
+            @Html.LabelFor(m => m.Case_Type)
+        </td>
+        <td>
+               @(Html.Kendo().ComboBoxFor(m => m.Case_Type).BindTo(new SelectList(CaseXL.Common.Repository.CaseTypes(), "ID", "Name")).Placeholder("Select Case Type").SelectedIndex(0))
+        </td>
+    </tr>
+</table>
+
+<style>
+.k-widget.k-window{
+    width: 460px; 
+    
+}
+</style>

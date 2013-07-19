@@ -1,0 +1,53 @@
+﻿@model CaseXL.ViewModels.IssueLinkingVM
+<div style="background: lightgrey">
+    @(Html.Kendo().Grid<CaseXL.ViewModels.IssuesVM>().Name("issueGrid")
+    .Columns(col =>
+    {
+        col.Bound(b => b.Issue_Name).Width(350);
+
+        col.Template(@<text></text>).ClientTemplate("<input type='checkbox' #= IsSelected ? checked='checked':'' # class='chkbx' style='cursor:pointer' />")
+        .HeaderTemplate("<input type='checkbox' id='masterCheckBox' style='cursor:pointer' onclick='checkAll(this)'/>").Width(50);
+    }
+    )
+       .DataSource(dataSource => dataSource
+       .Ajax()
+       .Model(model => model.Id(m => m.Id))
+       .Batch(true)
+       .Read(read => read.Action("_Issues", "Home", new { @caseid = Model.CaseID, @factID = Model.FactID }))
+       .Update(up => up.Action("_UpdateIssues", "Home", new { @caseid = Model.CaseID, @factID = Model.FactID }))
+    )
+     .Editable(ed => ed.Mode(GridEditMode.InCell))
+     .ToolBar(tb => tb.Save())
+     .Events(eve =>
+      {
+          eve.SaveChanges("SaveChanges");
+          eve.Change("Change");
+      }
+      )
+    )
+</div>
+<script type="text/javascript">
+    $(function () {
+        $('#issueGrid').on('click', '.chkbx', function () {
+
+            // kendo.ui.progress($("#issueGrid"), true);
+            var checked = $(this).is(':checked');
+            var grid = $('#issueGrid').data().kendoGrid;
+            var dataItem = grid.dataItem($(this).closest('tr'));
+            dataItem.set('IsSelected', checked);
+        })
+    })
+    function checkAll(ele) {
+        var state = $(ele).is(':checked');
+        var grid = $('#issueGrid').data().kendoGrid;
+        $.each(grid.dataSource.view(), function () {
+            if (this['IsSelected'] != state)
+                this.dirty = true;
+            this['IsSelected'] = state;
+        });
+        var data = grid.dataSource.data();
+        var grid = $("#issueGrid").data("kendoGrid");
+        var data = grid.dataSource.data();
+        grid.refresh();
+    }
+</script>

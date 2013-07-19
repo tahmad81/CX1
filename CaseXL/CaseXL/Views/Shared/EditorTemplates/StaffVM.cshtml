@@ -1,0 +1,35 @@
+﻿@model CaseXL.ViewModels.StaffVM
+@{
+    ViewBag.Title = "Staff";
+    
+}
+<table style="width: 400px">
+    <tr>
+        <td>
+            @Html.HiddenFor(m => m.ID)
+            @Html.HiddenFor(m => m.Firm_ID)
+            @Html.LabelFor(m => m.FirstName)
+        </td>
+        <td>
+            @Html.TextBoxFor(m => m.FirstName)
+        </td>
+    </tr>
+    <tr>
+        <td>
+            @Html.LabelFor(m => m.LastName)
+        </td>
+        <td>
+            @Html.TextBoxFor(m => m.LastName)
+        </td>
+    </tr>
+    <tr>
+        <td>
+            @Html.LabelFor(m => m.PartnerName)
+        </td>
+        <td>
+            @(Html.Kendo().ComboBoxFor(m => m.PartnerID).BindTo(new SelectList(ViewBag.Partners, "ID", "Name")).Placeholder("Select Partner").SelectedIndex(0))
+        </td>
+    </tr>
+</table>
+
+

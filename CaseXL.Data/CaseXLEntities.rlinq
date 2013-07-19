@@ -1,0 +1,1442 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DomainModel xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" dslVersion="2.0.0.0" name="CaseXLEntities" namespace="CaseXL.Data" showPropertiesCompartment="true" xmlns="http://www.telerik.com/ORM">
+  <orm:orm name="CaseXLEntities" backend="mssql" xmlns:orm="http://tempuri.org/ORM">
+    <orm:namespace name="CaseXL.Data" default="true">
+      <orm:class name="Staff" uniqueId="3b594c1e-f5f2-4f3c-a784-b28649859637">
+        <orm:table name="Staff" />
+        <orm:identity>
+          <orm:key-generator name="autoinc" />
+          <orm:single-field field-name="_iD" />
+        </orm:identity>
+        <orm:concurrency strategy="backend" field-name="_dateCreated">
+          <orm:column name="DateCreated" sql-type="timestamp" nullable="false" length="0" scale="0" backend-version="true" ado-type="Int64" />
+        </orm:concurrency>
+        <orm:field name="_iD" property="ID" behavior="readwrite" uniqueId="b85f8e08-4e7c-40fe-87de-e6223ff65b93" type="System.Int32">
+          <orm:column name="ID" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_firstName" property="FirstName" behavior="readwrite" uniqueId="bb39cd67-33d2-4b5a-9415-dab9409626c1" type="System.String">
+          <orm:column name="FirstName" sql-type="nvarchar" nullable="true" length="50" scale="0" ado-type="UnicodeStringVariableLength" />
+        </orm:field>
+        <orm:field name="_lastName" property="LastName" behavior="readwrite" uniqueId="db35fc7f-163d-4540-becc-6bd7d346cf26" type="System.String">
+          <orm:column name="LastName" sql-type="nchar" nullable="true" length="50" scale="0" ado-type="UnicodeStringFixedLength" />
+        </orm:field>
+        <orm:field name="_partner_ID" property="Partner_ID" behavior="readwrite" uniqueId="91b97a04-359e-411e-ad84-85cdaac7b443" type="System.Int32">
+          <orm:column name="Partner_ID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_case_ID" property="Case_ID" behavior="readwrite" uniqueId="7e6269f6-acb8-4d03-974f-f9fc1956ce71" type="System.Nullable`1[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]">
+          <orm:column name="Case_ID" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_firm_ID" property="Firm_ID" behavior="readwrite" uniqueId="19119b40-7092-41f6-9631-293404725078" type="System.Int32">
+          <orm:column name="Firm_ID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_dateCreated" property="DateCreated" behavior="readwrite" uniqueId="094c0b8a-1062-40f5-b066-268a69834471" type="System.Int64">
+          <orm:column name="DateCreated" sql-type="timestamp" nullable="false" length="0" scale="0" backend-version="true" ado-type="Int64" />
+        </orm:field>
+        <orm:field name="_firm" property="Firm" behavior="readwrite" uniqueId="21398539-d241-4a37-85e6-3e9c0f5bd57c" type="CaseXL.Data.Firm">
+          <orm:reference uniqueId="a8f74f39-0f13-4253-b7fb-d5cbc5ab8bf2">
+            <orm:sharedfield name="_firm_ID" target-class="CaseXL.Data.Firm" target-field="_iD" />
+            <orm:constraint name="FK_Staff_Firm" destination-table="Firm" />
+          </orm:reference>
+        </orm:field>
+        <orm:field name="_partner" property="Partner" behavior="readwrite" uniqueId="bd7319b9-7d98-4558-835d-9771916ddcb0" type="CaseXL.Data.Partner">
+          <orm:reference uniqueId="6eeae2bc-9c93-49e3-8b6f-ce5892fa487d">
+            <orm:sharedfield name="_partner_ID" target-class="CaseXL.Data.Partner" target-field="_iD" />
+            <orm:constraint name="FK_Staff_Partner" destination-table="Partner" />
+          </orm:reference>
+        </orm:field>
+        <orm:field name="_cases" property="Cases" behavior="readwrite" uniqueId="7b946201-7f96-4f41-a3d9-349e09d10ea2" type="CaseXL.Data.Case">
+          <orm:collection element-class="CaseXL.Data.Case" inverse-field="_staff" order-by="" uniqueId="1b30241d-1c3c-40d2-a3be-4b41e5cfcc33" />
+        </orm:field>
+        <orm:index name="idx_Staff_Case_ID">
+          <orm:columnMapping>
+            <orm:column name="Case_ID" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+          </orm:columnMapping>
+        </orm:index>
+        <orm:index name="idx_Staff_Firm_ID">
+          <orm:columnMapping>
+            <orm:column name="Firm_ID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+          </orm:columnMapping>
+        </orm:index>
+        <orm:index name="idx_Staff_Partner_ID">
+          <orm:columnMapping>
+            <orm:column name="Partner_ID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+          </orm:columnMapping>
+        </orm:index>
+      </orm:class>
+      <orm:class name="Partner" uniqueId="1b835d5a-d12c-4106-a3d1-f0671903eecb">
+        <orm:table name="Partner" />
+        <orm:identity>
+          <orm:key-generator name="autoinc" />
+          <orm:single-field field-name="_iD" />
+        </orm:identity>
+        <orm:concurrency strategy="changed" />
+        <orm:field name="_iD" property="ID" behavior="readwrite" uniqueId="4be69a3c-e09e-4f19-b61a-e8e14aad999d" type="System.Int32">
+          <orm:column name="ID" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_fristName" property="FristName" behavior="readwrite" uniqueId="6d35ee04-b989-43b8-baac-674ccb27a813" type="System.String">
+          <orm:column name="FristName" sql-type="nvarchar" nullable="true" length="50" scale="0" ado-type="UnicodeStringVariableLength" />
+        </orm:field>
+        <orm:field name="_lastName" property="LastName" behavior="readwrite" uniqueId="06b8e938-cea1-4dec-9211-4df1f1cb30b7" type="System.String">
+          <orm:column name="LastName" sql-type="nchar" nullable="true" length="50" scale="0" ado-type="UnicodeStringFixedLength" />
+        </orm:field>
+        <orm:field name="_firm_ID" property="Firm_ID" behavior="readwrite" uniqueId="8d058fe9-18bd-4007-9614-9de46887aa35" type="System.Int32">
+          <orm:column name="Firm_ID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_firm" property="Firm" behavior="readwrite" uniqueId="915202ca-40ae-4d18-b56a-1aa12e59245c" type="CaseXL.Data.Firm">
+          <orm:reference uniqueId="7fa1cacb-969c-4609-96bd-c4446d6134f9">
+            <orm:sharedfield name="_firm_ID" target-class="CaseXL.Data.Firm" target-field="_iD" />
+            <orm:constraint name="FK_Partner_Firm" destination-table="Firm" />
+          </orm:reference>
+        </orm:field>
+        <orm:field name="_staffs" property="Staffs" behavior="readwrite" uniqueId="9376e890-f1cb-4c0a-a38d-80229de9c2dd" type="CaseXL.Data.Staff">
+          <orm:collection element-class="CaseXL.Data.Staff" inverse-field="_partner" order-by="" uniqueId="6eeae2bc-9c93-49e3-8b6f-ce5892fa487d" />
+        </orm:field>
+      </orm:class>
+      <orm:class name="Issue" uniqueId="9494cacb-d6c4-407b-9a3c-c60d8396cb1b">
+        <orm:table name="Issues" />
+        <orm:identity>
+          <orm:key-generator name="autoinc" />
+          <orm:single-field field-name="_id" />
+        </orm:identity>
+        <orm:concurrency strategy="backend" field-name="_dateCreated">
+          <orm:column name="DateCreated" sql-type="timestamp" nullable="false" length="0" scale="0" backend-version="true" ado-type="Int64" />
+        </orm:concurrency>
+        <orm:field name="_case_ID" property="Case_ID" behavior="readwrite" uniqueId="fa77aae1-058b-4202-bc40-3a08363718a0" type="System.Int32">
+          <orm:column name="Case_ID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_id" property="Id" behavior="readwrite" uniqueId="a516dacc-6eee-4a9e-a139-3c5fef47fc76" type="System.Int32">
+          <orm:column name="Id" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_issue_Expl" property="Issue_Expl" behavior="readwrite" uniqueId="4227fd21-ccc4-436d-ae18-4c07d4801089" type="System.String">
+          <orm:column name="Issue_Expl" sql-type="varchar" nullable="true" length="255" scale="0" ado-type="StringVariableLength" />
+        </orm:field>
+        <orm:field name="_issue_Name" property="Issue_Name" behavior="readwrite" uniqueId="412a5335-775b-4909-ae95-e99c0f5d394c" type="System.String">
+          <orm:column name="Issue_Name" sql-type="varchar" nullable="true" length="255" scale="0" ado-type="StringVariableLength" />
+        </orm:field>
+        <orm:field name="_dateCreated" property="DateCreated" behavior="readwrite" uniqueId="294346ca-ff29-4186-94f5-ed0787b12aeb" type="System.Int64">
+          <orm:column name="DateCreated" sql-type="timestamp" nullable="false" length="0" scale="0" backend-version="true" ado-type="Int64" />
+        </orm:field>
+        <orm:field name="_description" property="Description" behavior="readwrite" uniqueId="b42e6173-16cb-4f56-a90c-a7017398ac9f" type="System.String">
+          <orm:column name="Description" sql-type="nvarchar" nullable="true" length="250" scale="0" ado-type="UnicodeStringVariableLength" />
+        </orm:field>
+        <orm:field name="_evaluation" property="Evaluation" uniqueId="ab670add-0722-4261-b807-5dc33e04e2b3" type="System.String" />
+        <orm:field name="_question" property="Question" uniqueId="db4393f7-8a68-4541-949e-2e771a1bc1bf" type="System.String" />
+        <orm:field name="_issue_Witness" property="Issue_Witness" uniqueId="babcb8ea-eb63-4dd3-aef1-0aecded7e690" type="System.Int32" />
+        <orm:field name="_fact_Id" property="Fact_Id" uniqueId="a47dbecc-c0d1-4b2f-be0e-af39ab950ce5" type="System.Int32" />
+        <orm:field name="_issues_Facts" property="Issues_Facts" behavior="readwrite" uniqueId="d52d1c9a-1d53-4e30-a9fb-ad56bdee34f8" type="CaseXL.Data.Issues_Fact">
+          <orm:collection element-class="CaseXL.Data.Issues_Fact" inverse-field="_issue" order-by="" uniqueId="89b1f719-62e1-475c-97fe-e28014da9a2b" />
+        </orm:field>
+        <orm:field name="_issue_Questions" property="Issue_Questions" behavior="readwrite" uniqueId="ddd797c2-ecef-4e4c-8e71-cbe31177fa3e" type="CaseXL.Data.Issue_Question">
+          <orm:collection element-class="CaseXL.Data.Issue_Question" inverse-field="_issue" order-by="" uniqueId="1af3e70d-d94f-43ab-8fdc-e40a6af8f978" />
+        </orm:field>
+        <orm:index name="idx_Issues_Case_ID">
+          <orm:columnMapping>
+            <orm:column name="Case_ID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+          </orm:columnMapping>
+        </orm:index>
+      </orm:class>
+      <orm:class name="Firm" uniqueId="c345388c-108b-470f-bb8e-fa24276bc708">
+        <orm:table name="Firm" />
+        <orm:identity>
+          <orm:key-generator name="autoinc" />
+          <orm:single-field field-name="_iD" />
+        </orm:identity>
+        <orm:concurrency strategy="changed" />
+        <orm:field name="_iD" property="ID" behavior="readwrite" uniqueId="08100a47-8fc2-47da-99cc-dea8a5d13f17" type="System.Int32">
+          <orm:column name="ID" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_firm_Name" property="Firm_Name" behavior="readwrite" uniqueId="0634b559-5c6c-41d2-a756-00e4c4daab7d" type="System.String">
+          <orm:column name="Firm_Name" sql-type="nvarchar" nullable="false" length="50" scale="0" ado-type="UnicodeStringVariableLength" />
+        </orm:field>
+        <orm:field name="_firm_Code" property="Firm_Code" behavior="readwrite" uniqueId="e8d91169-e39b-4181-9fab-d9a135446fa3" type="System.String">
+          <orm:column name="Firm_Code" sql-type="nvarchar" nullable="true" length="50" scale="0" ado-type="UnicodeStringVariableLength" />
+        </orm:field>
+        <orm:field name="_staffs" property="Staffs" behavior="readwrite" uniqueId="eb1db04f-2ad0-4288-ba16-b874cde8e465" type="CaseXL.Data.Staff">
+          <orm:collection element-class="CaseXL.Data.Staff" inverse-field="_firm" order-by="" uniqueId="a8f74f39-0f13-4253-b7fb-d5cbc5ab8bf2" />
+        </orm:field>
+        <orm:field name="_partners" property="Partners" behavior="readwrite" uniqueId="0f517680-1497-43a3-83b3-79eade48d348" type="CaseXL.Data.Partner">
+          <orm:collection element-class="CaseXL.Data.Partner" inverse-field="_firm" order-by="" uniqueId="7fa1cacb-969c-4609-96bd-c4446d6134f9" />
+        </orm:field>
+        <orm:field name="_app_Users" property="App_Users" behavior="readwrite" uniqueId="9dd06d39-f7a2-47e2-8403-daa66e5abc90" type="CaseXL.Data.App_User">
+          <orm:collection element-class="CaseXL.Data.App_User" inverse-field="_firm" order-by="" uniqueId="9c46bea4-ae9b-4454-94c3-76613d7cfcf5" />
+        </orm:field>
+      </orm:class>
+      <orm:class name="Case_Type" uniqueId="62d18829-b602-48d7-9097-81f9b9b453e3">
+        <orm:table name="Case_Types" />
+        <orm:identity>
+          <orm:key-generator name="autoinc" />
+          <orm:single-field field-name="_iD" />
+        </orm:identity>
+        <orm:concurrency strategy="changed" />
+        <orm:field name="_iD" property="ID" behavior="readwrite" uniqueId="943c25bd-b28e-4a6c-a6ef-de0582ae2076" type="System.Int32">
+          <orm:column name="ID" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_name" property="Name" behavior="readwrite" uniqueId="33e68858-20a5-4be8-a319-c064eabff93d" type="System.String">
+          <orm:column name="Name" sql-type="nvarchar" nullable="true" length="50" scale="0" ado-type="UnicodeStringVariableLength" />
+        </orm:field>
+      </orm:class>
+      <orm:class name="Case" uniqueId="d0eceffa-01e3-4276-8b14-1f2040ae3e8b">
+        <orm:table name="Case" />
+        <orm:identity>
+          <orm:key-generator name="autoinc" />
+          <orm:single-field field-name="_iD" />
+        </orm:identity>
+        <orm:concurrency strategy="changed" />
+        <orm:field name="_iD" property="ID" behavior="readwrite" uniqueId="9d520cac-0cf7-44eb-ab55-b4f85885ca12" type="System.Int32">
+          <orm:column name="ID" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_caption" property="Caption" behavior="readwrite" uniqueId="98fa011a-d5ad-40de-bf3f-93a496f45f2f" type="System.String">
+          <orm:column name="Caption" sql-type="nvarchar" nullable="false" length="200" scale="0" ado-type="UnicodeStringVariableLength" />
+        </orm:field>
+        <orm:field name="_case_Number" property="Case_Number" behavior="readwrite" uniqueId="3e8ab92b-845a-41c7-8340-e35e73b404b5" type="System.String">
+          <orm:column name="Case_Number" sql-type="nvarchar" nullable="true" length="50" scale="0" ado-type="UnicodeStringVariableLength" />
+        </orm:field>
+        <orm:field name="_firm_Number" property="Firm_Number" behavior="readwrite" uniqueId="41c3c42e-9fc2-46de-be51-475e16e4227d" type="System.String">
+          <orm:column name="Firm_Number" sql-type="nvarchar" nullable="true" length="50" scale="0" ado-type="UnicodeStringVariableLength" />
+        </orm:field>
+        <orm:field name="_staff_ID" property="Staff_ID" behavior="readwrite" uniqueId="3eacb291-1bc6-42bf-af69-77260ac91a85" type="System.Nullable`1[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]">
+          <orm:column name="Staff_ID" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_partner_ID" property="Partner_ID" behavior="readwrite" uniqueId="7f8569d4-010c-46d6-a340-d1380dbaaf93" type="System.Int32">
+          <orm:column name="Partner_ID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_firm_ID" property="Firm_ID" behavior="readwrite" uniqueId="a6c8adeb-130f-4a3c-b2c9-034421fc8638" type="System.Int32">
+          <orm:column name="Firm_ID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_case_Type_ID" property="Case_Type_ID" behavior="readwrite" uniqueId="2625d976-8b51-4418-9940-ea22cfce929c" type="System.Nullable`1[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]">
+          <orm:column name="Case_Type_ID" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_staff" property="Staff" behavior="readwrite" uniqueId="56ac6ed2-2d38-4931-bc9c-aa80fe592734" type="CaseXL.Data.Staff">
+          <orm:reference uniqueId="1b30241d-1c3c-40d2-a3be-4b41e5cfcc33">
+            <orm:sharedfield name="_staff_ID" target-class="CaseXL.Data.Staff" target-field="_iD" />
+            <orm:constraint name="FK_Case_Staff" destination-table="Staff" />
+          </orm:reference>
+        </orm:field>
+        <orm:field name="_exhibits" property="Exhibits" behavior="readwrite" uniqueId="0c990a17-b2bd-4137-942e-f9a7940171ba" type="CaseXL.Data.Exhibit">
+          <orm:collection element-class="CaseXL.Data.Exhibit" inverse-field="_case" order-by="" uniqueId="1e8a1a30-d406-4d85-ac44-195c15e97991" />
+        </orm:field>
+        <orm:field name="_exhibits_Facts" property="Exhibits_Facts" behavior="readwrite" uniqueId="b5204e42-ae03-4f43-b599-704c7545f319" type="CaseXL.Data.Exhibits_Fact">
+          <orm:collection element-class="CaseXL.Data.Exhibits_Fact" inverse-field="_case" order-by="" uniqueId="8a84b5a2-dd89-4e2b-8959-ad83aafca349" />
+        </orm:field>
+        <orm:field name="_facts" property="Facts" behavior="readwrite" uniqueId="4bf6e4a2-de97-4d3b-b351-5be9d0b39d1c" type="CaseXL.Data.Fact">
+          <orm:collection element-class="CaseXL.Data.Fact" inverse-field="_case" order-by="" uniqueId="540c1d60-e96f-46a4-9290-87a20a8d8316" />
+        </orm:field>
+      </orm:class>
+      <orm:class name="Witness" uniqueId="14aa327d-de7d-4314-98d7-1989a23c77e6">
+        <orm:table name="Witnesses" />
+        <orm:identity>
+          <orm:key-generator name="autoinc" />
+          <orm:single-field field-name="_id" />
+        </orm:identity>
+        <orm:concurrency strategy="changed" />
+        <orm:field name="_id" property="Id" behavior="readwrite" uniqueId="c7e0c729-c4db-4104-995e-df02ccea49c5" type="System.Int32">
+          <orm:column name="Id" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_name" property="Name" behavior="readwrite" uniqueId="7a0b8ed7-8ce7-434a-829b-f47576866420" type="System.String">
+          <orm:column name="Name" sql-type="varchar" nullable="true" length="255" scale="0" ado-type="StringVariableLength" />
+        </orm:field>
+        <orm:field name="_email" property="Email" behavior="readwrite" uniqueId="37039b1e-ffc0-46e6-8370-e5cbe72512cb" type="System.String">
+          <orm:column name="Email" sql-type="nvarchar" nullable="true" length="50" scale="0" ado-type="UnicodeStringVariableLength" />
+        </orm:field>
+        <orm:field name="_caseId" property="CaseId" behavior="readwrite" uniqueId="537bb47d-b004-419e-8e18-ba63fb3d0e4a" type="System.Nullable`1[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]">
+          <orm:column name="CaseId" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_witness_Facts" property="Witness_Facts" behavior="readwrite" uniqueId="9f0b7375-7bdd-43d5-bb68-a40908a345de" type="CaseXL.Data.Witness_Fact">
+          <orm:collection element-class="CaseXL.Data.Witness_Fact" inverse-field="_witness" order-by="" uniqueId="0e05cd4c-745b-43eb-91fe-fd5fbc7733a2" />
+        </orm:field>
+        <orm:field name="_questions" property="Questions" behavior="readwrite" uniqueId="71c3203e-655d-44e1-901c-5528be042a83" type="CaseXL.Data.Question">
+          <orm:collection element-class="CaseXL.Data.Question" inverse-field="_witness" order-by="" uniqueId="cf1a6051-fee2-4c45-9f60-8256bd9341c1" />
+        </orm:field>
+      </orm:class>
+      <orm:class name="Exhibit" uniqueId="410d0689-f89c-41a5-b3c4-0fef03853f0f">
+        <orm:table name="Exhibits" />
+        <orm:identity>
+          <orm:key-generator name="autoinc" />
+          <orm:single-field field-name="_id" />
+        </orm:identity>
+        <orm:concurrency strategy="changed" />
+        <orm:field name="_id" property="Id" behavior="readwrite" uniqueId="b4af28bc-e0d7-42cc-9835-aa6a6cb3d2ce" type="System.Int32">
+          <orm:column name="Id" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_type" property="Type" behavior="readwrite" uniqueId="5ededd2a-b00e-4e1b-b830-a708fc38ec72" type="System.String">
+          <orm:column name="Type" sql-type="nvarchar" nullable="true" length="50" scale="0" ado-type="UnicodeStringVariableLength" />
+        </orm:field>
+        <orm:field name="_source" property="Source" behavior="readwrite" uniqueId="b65a55e4-25a3-4a18-81db-11051195be1b" type="System.String">
+          <orm:column name="Source" sql-type="nvarchar" nullable="true" length="50" scale="0" ado-type="UnicodeStringVariableLength" />
+        </orm:field>
+        <orm:field name="_recepient" property="Recepient" behavior="readwrite" uniqueId="9adc74a1-85da-404e-9170-13c2c835e578" type="System.String">
+          <orm:column name="Recepient" sql-type="nvarchar" nullable="true" length="50" scale="0" ado-type="UnicodeStringVariableLength" />
+        </orm:field>
+        <orm:field name="_name" property="Name" behavior="readwrite" uniqueId="113ab1d3-5a23-4863-ac32-3bdb7132382f" type="System.String">
+          <orm:column name="Name" sql-type="nvarchar" nullable="true" length="50" scale="0" ado-type="UnicodeStringVariableLength" />
+        </orm:field>
+        <orm:field name="_description" property="Description" behavior="readwrite" uniqueId="e70fae6b-a735-419d-9c2e-3ddd6cb6b8ed" type="System.String">
+          <orm:column name="Description" sql-type="nvarchar" nullable="true" length="50" scale="0" ado-type="UnicodeStringVariableLength" />
+        </orm:field>
+        <orm:field name="_caseId" property="CaseId" behavior="readwrite" uniqueId="e055b8cc-0fce-47fe-aef6-3b580f95c2a0" type="System.Nullable`1[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]">
+          <orm:column name="CaseId" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_author" property="Author" behavior="readwrite" uniqueId="2b3dbcc7-a964-4642-989b-2782e96e1a93" type="System.String">
+          <orm:column name="Author" sql-type="nvarchar" nullable="true" length="50" scale="0" ado-type="UnicodeStringVariableLength" />
+        </orm:field>
+        <orm:field name="_date" property="Date" behavior="readwrite" uniqueId="38ab36d8-54bb-40b6-80e7-6f921065d721" type="System.Nullable`1[[System.DateTime, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]">
+          <orm:column name="Date" sql-type="date" nullable="true" length="0" scale="0" ado-type="Date" />
+        </orm:field>
+        <orm:field name="_type_Id" property="Type_Id" behavior="readwrite" uniqueId="946a8114-00d2-4efe-8a7c-68bfb94792b2" type="System.Nullable`1[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]">
+          <orm:column name="Type_Id" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_case" property="Case" behavior="readwrite" uniqueId="e956e01a-3e3d-4a2a-af6a-86ae30224d71" type="CaseXL.Data.Case">
+          <orm:reference uniqueId="1e8a1a30-d406-4d85-ac44-195c15e97991">
+            <orm:sharedfield name="_caseId" target-class="CaseXL.Data.Case" target-field="_iD" />
+            <orm:constraint name="FK_Exhibits_Case" destination-table="Case" />
+          </orm:reference>
+        </orm:field>
+        <orm:field name="_exhibits_Type" property="Exhibits_Type" behavior="readwrite" uniqueId="78098454-6d45-43f2-9dc5-f5b125e1dab1" type="CaseXL.Data.Exhibits_Type">
+          <orm:reference uniqueId="3575353c-3cfe-452f-839f-27520a859318">
+            <orm:sharedfield name="_type_Id" target-class="CaseXL.Data.Exhibits_Type" target-field="_id" />
+            <orm:constraint name="FK_Exhibits_Exhibits_Type" destination-table="Exhibits_Type" />
+          </orm:reference>
+        </orm:field>
+        <orm:field name="_exhibits_Facts" property="Exhibits_Facts" behavior="readwrite" uniqueId="09394edb-35c8-4e2a-b819-cad88e21ae17" type="CaseXL.Data.Exhibits_Fact">
+          <orm:collection element-class="CaseXL.Data.Exhibits_Fact" inverse-field="_exhibit" order-by="" uniqueId="48c2ebdb-edca-4ffe-8d00-74fa465cabfa" />
+        </orm:field>
+      </orm:class>
+      <orm:class name="Evaluation" uniqueId="a542c967-3413-4255-b900-1ec6aa783c18">
+        <orm:table name="Evaluation" />
+        <orm:identity>
+          <orm:key-generator name="autoinc" />
+          <orm:single-field field-name="_id" />
+        </orm:identity>
+        <orm:concurrency strategy="changed" />
+        <orm:field name="_id" property="Id" behavior="readwrite" uniqueId="c44990db-27f1-4a66-8249-c4e57b8f5103" type="System.Int32">
+          <orm:column name="Id" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_evaluation_Text" property="Evaluation_Text" behavior="readwrite" uniqueId="73d7c984-528b-4553-ac92-f48968fe9085" type="System.String">
+          <orm:column name="Evaluation_Text" sql-type="nvarchar" nullable="true" length="150" scale="0" ado-type="UnicodeStringVariableLength" />
+        </orm:field>
+        <orm:field name="_facts" property="Facts" behavior="readwrite" uniqueId="debf8720-f341-4e01-ac3f-4aa603735fc3" type="CaseXL.Data.Fact">
+          <orm:collection element-class="CaseXL.Data.Fact" inverse-field="_evaluation1" order-by="" uniqueId="ebb8e145-8377-4137-b397-00d0b1a8c07b" />
+        </orm:field>
+      </orm:class>
+      <orm:class name="Issues_Fact" uniqueId="c8ea8a9c-f61d-49cd-a1c7-7c962ebf2f35">
+        <orm:table name="Issues_Facts" />
+        <orm:identity>
+          <orm:key-generator name="autoinc" />
+          <orm:single-field field-name="_id" />
+        </orm:identity>
+        <orm:concurrency strategy="changed" />
+        <orm:field name="_id" property="Id" behavior="readwrite" uniqueId="e4e4ec98-d679-440d-b9fc-d4d6f35a5b2b" type="System.Int32">
+          <orm:column name="Id" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_case_Id" property="Case_Id" behavior="readwrite" uniqueId="b47f177a-a913-4de9-b9d0-7744f82b7f69" type="System.Nullable`1[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]">
+          <orm:column name="Case_Id" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_issue_Id" property="Issue_Id" behavior="readwrite" uniqueId="74f46afa-806d-4867-87db-fac7edb6605f" type="System.Nullable`1[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]">
+          <orm:column name="Issue_Id" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_fact_Id" property="Fact_Id" behavior="readwrite" uniqueId="b761097c-3532-4849-8fca-890bdd5deedc" type="System.Nullable`1[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]">
+          <orm:column name="Fact_Id" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_issue" property="Issue" behavior="readwrite" uniqueId="231fa476-c11b-461c-a14e-31539f2b3d79" type="CaseXL.Data.Issue">
+          <orm:reference uniqueId="89b1f719-62e1-475c-97fe-e28014da9a2b">
+            <orm:sharedfield name="_issue_Id" target-class="CaseXL.Data.Issue" target-field="_id" />
+            <orm:constraint name="FK_Issues_Facts_Issues" destination-table="Issues" />
+          </orm:reference>
+        </orm:field>
+      </orm:class>
+      <orm:class name="Witness_Fact" uniqueId="55a187ca-a49e-47f5-acbc-d352cbed1e8c">
+        <orm:table name="Witness_Facts" />
+        <orm:identity>
+          <orm:key-generator name="autoinc" />
+          <orm:single-field field-name="_id" />
+        </orm:identity>
+        <orm:concurrency strategy="changed" />
+        <orm:field name="_id" property="Id" behavior="readwrite" uniqueId="75db63ba-2352-44ad-9008-0b575c482843" type="System.Int32">
+          <orm:column name="Id" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_caseId" property="CaseId" behavior="readwrite" uniqueId="af5c4da3-a688-49c1-b393-c63677be533f" type="System.Nullable`1[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]">
+          <orm:column name="CaseId" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_factId" property="FactId" behavior="readwrite" uniqueId="eb549855-3331-4475-a5ef-80146d6ad6de" type="System.Nullable`1[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]">
+          <orm:column name="FactId" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_witnessId" property="WitnessId" behavior="readwrite" uniqueId="7bc96288-38fd-4c58-bd5d-0db264bdcafa" type="System.Nullable`1[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]">
+          <orm:column name="WitnessId" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_witness" property="Witness" behavior="readwrite" uniqueId="a595701e-c2e3-41aa-82f5-dd1c3fc1452a" type="CaseXL.Data.Witness">
+          <orm:reference uniqueId="0e05cd4c-745b-43eb-91fe-fd5fbc7733a2">
+            <orm:sharedfield name="_witnessId" target-class="CaseXL.Data.Witness" target-field="_id" />
+            <orm:constraint name="FK_Witness_Facts_Witnesses" destination-table="Witnesses" />
+          </orm:reference>
+        </orm:field>
+        <orm:field name="_fact_Witness_Questions" property="Fact_Witness_Questions" behavior="readwrite" uniqueId="05e7ca16-5efa-4712-939d-592c68cb57e1" type="CaseXL.Data.Fact_Witness_Question">
+          <orm:collection element-class="CaseXL.Data.Fact_Witness_Question" inverse-field="_witness_Fact" order-by="" uniqueId="d881a42f-5cd2-4b66-875f-2ad71591ae4e" />
+        </orm:field>
+      </orm:class>
+      <orm:class name="Exhibits_Fact" uniqueId="cf94ed26-2850-4755-b155-69a43e17f345">
+        <orm:table name="Exhibits_Facts" />
+        <orm:identity>
+          <orm:key-generator name="autoinc" />
+          <orm:single-field field-name="_id" />
+        </orm:identity>
+        <orm:concurrency strategy="changed" />
+        <orm:field name="_id" property="Id" behavior="readwrite" uniqueId="d5c2324b-9d57-429d-b66a-8b70bbd1caf1" type="System.Int32">
+          <orm:column name="Id" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_caseId" property="CaseId" behavior="readwrite" uniqueId="dfc99173-76bd-446c-a9a0-dfd19a0b84d0" type="System.Nullable`1[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]">
+          <orm:column name="CaseId" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_factId" property="FactId" behavior="readwrite" uniqueId="8a11dcc6-321a-4250-a7f3-92aa981d902e" type="System.Nullable`1[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]">
+          <orm:column name="FactId" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_exhibitId" property="ExhibitId" behavior="readwrite" uniqueId="6d0d5ead-2c3b-4d6a-8e6f-b1418021bc73" type="System.Nullable`1[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]">
+          <orm:column name="ExhibitId" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_exhibit" property="Exhibit" behavior="readwrite" uniqueId="ed8e8898-8360-4eb7-b717-46829c68b4eb" type="CaseXL.Data.Exhibit">
+          <orm:reference uniqueId="48c2ebdb-edca-4ffe-8d00-74fa465cabfa">
+            <orm:sharedfield name="_exhibitId" target-class="CaseXL.Data.Exhibit" target-field="_id" />
+            <orm:constraint name="FK_Exhibits_Facts_Exhibits" destination-table="Exhibits" />
+          </orm:reference>
+        </orm:field>
+        <orm:field name="_case" property="Case" behavior="readwrite" uniqueId="4e61a6a6-57bf-41b1-b9eb-b3a2e05e182a" type="CaseXL.Data.Case">
+          <orm:reference uniqueId="8a84b5a2-dd89-4e2b-8959-ad83aafca349">
+            <orm:sharedfield name="_caseId" target-class="CaseXL.Data.Case" target-field="_iD" />
+            <orm:constraint name="FK_Exhibits_Facts_Case" destination-table="Case" />
+          </orm:reference>
+        </orm:field>
+      </orm:class>
+      <orm:class name="Fact" uniqueId="3a5fb4ec-04ee-410f-a042-f2cb16ede59d">
+        <orm:table name="Facts" />
+        <orm:identity>
+          <orm:key-generator name="autoinc" />
+          <orm:single-field field-name="_id" />
+        </orm:identity>
+        <orm:concurrency strategy="changed" />
+        <orm:field name="_id" property="Id" behavior="readwrite" uniqueId="5c15ebdd-5734-4709-82f8-660154189b59" type="System.Int32">
+          <orm:column name="Id" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_case_Id" property="Case_Id" behavior="readwrite" uniqueId="8d2b89bb-d353-4abd-a83f-86904801ef35" type="System.Int32">
+          <orm:column name="Case_Id" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_dte" property="Dte" behavior="readwrite" uniqueId="9c392779-b6fa-45aa-8fdf-09e8e5100e3e" type="System.Nullable`1[[System.DateTime, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]">
+          <orm:column name="dte" sql-type="date" nullable="true" length="0" scale="0" ado-type="Date" />
+        </orm:field>
+        <orm:field name="_description" property="Description" behavior="readwrite" uniqueId="d3b84975-86f9-4f0e-bcb2-e1f586dab3f0" type="System.String">
+          <orm:column name="Description" sql-type="varchar" nullable="true" length="255" scale="0" ado-type="StringVariableLength" />
+        </orm:field>
+        <orm:field name="_issue_Id" property="Issue_Id" behavior="readwrite" uniqueId="6d861bc4-2991-47f7-83f4-1628b0e17aa8" type="System.Int32">
+          <orm:column name="Issue_Id" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_source" property="Source" behavior="readwrite" uniqueId="3051da12-1168-4638-b9b1-a73dfb60b779" type="System.String">
+          <orm:column name="Source" sql-type="varchar" nullable="true" length="255" scale="0" ado-type="StringVariableLength" />
+        </orm:field>
+        <orm:field name="_evaluation" property="Evaluation" behavior="readwrite" uniqueId="a188f9ac-57bb-457e-8eae-488bc340fa7f" type="System.String">
+          <orm:column name="Evaluation" sql-type="nchar" nullable="true" length="255" scale="0" ado-type="UnicodeStringFixedLength" />
+        </orm:field>
+        <orm:field name="_date" property="Date" behavior="readwrite" uniqueId="8ce8ce1f-9178-4fac-ba90-ec6f0f050c74" type="System.Nullable`1[[System.DateTime, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]">
+          <orm:column name="Date" sql-type="datetime" nullable="true" length="0" scale="0" ado-type="DateTime" />
+        </orm:field>
+        <orm:field name="_evaluation_Id" property="Evaluation_Id" behavior="readwrite" uniqueId="d529a131-20b5-43bb-b5f3-6a7219e8da9e" type="System.Nullable`1[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]">
+          <orm:column name="Evaluation_Id" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_case" property="Case" behavior="readwrite" uniqueId="a3055a8d-3600-4988-a786-59f8fd31cbfe" type="CaseXL.Data.Case">
+          <orm:reference uniqueId="540c1d60-e96f-46a4-9290-87a20a8d8316">
+            <orm:sharedfield name="_case_Id" target-class="CaseXL.Data.Case" target-field="_iD" />
+            <orm:constraint name="ref_Facts_Case" destination-table="Case" />
+          </orm:reference>
+        </orm:field>
+        <orm:field name="_evaluation1" property="Evaluation1" behavior="readwrite" uniqueId="e46f4f4f-9b8f-4daf-b4ad-c8c4b38af5ac" type="CaseXL.Data.Evaluation">
+          <orm:reference uniqueId="ebb8e145-8377-4137-b397-00d0b1a8c07b">
+            <orm:sharedfield name="_evaluation_Id" target-class="CaseXL.Data.Evaluation" target-field="_id" />
+            <orm:constraint name="FK_Facts_Facts" destination-table="Evaluation" />
+          </orm:reference>
+        </orm:field>
+      </orm:class>
+      <orm:class name="Question" uniqueId="27f112af-f55c-42b4-bdfc-9d7b3aa8f5fb">
+        <orm:table name="Questions" />
+        <orm:identity>
+          <orm:key-generator name="autoinc" />
+          <orm:single-field field-name="_id" />
+        </orm:identity>
+        <orm:concurrency strategy="changed" />
+        <orm:field name="_id" property="Id" behavior="readwrite" uniqueId="fbf41e10-fff2-4d51-ba0f-0ea18f5e7323" type="System.Int32">
+          <orm:column name="Id" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_question1" property="Question1" behavior="readwrite" uniqueId="2370217a-4d1a-4d8d-bfbe-735f19ef8ba2" type="System.String">
+          <orm:column name="Question" sql-type="nvarchar" nullable="true" length="250" scale="0" ado-type="UnicodeStringVariableLength" />
+        </orm:field>
+        <orm:field name="_answer" property="Answer" behavior="readwrite" uniqueId="486b4ed5-2cfb-4ca5-b836-3a31fafb3726" type="System.String">
+          <orm:column name="answer" sql-type="nvarchar" nullable="true" length="250" scale="0" ado-type="UnicodeStringVariableLength" />
+        </orm:field>
+        <orm:field name="_witness_Id" property="Witness_Id" behavior="readwrite" uniqueId="c4c15b7b-be9f-4835-9658-168058dc39f8" type="System.Nullable`1[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]">
+          <orm:column name="Witness_Id" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_witness" property="Witness" behavior="readwrite" uniqueId="3e4ac467-b092-4bda-b0a6-8bc78a758cda" type="CaseXL.Data.Witness">
+          <orm:reference uniqueId="cf1a6051-fee2-4c45-9f60-8256bd9341c1">
+            <orm:sharedfield name="_witness_Id" target-class="CaseXL.Data.Witness" target-field="_id" />
+            <orm:constraint name="FK_Questions_Witnesses" destination-table="Witnesses" />
+          </orm:reference>
+        </orm:field>
+      </orm:class>
+      <orm:class name="Exhibits_Type" uniqueId="35dc10ff-2de7-4bb8-9a30-87f75ac4ee59">
+        <orm:table name="Exhibits_Type" />
+        <orm:identity>
+          <orm:key-generator name="autoinc" />
+          <orm:single-field field-name="_id" />
+        </orm:identity>
+        <orm:concurrency strategy="changed" />
+        <orm:field name="_id" property="Id" behavior="readwrite" uniqueId="d55770c8-2cb3-4cdd-8d2e-4140ac83b7af" type="System.Int32">
+          <orm:column name="Id" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_typer" property="Typer" behavior="readwrite" uniqueId="759668ba-e8fa-408b-a59f-0ee62bd46e34" type="System.String">
+          <orm:column name="Typer" sql-type="nvarchar" nullable="true" length="50" scale="0" ado-type="UnicodeStringVariableLength" />
+        </orm:field>
+        <orm:field name="_exhibits" property="Exhibits" behavior="readwrite" uniqueId="7cca997b-c301-402a-bb2e-f3ab8a1e5fc2" type="CaseXL.Data.Exhibit">
+          <orm:collection element-class="CaseXL.Data.Exhibit" inverse-field="_exhibits_Type" order-by="" uniqueId="3575353c-3cfe-452f-839f-27520a859318" />
+        </orm:field>
+      </orm:class>
+      <orm:class name="Issue_Question" uniqueId="e8237b18-bbc9-4017-8a27-7e09596a87f5">
+        <orm:table name="Issue_Questions" />
+        <orm:identity>
+          <orm:key-generator name="autoinc" />
+          <orm:single-field field-name="_id" />
+        </orm:identity>
+        <orm:concurrency strategy="changed" />
+        <orm:field name="_id" property="Id" behavior="readwrite" uniqueId="ccda2af5-8fc1-42ab-b642-b6f370d3cdb0" type="System.Int32">
+          <orm:column name="Id" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_question" property="Question" behavior="readwrite" uniqueId="deacc087-23db-46c1-a9fa-9065ea200271" type="System.String">
+          <orm:column name="Question" sql-type="nvarchar" nullable="true" length="250" scale="0" ado-type="UnicodeStringVariableLength" />
+        </orm:field>
+        <orm:field name="_answer" property="Answer" behavior="readwrite" uniqueId="bee26231-e651-48ee-863d-cc6d3ca22278" type="System.String">
+          <orm:column name="Answer" sql-type="nvarchar" nullable="true" length="250" scale="0" ado-type="UnicodeStringVariableLength" />
+        </orm:field>
+        <orm:field name="_issue_Id" property="Issue_Id" behavior="readwrite" uniqueId="65084b25-e2b2-4886-80ac-390a054330fc" type="System.Nullable`1[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]">
+          <orm:column name="Issue_Id" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_issue" property="Issue" behavior="readwrite" uniqueId="2c7cb0c2-a420-424b-a99e-d3f37c4f9074" type="CaseXL.Data.Issue">
+          <orm:reference uniqueId="1af3e70d-d94f-43ab-8fdc-e40a6af8f978">
+            <orm:sharedfield name="_issue_Id" target-class="CaseXL.Data.Issue" target-field="_id" />
+            <orm:constraint name="FK_Issue_Questions_Issues" destination-table="Issues" />
+          </orm:reference>
+        </orm:field>
+      </orm:class>
+      <orm:class name="App_User" uniqueId="de49ce0c-22c7-4c11-aee5-57c7a04eadea">
+        <orm:table name="App_Users" />
+        <orm:identity>
+          <orm:key-generator name="autoinc" />
+          <orm:single-field field-name="_id" />
+        </orm:identity>
+        <orm:concurrency strategy="changed" />
+        <orm:field name="_id" property="Id" behavior="readwrite" uniqueId="b6455947-4cac-4a8d-9b3f-ab67a66c567e" type="System.Int32">
+          <orm:column name="Id" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_firstName" property="FirstName" behavior="readwrite" uniqueId="a01c3bcd-5177-41b5-b499-1858c0cf6ed0" type="System.String">
+          <orm:column name="FirstName" sql-type="nvarchar" nullable="false" length="150" scale="0" ado-type="UnicodeStringVariableLength" />
+        </orm:field>
+        <orm:field name="_lastName" property="LastName" behavior="readwrite" uniqueId="e3aaebee-6d92-43a5-9ee3-c1bedb908ab2" type="System.String">
+          <orm:column name="LastName" sql-type="nvarchar" nullable="false" length="150" scale="0" ado-type="UnicodeStringVariableLength" />
+        </orm:field>
+        <orm:field name="_creditCard" property="CreditCard" behavior="readwrite" uniqueId="2e2a3616-96d3-421e-ba96-f35df250a1d2" type="System.String">
+          <orm:column name="CreditCard" sql-type="nvarchar" nullable="false" length="50" scale="0" ado-type="UnicodeStringVariableLength" />
+        </orm:field>
+        <orm:field name="_subscriptionNo" property="SubscriptionNo" behavior="readwrite" uniqueId="d128d9b3-c5aa-47c1-af9c-63e2bdb3d540" type="System.Int64">
+          <orm:column name="SubscriptionNo" sql-type="bigint" nullable="false" length="0" scale="0" ado-type="Int64" />
+        </orm:field>
+        <orm:field name="_userName" property="UserName" behavior="readwrite" uniqueId="2dd33ad7-91a6-4ba6-9a81-72bc3c8f4d31" type="System.String">
+          <orm:column name="UserName" sql-type="nvarchar" nullable="false" length="50" scale="0" ado-type="UnicodeStringVariableLength" />
+        </orm:field>
+        <orm:field name="_firmId" property="FirmId" behavior="readwrite" uniqueId="76be44ca-1d45-45cf-9d47-63c2babc42ae" type="System.Int32">
+          <orm:column name="FirmId" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_cVNNo" property="CVNNo" behavior="readwrite" uniqueId="186de8b7-a9ec-4432-baf1-34dfa44fcd9a" type="System.String">
+          <orm:column name="CVNNo" sql-type="nvarchar" nullable="false" length="50" scale="0" ado-type="UnicodeStringVariableLength" />
+        </orm:field>
+        <orm:field name="_email" property="Email" behavior="readwrite" uniqueId="b6872fec-1655-4f38-af91-35be1d94e198" type="System.String">
+          <orm:column name="Email" sql-type="nvarchar" nullable="false" length="50" scale="0" ado-type="UnicodeStringVariableLength" />
+        </orm:field>
+        <orm:field name="_contactNo" property="ContactNo" behavior="readwrite" uniqueId="8f1f8937-50c9-4346-a36c-c6a84ff5739e" type="System.String">
+          <orm:column name="ContactNo" sql-type="nvarchar" nullable="true" length="50" scale="0" ado-type="UnicodeStringVariableLength" />
+        </orm:field>
+        <orm:field name="_signOnDate" property="SignOnDate" behavior="readwrite" uniqueId="3daff13f-e361-4652-b290-6a5df7644739" type="System.DateTime">
+          <orm:column name="SignOnDate" sql-type="date" nullable="false" length="0" scale="0" ado-type="Date" />
+        </orm:field>
+        <orm:field name="_firm" property="Firm" behavior="readwrite" uniqueId="48ca9c5f-6054-415e-8a6e-dd2008e4b08b" type="CaseXL.Data.Firm">
+          <orm:reference uniqueId="9c46bea4-ae9b-4454-94c3-76613d7cfcf5">
+            <orm:sharedfield name="_firmId" target-class="CaseXL.Data.Firm" target-field="_iD" />
+            <orm:constraint name="FK_App_Users_Firm" destination-table="Firm" />
+          </orm:reference>
+        </orm:field>
+      </orm:class>
+      <orm:class name="RestPwd" uniqueId="500d1cb8-1119-402b-9496-490c782366a2">
+        <orm:table name="RestPwd" />
+        <orm:identity>
+          <orm:key-generator name="autoinc" />
+          <orm:single-field field-name="_id" />
+        </orm:identity>
+        <orm:concurrency strategy="changed" />
+        <orm:field name="_id" property="Id" behavior="readwrite" uniqueId="6faf3a0f-25fb-4057-adcc-605ee9e6317d" type="System.Int32">
+          <orm:column name="Id" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_randomCode" property="RandomCode" behavior="readwrite" uniqueId="4e53b1ff-de97-4b21-a774-551a942e4caa" type="System.Nullable`1[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]">
+          <orm:column name="RandomCode" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_userName" property="UserName" behavior="readwrite" uniqueId="31b6e62f-e79c-462a-b229-ebe17f417cab" type="System.String">
+          <orm:column name="UserName" sql-type="nvarchar" nullable="true" length="50" scale="0" ado-type="UnicodeStringVariableLength" />
+        </orm:field>
+      </orm:class>
+      <orm:class name="Document" uniqueId="60c4f019-c5be-45f2-bf15-5cffa7afb78a">
+        <orm:table name="Documents" />
+        <orm:identity>
+          <orm:key-generator name="autoinc" />
+          <orm:single-field field-name="_id" />
+        </orm:identity>
+        <orm:concurrency strategy="changed" />
+        <orm:field name="_id" property="Id" behavior="readwrite" uniqueId="c9a1f36b-22e9-4c32-ab1c-8538642e407b" type="System.Int32">
+          <orm:column name="id" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_doc_Type" property="Doc_Type" behavior="readwrite" uniqueId="9eb11aea-68be-4a7c-9c25-56a3159c4f59" type="System.Nullable`1[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]">
+          <orm:column name="Doc_Type" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_doc_Name" property="Doc_Name" behavior="readwrite" uniqueId="694ad25b-9f56-4cf5-b393-133cbea8d8de" type="System.String">
+          <orm:column name="Doc_Name" sql-type="nvarchar" nullable="true" length="50" scale="0" ado-type="UnicodeStringVariableLength" />
+        </orm:field>
+        <orm:field name="_doc_Url" property="Doc_Url" behavior="readwrite" uniqueId="7199b136-5ff6-4890-b239-01dca44119d2" type="System.String">
+          <orm:column name="Doc_Url" sql-type="nvarchar" nullable="true" length="550" scale="0" ado-type="UnicodeStringVariableLength" />
+        </orm:field>
+        <orm:field name="_doc_ParentId" property="Doc_ParentId" behavior="readwrite" uniqueId="76b8c059-6098-4153-acfa-b65514c40dcb" type="System.Nullable`1[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]">
+          <orm:column name="Doc_ParentId" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
+      </orm:class>
+      <orm:class name="Fact_Witness_Question" uniqueId="ccf4696a-14a0-4d51-ac00-de3138081e63">
+        <orm:table name="Fact_Witness_Questions" />
+        <orm:identity>
+          <orm:key-generator name="autoinc" />
+          <orm:single-field field-name="_id" />
+        </orm:identity>
+        <orm:concurrency strategy="changed" />
+        <orm:field name="_id" property="Id" behavior="readwrite" uniqueId="9ee0f482-6afa-4653-8441-68ba4171c5bb" type="System.Int32">
+          <orm:column name="Id" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_witness_Fact_Id" property="Witness_Fact_Id" behavior="readwrite" uniqueId="478c582a-4e02-4203-b86b-0b2e32848497" type="System.Int32">
+          <orm:column name="Witness_Fact_Id" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_question" property="Question" behavior="readwrite" uniqueId="23933f59-5d8a-4aaa-b58e-f0405a3a6af8" type="System.String">
+          <orm:column name="Question" sql-type="nvarchar" nullable="false" length="550" scale="0" ado-type="UnicodeStringVariableLength" />
+        </orm:field>
+        <orm:field name="_answer" property="Answer" behavior="readwrite" uniqueId="6007cb46-d9b3-4a21-ae90-c4e073fc7503" type="System.String">
+          <orm:column name="Answer" sql-type="nvarchar" nullable="false" length="550" scale="0" ado-type="UnicodeStringVariableLength" />
+        </orm:field>
+        <orm:field name="_asked" property="Asked" behavior="readwrite" uniqueId="91f23e81-22e9-4fe0-a7b3-3368bddf1f2d" type="System.Boolean">
+          <orm:column name="Asked" sql-type="bit" nullable="false" length="0" scale="0" ado-type="Bit" />
+        </orm:field>
+        <orm:field name="_question_Number" property="Question_Number" behavior="readwrite" uniqueId="78604eda-626a-430e-8471-25575e785a38" type="System.Nullable`1[[System.Double, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]">
+          <orm:column name="Question_Number" sql-type="float" nullable="true" length="0" scale="0" ado-type="Double" />
+        </orm:field>
+        <orm:field name="_witness_Fact" property="Witness_Fact" behavior="readwrite" uniqueId="fcf72ea9-3727-4fe9-b5b3-e69dfae520f0" type="CaseXL.Data.Witness_Fact">
+          <orm:reference uniqueId="d881a42f-5cd2-4b66-875f-2ad71591ae4e">
+            <orm:sharedfield name="_witness_Fact_Id" target-class="CaseXL.Data.Witness_Fact" target-field="_id" />
+            <orm:constraint name="FK_Fact_Witness_Questions_Witness_Facts" destination-table="Witness_Facts" />
+          </orm:reference>
+        </orm:field>
+      </orm:class>
+    </orm:namespace>
+    <orm:schema schema="">
+      <orm:table name="Staff">
+        <orm:column name="ID" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        <orm:column name="FirstName" sql-type="nvarchar" nullable="true" length="50" scale="0" ado-type="UnicodeStringVariableLength" />
+        <orm:column name="LastName" sql-type="nchar" nullable="true" length="50" scale="0" ado-type="UnicodeStringFixedLength" />
+        <orm:column name="Partner_ID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        <orm:column name="Case_ID" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        <orm:column name="Firm_ID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        <orm:column name="DateCreated" sql-type="timestamp" nullable="false" length="0" scale="0" backend-version="true" ado-type="Int64" />
+        <orm:index name="idx_Staff_Case_ID">
+          <orm:columnMapping>
+            <orm:column name="Case_ID" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+          </orm:columnMapping>
+        </orm:index>
+        <orm:index name="idx_Staff_Firm_ID">
+          <orm:columnMapping>
+            <orm:column name="Firm_ID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+          </orm:columnMapping>
+        </orm:index>
+        <orm:index name="idx_Staff_Partner_ID">
+          <orm:columnMapping>
+            <orm:column name="Partner_ID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+          </orm:columnMapping>
+        </orm:index>
+        <orm:constraint name="FK_Staff_Firm" destination-table="Firm">
+          <orm:column name="Firm_ID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:constraint>
+        <orm:constraint name="FK_Staff_Partner" destination-table="Partner">
+          <orm:column name="Partner_ID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:constraint>
+      </orm:table>
+      <orm:table name="Partner">
+        <orm:column name="ID" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        <orm:column name="FristName" sql-type="nvarchar" nullable="true" length="50" scale="0" ado-type="UnicodeStringVariableLength" />
+        <orm:column name="LastName" sql-type="nchar" nullable="true" length="50" scale="0" ado-type="UnicodeStringFixedLength" />
+        <orm:column name="Firm_ID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        <orm:constraint name="FK_Partner_Firm" destination-table="Firm">
+          <orm:column name="Firm_ID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:constraint>
+      </orm:table>
+      <orm:table name="Issues">
+        <orm:column name="Case_ID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        <orm:column name="Id" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        <orm:column name="Issue_Expl" sql-type="varchar" nullable="true" length="255" scale="0" ado-type="StringVariableLength" />
+        <orm:column name="Issue_Name" sql-type="varchar" nullable="true" length="255" scale="0" ado-type="StringVariableLength" />
+        <orm:column name="DateCreated" sql-type="timestamp" nullable="false" length="0" scale="0" backend-version="true" ado-type="Int64" />
+        <orm:column name="Question" sql-type="varchar" nullable="true" length="255" scale="0" ado-type="StringVariableLength" />
+        <orm:column name="Issue_Witness" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        <orm:column name="Fact_Id" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        <orm:column name="Evaluation" sql-type="varchar" nullable="true" length="255" scale="0" ado-type="StringVariableLength" />
+        <orm:column name="Description" sql-type="nvarchar" nullable="true" length="250" scale="0" ado-type="UnicodeStringVariableLength" />
+        <orm:index name="idx_Issues_Case_ID">
+          <orm:columnMapping>
+            <orm:column name="Case_ID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+          </orm:columnMapping>
+        </orm:index>
+      </orm:table>
+      <orm:table name="Firm">
+        <orm:column name="ID" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        <orm:column name="Firm_Name" sql-type="nvarchar" nullable="false" length="50" scale="0" ado-type="UnicodeStringVariableLength" />
+        <orm:column name="Firm_Code" sql-type="nvarchar" nullable="true" length="50" scale="0" ado-type="UnicodeStringVariableLength" />
+      </orm:table>
+      <orm:table name="Case_Types">
+        <orm:column name="ID" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        <orm:column name="Name" sql-type="nvarchar" nullable="true" length="50" scale="0" ado-type="UnicodeStringVariableLength" />
+      </orm:table>
+      <orm:table name="Case">
+        <orm:column name="ID" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        <orm:column name="Caption" sql-type="nvarchar" nullable="false" length="200" scale="0" ado-type="UnicodeStringVariableLength" />
+        <orm:column name="Case_Number" sql-type="nvarchar" nullable="true" length="50" scale="0" ado-type="UnicodeStringVariableLength" />
+        <orm:column name="Firm_Number" sql-type="nvarchar" nullable="true" length="50" scale="0" ado-type="UnicodeStringVariableLength" />
+        <orm:column name="Staff_ID" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        <orm:column name="Partner_ID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        <orm:column name="Firm_ID" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        <orm:column name="Case_Type_ID" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        <orm:constraint name="FK_Case_Staff" destination-table="Staff">
+          <orm:column name="Staff_ID" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        </orm:constraint>
+      </orm:table>
+      <orm:table name="Witnesses">
+        <orm:column name="Id" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        <orm:column name="Name" sql-type="varchar" nullable="true" length="255" scale="0" ado-type="StringVariableLength" />
+        <orm:column name="Email" sql-type="nvarchar" nullable="true" length="50" scale="0" ado-type="UnicodeStringVariableLength" />
+        <orm:column name="CaseId" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+      </orm:table>
+      <orm:table name="Exhibits">
+        <orm:column name="Id" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        <orm:column name="Type" sql-type="nvarchar" nullable="true" length="50" scale="0" ado-type="UnicodeStringVariableLength" />
+        <orm:column name="Source" sql-type="nvarchar" nullable="true" length="50" scale="0" ado-type="UnicodeStringVariableLength" />
+        <orm:column name="Recepient" sql-type="nvarchar" nullable="true" length="50" scale="0" ado-type="UnicodeStringVariableLength" />
+        <orm:column name="Name" sql-type="nvarchar" nullable="true" length="50" scale="0" ado-type="UnicodeStringVariableLength" />
+        <orm:column name="Description" sql-type="nvarchar" nullable="true" length="50" scale="0" ado-type="UnicodeStringVariableLength" />
+        <orm:column name="CaseId" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        <orm:column name="Author" sql-type="nvarchar" nullable="true" length="50" scale="0" ado-type="UnicodeStringVariableLength" />
+        <orm:column name="Date" sql-type="date" nullable="true" length="0" scale="0" ado-type="Date" />
+        <orm:column name="Type_Id" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        <orm:constraint name="FK_Exhibits_Case" destination-table="Case">
+          <orm:column name="CaseId" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        </orm:constraint>
+        <orm:constraint name="FK_Exhibits_Exhibits_Type" destination-table="Exhibits_Type">
+          <orm:column name="Type_Id" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        </orm:constraint>
+      </orm:table>
+      <orm:table name="Evaluation">
+        <orm:column name="Id" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        <orm:column name="Evaluation_Text" sql-type="nvarchar" nullable="true" length="150" scale="0" ado-type="UnicodeStringVariableLength" />
+      </orm:table>
+      <orm:table name="Issues_Facts">
+        <orm:column name="Id" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        <orm:column name="Case_Id" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        <orm:column name="Issue_Id" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        <orm:column name="Fact_Id" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        <orm:constraint name="FK_Issues_Facts_Issues" destination-table="Issues">
+          <orm:column name="Issue_Id" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        </orm:constraint>
+        <orm:constraint name="FK_Issues_Facts_Facts" destination-table="Facts">
+          <orm:column name="Fact_Id" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        </orm:constraint>
+      </orm:table>
+      <orm:table name="Witness_Facts">
+        <orm:column name="Id" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        <orm:column name="CaseId" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        <orm:column name="FactId" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        <orm:column name="WitnessId" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        <orm:constraint name="FK_Witness_Facts_Witnesses" destination-table="Witnesses">
+          <orm:column name="WitnessId" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        </orm:constraint>
+        <orm:constraint name="FK_Witness_Facts_Facts">
+          <orm:column name="FactId" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        </orm:constraint>
+      </orm:table>
+      <orm:table name="Exhibits_Facts">
+        <orm:column name="Id" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        <orm:column name="CaseId" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        <orm:column name="FactId" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        <orm:column name="ExhibitId" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        <orm:constraint name="FK_Exhibits_Facts_Facts">
+          <orm:column name="FactId" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        </orm:constraint>
+        <orm:constraint name="FK_Exhibits_Facts_Exhibits" destination-table="Exhibits">
+          <orm:column name="ExhibitId" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        </orm:constraint>
+        <orm:constraint name="FK_Exhibits_Facts_Case" destination-table="Case">
+          <orm:column name="CaseId" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        </orm:constraint>
+      </orm:table>
+      <orm:table name="Facts">
+        <orm:column name="Id" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        <orm:column name="Case_Id" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        <orm:column name="dte" sql-type="date" nullable="true" length="0" scale="0" ado-type="Date" />
+        <orm:column name="Description" sql-type="varchar" nullable="true" length="255" scale="0" ado-type="StringVariableLength" />
+        <orm:column name="Issue_Id" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        <orm:column name="Source" sql-type="varchar" nullable="true" length="255" scale="0" ado-type="StringVariableLength" />
+        <orm:column name="Evaluation" sql-type="nchar" nullable="true" length="255" scale="0" ado-type="UnicodeStringFixedLength" />
+        <orm:column name="Date" sql-type="datetime" nullable="true" length="0" scale="0" ado-type="DateTime" />
+        <orm:column name="Evaluation_Id" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        <orm:constraint name="ref_Facts_Case" destination-table="Case">
+          <orm:column name="Case_Id" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:constraint>
+        <orm:constraint name="FK_Facts_Facts" destination-table="Evaluation">
+          <orm:column name="Evaluation_Id" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        </orm:constraint>
+      </orm:table>
+      <orm:table name="Questions">
+        <orm:column name="Id" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        <orm:column name="Question" sql-type="nvarchar" nullable="true" length="250" scale="0" ado-type="UnicodeStringVariableLength" />
+        <orm:column name="answer" sql-type="nvarchar" nullable="true" length="250" scale="0" ado-type="UnicodeStringVariableLength" />
+        <orm:column name="Witness_Id" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        <orm:constraint name="FK_Questions_Witnesses" destination-table="Witnesses">
+          <orm:column name="Witness_Id" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        </orm:constraint>
+      </orm:table>
+      <orm:table name="Exhibits_Type">
+        <orm:column name="Id" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        <orm:column name="Typer" sql-type="nvarchar" nullable="true" length="50" scale="0" ado-type="UnicodeStringVariableLength" />
+      </orm:table>
+      <orm:table name="Issue_Questions">
+        <orm:column name="Id" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        <orm:column name="Question" sql-type="nvarchar" nullable="true" length="250" scale="0" ado-type="UnicodeStringVariableLength" />
+        <orm:column name="Answer" sql-type="nvarchar" nullable="true" length="250" scale="0" ado-type="UnicodeStringVariableLength" />
+        <orm:column name="Issue_Id" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        <orm:constraint name="FK_Issue_Questions_Issues" destination-table="Issues">
+          <orm:column name="Issue_Id" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        </orm:constraint>
+      </orm:table>
+      <orm:table name="App_Users">
+        <orm:column name="Id" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        <orm:column name="FirstName" sql-type="nvarchar" nullable="false" length="150" scale="0" ado-type="UnicodeStringVariableLength" />
+        <orm:column name="LastName" sql-type="nvarchar" nullable="false" length="150" scale="0" ado-type="UnicodeStringVariableLength" />
+        <orm:column name="CreditCard" sql-type="nvarchar" nullable="false" length="50" scale="0" ado-type="UnicodeStringVariableLength" />
+        <orm:column name="SubscriptionNo" sql-type="bigint" nullable="false" length="0" scale="0" ado-type="Int64" />
+        <orm:column name="UserName" sql-type="nvarchar" nullable="false" length="50" scale="0" ado-type="UnicodeStringVariableLength" />
+        <orm:column name="FirmId" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        <orm:column name="CVNNo" sql-type="nvarchar" nullable="false" length="50" scale="0" ado-type="UnicodeStringVariableLength" />
+        <orm:column name="Email" sql-type="nvarchar" nullable="false" length="50" scale="0" ado-type="UnicodeStringVariableLength" />
+        <orm:column name="ContactNo" sql-type="nvarchar" nullable="true" length="50" scale="0" ado-type="UnicodeStringVariableLength" />
+        <orm:column name="SignOnDate" sql-type="date" nullable="false" length="0" scale="0" ado-type="Date" />
+        <orm:constraint name="FK_App_Users_Firm" destination-table="Firm">
+          <orm:column name="FirmId" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:constraint>
+      </orm:table>
+      <orm:table name="RestPwd">
+        <orm:column name="Id" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        <orm:column name="RandomCode" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        <orm:column name="UserName" sql-type="nvarchar" nullable="true" length="50" scale="0" ado-type="UnicodeStringVariableLength" />
+      </orm:table>
+      <orm:table name="Documents">
+        <orm:column name="id" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        <orm:column name="Doc_Type" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        <orm:column name="Doc_Name" sql-type="nvarchar" nullable="true" length="50" scale="0" ado-type="UnicodeStringVariableLength" />
+        <orm:column name="Doc_Url" sql-type="nvarchar" nullable="true" length="550" scale="0" ado-type="UnicodeStringVariableLength" />
+        <orm:column name="Doc_ParentId" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+      </orm:table>
+      <orm:table name="Fact_Witness_Questions">
+        <orm:column name="Id" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
+        <orm:column name="Witness_Fact_Id" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        <orm:column name="Question" sql-type="nvarchar" nullable="false" length="550" scale="0" ado-type="UnicodeStringVariableLength" />
+        <orm:column name="Answer" sql-type="nvarchar" nullable="false" length="550" scale="0" ado-type="UnicodeStringVariableLength" />
+        <orm:column name="Asked" sql-type="bit" nullable="false" length="0" scale="0" ado-type="Bit" />
+        <orm:column name="Question_Number" sql-type="float" nullable="true" length="0" scale="0" ado-type="Double" />
+        <orm:constraint name="FK_Fact_Witness_Questions_Witness_Facts" destination-table="Witness_Facts">
+          <orm:column name="Witness_Fact_Id" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:constraint>
+      </orm:table>
+    </orm:schema>
+    <orm:relational-naming-settings>
+      <orm:remove-camel-case>False</orm:remove-camel-case>
+      <orm:source-strategy>Property</orm:source-strategy>
+    </orm:relational-naming-settings>
+  </orm:orm>
+  <ModelSettings xmlns="">
+    <AppConfigConnectionPropertyName>CaseXLConnection</AppConfigConnectionPropertyName>
+    <AppConfigConnectionString>data source=.;initial catalog=CaseXL;integrated security=True</AppConfigConnectionString>
+    <InitialCatalog>CaseXL</InitialCatalog>
+    <NamingSettings>
+      <ClassRules>
+        <CaseMode>PascalCase</CaseMode>
+        <PluralizationMode>Singularize</PluralizationMode>
+      </ClassRules>
+      <FieldRules>
+        <AddPrefix>_</AddPrefix>
+        <CaseMode>CamelCase</CaseMode>
+      </FieldRules>
+      <PropertyRules>
+        <CaseMode>PascalCase</CaseMode>
+      </PropertyRules>
+    </NamingSettings>
+    <CodeGenerationSettings>
+      <MappingDefinitionType>Xml</MappingDefinitionType>
+    </CodeGenerationSettings>
+    <SchemaUpdateSettings>
+      <ExecuteScript>true</ExecuteScript>
+      <DeploymentProject>CaseXL.Data</DeploymentProject>
+      <UpdateDatabaseOperation>Migrate</UpdateDatabaseOperation>
+    </SchemaUpdateSettings>
+    <BackendConfigurationSettings>
+      <BackendConfiguration>
+        <Backend>MsSql</Backend>
+        <ProviderName>System.Data.SqlClient</ProviderName>
+      </BackendConfiguration>
+    </BackendConfigurationSettings>
+  </ModelSettings>
+  <Types>
+    <DomainClass Id="3b594c1e-f5f2-4f3c-a784-b28649859637" name="Staff" namespace="CaseXL.Data" showPropertiesCompartment="true" identityMechanism="DatabaseServerCalculated" concurrencyMode="Backend" concurrencyMember="DateCreated" showNavigationCompartment="true" showImplementationCompartment="true">
+      <Property Id="b85f8e08-4e7c-40fe-87de-e6223ff65b93" name="ID" type="Int32" label="ID : Int32" kind="Persistent" identity="true" fieldName="_iD" />
+      <Property Id="7e6269f6-acb8-4d03-974f-f9fc1956ce71" name="Case_ID" type="Int32" label="Case_ID : Int32" nullable="true" kind="Persistent" fieldName="_case_ID" />
+      <Property Id="094c0b8a-1062-40f5-b066-268a69834471" name="DateCreated" type="Int64" label="DateCreated : Int64" kind="Persistent" fieldName="_dateCreated" />
+      <Property Id="19119b40-7092-41f6-9631-293404725078" name="Firm_ID" type="Int32" label="Firm_ID : Int32" kind="Persistent" fieldName="_firm_ID" />
+      <Property Id="bb39cd67-33d2-4b5a-9415-dab9409626c1" name="FirstName" label="FirstName : String" kind="Persistent" fieldName="_firstName" />
+      <Property Id="db35fc7f-163d-4540-becc-6bd7d346cf26" name="LastName" label="LastName : String" kind="Persistent" fieldName="_lastName" />
+      <Property Id="91b97a04-359e-411e-ad84-85cdaac7b443" name="Partner_ID" type="Int32" label="Partner_ID : Int32" kind="Persistent" fieldName="_partner_ID" />
+      <AssociationTargets>
+        <Association Id="a8f74f39-0f13-4253-b7fb-d5cbc5ab8bf2" SourceMultiplicity="One" name="StaffHasFirm">
+          <DomainClassMoniker name="/CaseXLEntities/Firm" />
+          <targetNavigationalProperty>
+            <associationDefinesTargetProperty Id="e36ea056-a438-4da2-af28-809fdaf3001e">
+              <NavigationalPropertyMoniker name="/CaseXLEntities/Firm/Staffs" />
+            </associationDefinesTargetProperty>
+          </targetNavigationalProperty>
+          <sourceNavigationalProperty>
+            <associationDefinesSourceProperty Id="d6c6050b-c347-4b3a-b91b-13e743c4d992">
+              <NavigationalPropertyMoniker name="/CaseXLEntities/Staff/Firm" />
+            </associationDefinesSourceProperty>
+          </sourceNavigationalProperty>
+        </Association>
+        <Association Id="6eeae2bc-9c93-49e3-8b6f-ce5892fa487d" SourceMultiplicity="One" name="StaffHasPartner">
+          <DomainClassMoniker name="/CaseXLEntities/Partner" />
+          <targetNavigationalProperty>
+            <associationDefinesTargetProperty Id="b58e18fb-cf57-4f62-b9f3-ca3ad56ff5a7">
+              <NavigationalPropertyMoniker name="/CaseXLEntities/Partner/Staffs" />
+            </associationDefinesTargetProperty>
+          </targetNavigationalProperty>
+          <sourceNavigationalProperty>
+            <associationDefinesSourceProperty Id="9b77ce66-475b-47e8-9444-c9da3f6a63ed">
+              <NavigationalPropertyMoniker name="/CaseXLEntities/Staff/Partner" />
+            </associationDefinesSourceProperty>
+          </sourceNavigationalProperty>
+        </Association>
+      </AssociationTargets>
+      <navigationalProperties>
+        <classHasNavigationalProperties Id="b7f93671-d23e-44a0-b5a0-5dd453f607df">
+          <NavigationalProperty Id="21398539-d241-4a37-85e6-3e9c0f5bd57c" name="Firm" type="Firm" label="Firm : Firm" nullable="true" kind="Persistent" fieldName="_firm" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+        <classHasNavigationalProperties Id="d5cf4294-b900-48b4-9fd8-5a375c9ee98a">
+          <NavigationalProperty Id="bd7319b9-7d98-4558-835d-9771916ddcb0" name="Partner" type="Partner" label="Partner : Partner" nullable="true" kind="Persistent" fieldName="_partner" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+        <classHasNavigationalProperties Id="17bd2c0b-5169-4c9e-9414-25095efbf1ec">
+          <NavigationalProperty Id="7b946201-7f96-4f41-a3d9-349e09d10ea2" name="Cases" type="IList&lt;Case&gt;" label="Cases : IList&lt;Case&gt;" nullable="true" kind="Persistent" fieldName="_cases" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+      </navigationalProperties>
+    </DomainClass>
+    <DomainClass Id="1b835d5a-d12c-4106-a3d1-f0671903eecb" name="Partner" namespace="CaseXL.Data" showPropertiesCompartment="true" identityMechanism="DatabaseServerCalculated" concurrencyMode="Changed" showNavigationCompartment="true" showImplementationCompartment="true">
+      <Property Id="4be69a3c-e09e-4f19-b61a-e8e14aad999d" name="ID" type="Int32" label="ID : Int32" kind="Persistent" identity="true" fieldName="_iD" />
+      <Property Id="8d058fe9-18bd-4007-9614-9de46887aa35" name="Firm_ID" type="Int32" label="Firm_ID : Int32" kind="Persistent" fieldName="_firm_ID" />
+      <Property Id="6d35ee04-b989-43b8-baac-674ccb27a813" name="FristName" label="FristName : String" kind="Persistent" fieldName="_fristName" />
+      <Property Id="06b8e938-cea1-4dec-9211-4df1f1cb30b7" name="LastName" label="LastName : String" kind="Persistent" fieldName="_lastName" />
+      <AssociationTargets>
+        <Association Id="7fa1cacb-969c-4609-96bd-c4446d6134f9" SourceMultiplicity="One" name="PartnerHasFirm">
+          <DomainClassMoniker name="/CaseXLEntities/Firm" />
+          <targetNavigationalProperty>
+            <associationDefinesTargetProperty Id="2f4fb361-86d1-45da-bf52-f7532a37b3b2">
+              <NavigationalPropertyMoniker name="/CaseXLEntities/Firm/Partners" />
+            </associationDefinesTargetProperty>
+          </targetNavigationalProperty>
+          <sourceNavigationalProperty>
+            <associationDefinesSourceProperty Id="c013880f-aec3-428f-aaed-904dd2d99f72">
+              <NavigationalPropertyMoniker name="/CaseXLEntities/Partner/Firm" />
+            </associationDefinesSourceProperty>
+          </sourceNavigationalProperty>
+        </Association>
+      </AssociationTargets>
+      <navigationalProperties>
+        <classHasNavigationalProperties Id="95a3ff84-8c0a-446d-8237-780d8ea0c5ce">
+          <NavigationalProperty Id="9376e890-f1cb-4c0a-a38d-80229de9c2dd" name="Staffs" type="IList&lt;Staff&gt;" label="Staffs : IList&lt;Staff&gt;" nullable="true" kind="Persistent" fieldName="_staffs" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+        <classHasNavigationalProperties Id="3ebad3fa-11e1-48e7-bc86-4db2d66a0f13">
+          <NavigationalProperty Id="915202ca-40ae-4d18-b56a-1aa12e59245c" name="Firm" type="Firm" label="Firm : Firm" nullable="true" kind="Persistent" fieldName="_firm" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+      </navigationalProperties>
+    </DomainClass>
+    <DomainClass Id="9494cacb-d6c4-407b-9a3c-c60d8396cb1b" name="Issue" namespace="CaseXL.Data" showPropertiesCompartment="true" identityMechanism="DatabaseServerCalculated" concurrencyMode="Backend" concurrencyMember="DateCreated" showNavigationCompartment="true" showImplementationCompartment="true">
+      <Property Id="a516dacc-6eee-4a9e-a139-3c5fef47fc76" name="Id" type="Int32" label="Id : Int32" kind="Persistent" identity="true" fieldName="_id" />
+      <Property Id="fa77aae1-058b-4202-bc40-3a08363718a0" name="Case_ID" type="Int32" label="Case_ID : Int32" kind="Persistent" fieldName="_case_ID" />
+      <Property Id="294346ca-ff29-4186-94f5-ed0787b12aeb" name="DateCreated" type="Int64" label="DateCreated : Int64" kind="Persistent" fieldName="_dateCreated" />
+      <Property Id="4227fd21-ccc4-436d-ae18-4c07d4801089" name="Issue_Expl" label="Issue_Expl : String" kind="Persistent" fieldName="_issue_Expl" />
+      <Property Id="412a5335-775b-4909-ae95-e99c0f5d394c" name="Issue_Name" label="Issue_Name : String" kind="Persistent" fieldName="_issue_Name" />
+      <Property Id="ab670add-0722-4261-b807-5dc33e04e2b3" name="Evaluation" label="Evaluation : String" fieldName="_evaluation" />
+      <Property Id="db4393f7-8a68-4541-949e-2e771a1bc1bf" name="Question" label="Question : String" fieldName="_question" />
+      <Property Id="babcb8ea-eb63-4dd3-aef1-0aecded7e690" name="Issue_Witness" type="Int32" label="Issue_Witness : Int32" fieldName="_issue_Witness" />
+      <Property Id="a47dbecc-c0d1-4b2f-be0e-af39ab950ce5" name="Fact_Id" type="Int32" label="Fact_Id : Int32" fieldName="_fact_Id" />
+      <Property Id="b42e6173-16cb-4f56-a90c-a7017398ac9f" name="Description" label="Description : String" kind="Persistent" fieldName="_description" />
+      <navigationalProperties>
+        <classHasNavigationalProperties Id="6d9fd3dd-1f9e-4b3c-a474-df7e42ea5713">
+          <NavigationalProperty Id="d52d1c9a-1d53-4e30-a9fb-ad56bdee34f8" name="Issues_Facts" type="IList&lt;Issues_Fact&gt;" label="Issues_Facts : IList&lt;Issues_Fact&gt;" nullable="true" kind="Persistent" fieldName="_issues_Facts" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+        <classHasNavigationalProperties Id="97cf1f10-14a2-4fc7-9581-a62aeed108cc">
+          <NavigationalProperty Id="ddd797c2-ecef-4e4c-8e71-cbe31177fa3e" name="Issue_Questions" type="IList&lt;Issue_Question&gt;" label="Issue_Questions : IList&lt;Issue_Question&gt;" nullable="true" kind="Persistent" fieldName="_issue_Questions" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+      </navigationalProperties>
+    </DomainClass>
+    <DomainClass Id="c345388c-108b-470f-bb8e-fa24276bc708" name="Firm" namespace="CaseXL.Data" showPropertiesCompartment="true" identityMechanism="DatabaseServerCalculated" concurrencyMode="Changed" showNavigationCompartment="true" showImplementationCompartment="true">
+      <Property Id="08100a47-8fc2-47da-99cc-dea8a5d13f17" name="ID" type="Int32" label="ID : Int32" kind="Persistent" identity="true" fieldName="_iD" />
+      <Property Id="0634b559-5c6c-41d2-a756-00e4c4daab7d" name="Firm_Name" label="Firm_Name : String" kind="Persistent" fieldName="_firm_Name" />
+      <Property Id="e8d91169-e39b-4181-9fab-d9a135446fa3" name="Firm_Code" label="Firm_Code : String" kind="Persistent" fieldName="_firm_Code" />
+      <navigationalProperties>
+        <classHasNavigationalProperties Id="f48d569d-8d36-457e-9a38-f54a57e65f16">
+          <NavigationalProperty Id="eb1db04f-2ad0-4288-ba16-b874cde8e465" name="Staffs" type="IList&lt;Staff&gt;" label="Staffs : IList&lt;Staff&gt;" nullable="true" kind="Persistent" fieldName="_staffs" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+        <classHasNavigationalProperties Id="3e4700a5-fa2c-492e-ba5e-6fc617f4346d">
+          <NavigationalProperty Id="0f517680-1497-43a3-83b3-79eade48d348" name="Partners" type="IList&lt;Partner&gt;" label="Partners : IList&lt;Partner&gt;" nullable="true" kind="Persistent" fieldName="_partners" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+        <classHasNavigationalProperties Id="4998adb0-2997-4a26-8553-7a901095f6de">
+          <NavigationalProperty Id="9dd06d39-f7a2-47e2-8403-daa66e5abc90" name="App_Users" type="IList&lt;App_User&gt;" label="App_Users : IList&lt;App_User&gt;" nullable="true" kind="Persistent" fieldName="_app_Users" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+      </navigationalProperties>
+    </DomainClass>
+    <DomainClass Id="62d18829-b602-48d7-9097-81f9b9b453e3" name="Case_Type" namespace="CaseXL.Data" showPropertiesCompartment="true" identityMechanism="DatabaseServerCalculated" concurrencyMode="Changed" showNavigationCompartment="true" showImplementationCompartment="true">
+      <Property Id="943c25bd-b28e-4a6c-a6ef-de0582ae2076" name="ID" type="Int32" label="ID : Int32" kind="Persistent" identity="true" fieldName="_iD" />
+      <Property Id="33e68858-20a5-4be8-a319-c064eabff93d" name="Name" label="Name : String" kind="Persistent" fieldName="_name" />
+    </DomainClass>
+    <DomainClass Id="d0eceffa-01e3-4276-8b14-1f2040ae3e8b" name="Case" namespace="CaseXL.Data" showPropertiesCompartment="true" identityMechanism="DatabaseServerCalculated" concurrencyMode="Changed" showNavigationCompartment="true" showImplementationCompartment="true">
+      <Property Id="9d520cac-0cf7-44eb-ab55-b4f85885ca12" name="ID" type="Int32" label="ID : Int32" kind="Persistent" identity="true" fieldName="_iD" />
+      <Property Id="98fa011a-d5ad-40de-bf3f-93a496f45f2f" name="Caption" label="Caption : String" kind="Persistent" fieldName="_caption" />
+      <Property Id="3e8ab92b-845a-41c7-8340-e35e73b404b5" name="Case_Number" label="Case_Number : String" kind="Persistent" fieldName="_case_Number" />
+      <Property Id="2625d976-8b51-4418-9940-ea22cfce929c" name="Case_Type_ID" type="Int32" label="Case_Type_ID : Int32" nullable="true" kind="Persistent" fieldName="_case_Type_ID" />
+      <Property Id="a6c8adeb-130f-4a3c-b2c9-034421fc8638" name="Firm_ID" type="Int32" label="Firm_ID : Int32" kind="Persistent" fieldName="_firm_ID" />
+      <Property Id="41c3c42e-9fc2-46de-be51-475e16e4227d" name="Firm_Number" label="Firm_Number : String" kind="Persistent" fieldName="_firm_Number" />
+      <Property Id="7f8569d4-010c-46d6-a340-d1380dbaaf93" name="Partner_ID" type="Int32" label="Partner_ID : Int32" kind="Persistent" fieldName="_partner_ID" />
+      <Property Id="3eacb291-1bc6-42bf-af69-77260ac91a85" name="Staff_ID" type="Int32" label="Staff_ID : Int32" nullable="true" kind="Persistent" fieldName="_staff_ID" />
+      <AssociationTargets>
+        <Association Id="1b30241d-1c3c-40d2-a3be-4b41e5cfcc33" SourceMultiplicity="ZeroOne" name="CaseHasStaff">
+          <DomainClassMoniker name="/CaseXLEntities/Staff" />
+          <targetNavigationalProperty>
+            <associationDefinesTargetProperty Id="79eee6ab-08d2-4b17-9e1e-e3d3b2838b29">
+              <NavigationalPropertyMoniker name="/CaseXLEntities/Staff/Cases" />
+            </associationDefinesTargetProperty>
+          </targetNavigationalProperty>
+          <sourceNavigationalProperty>
+            <associationDefinesSourceProperty Id="23e34bee-db6b-475a-a0b9-4eaa18f03abb">
+              <NavigationalPropertyMoniker name="/CaseXLEntities/Case/Staff" />
+            </associationDefinesSourceProperty>
+          </sourceNavigationalProperty>
+        </Association>
+      </AssociationTargets>
+      <navigationalProperties>
+        <classHasNavigationalProperties Id="b8219fc1-4e1b-4c1c-9518-4ffe01ae255d">
+          <NavigationalProperty Id="56ac6ed2-2d38-4931-bc9c-aa80fe592734" name="Staff" type="Staff" label="Staff : Staff" nullable="true" kind="Persistent" fieldName="_staff" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+        <classHasNavigationalProperties Id="83c4611b-62b9-464a-bbc5-1a0c9c5ddc1b">
+          <NavigationalProperty Id="0c990a17-b2bd-4137-942e-f9a7940171ba" name="Exhibits" type="IList&lt;Exhibit&gt;" label="Exhibits : IList&lt;Exhibit&gt;" nullable="true" kind="Persistent" fieldName="_exhibits" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+        <classHasNavigationalProperties Id="d7d99ae2-870e-45ec-ad95-e2054b26d5c6">
+          <NavigationalProperty Id="b5204e42-ae03-4f43-b599-704c7545f319" name="Exhibits_Facts" type="IList&lt;Exhibits_Fact&gt;" label="Exhibits_Facts : IList&lt;Exhibits_Fact&gt;" nullable="true" kind="Persistent" fieldName="_exhibits_Facts" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+        <classHasNavigationalProperties Id="7b0d49a5-512d-4b60-a16f-6959b2da0c78">
+          <NavigationalProperty Id="4bf6e4a2-de97-4d3b-b351-5be9d0b39d1c" name="Facts" type="IList&lt;Fact&gt;" label="Facts : IList&lt;Fact&gt;" nullable="true" kind="Persistent" fieldName="_facts" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+      </navigationalProperties>
+    </DomainClass>
+    <DomainClass Id="14aa327d-de7d-4314-98d7-1989a23c77e6" name="Witness" namespace="CaseXL.Data" showPropertiesCompartment="true" identityMechanism="DatabaseServerCalculated" concurrencyMode="Changed" showNavigationCompartment="true" showImplementationCompartment="true">
+      <Property Id="c7e0c729-c4db-4104-995e-df02ccea49c5" name="Id" type="Int32" label="Id : Int32" kind="Persistent" identity="true" fieldName="_id" />
+      <Property Id="7a0b8ed7-8ce7-434a-829b-f47576866420" name="Name" label="Name : String" kind="Persistent" fieldName="_name" />
+      <Property Id="37039b1e-ffc0-46e6-8370-e5cbe72512cb" name="Email" label="Email : String" kind="Persistent" fieldName="_email" />
+      <Property Id="537bb47d-b004-419e-8e18-ba63fb3d0e4a" name="CaseId" type="Int32" label="CaseId : Int32" nullable="true" kind="Persistent" fieldName="_caseId" />
+      <navigationalProperties>
+        <classHasNavigationalProperties Id="a0583a46-14eb-43c9-b8ca-dc551b5bd244">
+          <NavigationalProperty Id="9f0b7375-7bdd-43d5-bb68-a40908a345de" name="Witness_Facts" type="IList&lt;Witness_Fact&gt;" label="Witness_Facts : IList&lt;Witness_Fact&gt;" nullable="true" kind="Persistent" fieldName="_witness_Facts" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+        <classHasNavigationalProperties Id="e92ee3b5-3163-4ec7-a862-f9bd8cc044f0">
+          <NavigationalProperty Id="71c3203e-655d-44e1-901c-5528be042a83" name="Questions" type="IList&lt;Question&gt;" label="Questions : IList&lt;Question&gt;" nullable="true" kind="Persistent" fieldName="_questions" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+      </navigationalProperties>
+    </DomainClass>
+    <DomainClass Id="410d0689-f89c-41a5-b3c4-0fef03853f0f" name="Exhibit" namespace="CaseXL.Data" showPropertiesCompartment="true" identityMechanism="DatabaseServerCalculated" concurrencyMode="Changed" showNavigationCompartment="true" showImplementationCompartment="true">
+      <Property Id="b4af28bc-e0d7-42cc-9835-aa6a6cb3d2ce" name="Id" type="Int32" label="Id : Int32" kind="Persistent" identity="true" fieldName="_id" />
+      <Property Id="5ededd2a-b00e-4e1b-b830-a708fc38ec72" name="Type" label="Type : String" kind="Persistent" fieldName="_type" />
+      <Property Id="b65a55e4-25a3-4a18-81db-11051195be1b" name="Source" label="Source : String" kind="Persistent" fieldName="_source" />
+      <Property Id="9adc74a1-85da-404e-9170-13c2c835e578" name="Recepient" label="Recepient : String" kind="Persistent" fieldName="_recepient" />
+      <Property Id="113ab1d3-5a23-4863-ac32-3bdb7132382f" name="Name" label="Name : String" kind="Persistent" fieldName="_name" />
+      <Property Id="e70fae6b-a735-419d-9c2e-3ddd6cb6b8ed" name="Description" label="Description : String" kind="Persistent" fieldName="_description" />
+      <Property Id="e055b8cc-0fce-47fe-aef6-3b580f95c2a0" name="CaseId" type="Int32" label="CaseId : Int32" nullable="true" kind="Persistent" fieldName="_caseId" />
+      <Property Id="2b3dbcc7-a964-4642-989b-2782e96e1a93" name="Author" label="Author : String" kind="Persistent" fieldName="_author" />
+      <Property Id="38ab36d8-54bb-40b6-80e7-6f921065d721" name="Date" type="DateTime" label="Date : DateTime" nullable="true" kind="Persistent" fieldName="_date" />
+      <Property Id="946a8114-00d2-4efe-8a7c-68bfb94792b2" name="Type_Id" type="Int32" label="Type_Id : Int32" nullable="true" kind="Persistent" fieldName="_type_Id" />
+      <AssociationTargets>
+        <Association Id="1e8a1a30-d406-4d85-ac44-195c15e97991" SourceMultiplicity="ZeroOne" name="ExhibitHasCase">
+          <DomainClassMoniker name="/CaseXLEntities/Case" />
+          <targetNavigationalProperty>
+            <associationDefinesTargetProperty Id="ddae9fad-8bfe-478d-8ca6-34be0b04bf1a">
+              <NavigationalPropertyMoniker name="/CaseXLEntities/Case/Exhibits" />
+            </associationDefinesTargetProperty>
+          </targetNavigationalProperty>
+          <sourceNavigationalProperty>
+            <associationDefinesSourceProperty Id="31c33cfe-e3aa-4487-aa5f-d28a6681149d">
+              <NavigationalPropertyMoniker name="/CaseXLEntities/Exhibit/Case" />
+            </associationDefinesSourceProperty>
+          </sourceNavigationalProperty>
+        </Association>
+        <Association Id="3575353c-3cfe-452f-839f-27520a859318" SourceMultiplicity="ZeroOne" name="ExhibitHasExhibits_Type">
+          <DomainClassMoniker name="/CaseXLEntities/Exhibits_Type" />
+          <targetNavigationalProperty>
+            <associationDefinesTargetProperty Id="7f953e64-99dc-444d-9799-23a8a7fbb7ec">
+              <NavigationalPropertyMoniker name="/CaseXLEntities/Exhibits_Type/Exhibits" />
+            </associationDefinesTargetProperty>
+          </targetNavigationalProperty>
+          <sourceNavigationalProperty>
+            <associationDefinesSourceProperty Id="b2eb49a2-dd97-4d61-a14e-ec84f6a0e5df">
+              <NavigationalPropertyMoniker name="/CaseXLEntities/Exhibit/Exhibits_Type" />
+            </associationDefinesSourceProperty>
+          </sourceNavigationalProperty>
+        </Association>
+      </AssociationTargets>
+      <navigationalProperties>
+        <classHasNavigationalProperties Id="263a698f-2d64-4759-9f22-cc9dd6f38199">
+          <NavigationalProperty Id="e956e01a-3e3d-4a2a-af6a-86ae30224d71" name="Case" type="Case" label="Case : Case" nullable="true" kind="Persistent" fieldName="_case" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+        <classHasNavigationalProperties Id="4eb97149-842a-4255-a357-426d209c18f5">
+          <NavigationalProperty Id="09394edb-35c8-4e2a-b819-cad88e21ae17" name="Exhibits_Facts" type="IList&lt;Exhibits_Fact&gt;" label="Exhibits_Facts : IList&lt;Exhibits_Fact&gt;" nullable="true" kind="Persistent" fieldName="_exhibits_Facts" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+        <classHasNavigationalProperties Id="3ea9d1d9-d0ae-4c49-a52f-2dd08afd9c9c">
+          <NavigationalProperty Id="78098454-6d45-43f2-9dc5-f5b125e1dab1" name="Exhibits_Type" type="Exhibits_Type" label="Exhibits_Type : Exhibits_Type" nullable="true" kind="Persistent" fieldName="_exhibits_Type" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+      </navigationalProperties>
+    </DomainClass>
+    <DomainClass Id="a542c967-3413-4255-b900-1ec6aa783c18" name="Evaluation" namespace="CaseXL.Data" showPropertiesCompartment="true" identityMechanism="DatabaseServerCalculated" concurrencyMode="Changed" showNavigationCompartment="true" showImplementationCompartment="true">
+      <Property Id="c44990db-27f1-4a66-8249-c4e57b8f5103" name="Id" type="Int32" label="Id : Int32" kind="Persistent" identity="true" fieldName="_id" />
+      <Property Id="73d7c984-528b-4553-ac92-f48968fe9085" name="Evaluation_Text" label="Evaluation_Text : String" kind="Persistent" fieldName="_evaluation_Text" />
+      <navigationalProperties>
+        <classHasNavigationalProperties Id="e79c7f69-d94a-4c55-bf6c-26f4236bdce3">
+          <NavigationalProperty Id="debf8720-f341-4e01-ac3f-4aa603735fc3" name="Facts" type="IList&lt;Fact&gt;" label="Facts : IList&lt;Fact&gt;" nullable="true" kind="Persistent" fieldName="_facts" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+      </navigationalProperties>
+    </DomainClass>
+    <DomainClass Id="c8ea8a9c-f61d-49cd-a1c7-7c962ebf2f35" name="Issues_Fact" namespace="CaseXL.Data" showPropertiesCompartment="true" identityMechanism="DatabaseServerCalculated" concurrencyMode="Changed" showNavigationCompartment="true" showImplementationCompartment="true">
+      <Property Id="e4e4ec98-d679-440d-b9fc-d4d6f35a5b2b" name="Id" type="Int32" label="Id : Int32" kind="Persistent" identity="true" fieldName="_id" />
+      <Property Id="b47f177a-a913-4de9-b9d0-7744f82b7f69" name="Case_Id" type="Int32" label="Case_Id : Int32" nullable="true" kind="Persistent" fieldName="_case_Id" />
+      <Property Id="b761097c-3532-4849-8fca-890bdd5deedc" name="Fact_Id" type="Int32" label="Fact_Id : Int32" nullable="true" kind="Persistent" fieldName="_fact_Id" />
+      <Property Id="74f46afa-806d-4867-87db-fac7edb6605f" name="Issue_Id" type="Int32" label="Issue_Id : Int32" nullable="true" kind="Persistent" fieldName="_issue_Id" />
+      <AssociationTargets>
+        <Association Id="89b1f719-62e1-475c-97fe-e28014da9a2b" SourceMultiplicity="ZeroOne" name="Issues_FactHasIssue">
+          <DomainClassMoniker name="/CaseXLEntities/Issue" />
+          <targetNavigationalProperty>
+            <associationDefinesTargetProperty Id="d380d072-a383-4619-8d86-89683dc4148c">
+              <NavigationalPropertyMoniker name="/CaseXLEntities/Issue/Issues_Facts" />
+            </associationDefinesTargetProperty>
+          </targetNavigationalProperty>
+          <sourceNavigationalProperty>
+            <associationDefinesSourceProperty Id="3c764531-b79f-4476-843c-42a5ac2edfcd">
+              <NavigationalPropertyMoniker name="/CaseXLEntities/Issues_Fact/Issue" />
+            </associationDefinesSourceProperty>
+          </sourceNavigationalProperty>
+        </Association>
+      </AssociationTargets>
+      <navigationalProperties>
+        <classHasNavigationalProperties Id="06d28cef-18d5-44bb-a917-fc47fbdac279">
+          <NavigationalProperty Id="231fa476-c11b-461c-a14e-31539f2b3d79" name="Issue" type="Issue" label="Issue : Issue" nullable="true" kind="Persistent" fieldName="_issue" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+      </navigationalProperties>
+    </DomainClass>
+    <DomainClass Id="55a187ca-a49e-47f5-acbc-d352cbed1e8c" name="Witness_Fact" namespace="CaseXL.Data" showPropertiesCompartment="true" identityMechanism="DatabaseServerCalculated" concurrencyMode="Changed" showNavigationCompartment="true" showImplementationCompartment="true">
+      <Property Id="75db63ba-2352-44ad-9008-0b575c482843" name="Id" type="Int32" label="Id : Int32" kind="Persistent" identity="true" fieldName="_id" />
+      <Property Id="af5c4da3-a688-49c1-b393-c63677be533f" name="CaseId" type="Int32" label="CaseId : Int32" nullable="true" kind="Persistent" fieldName="_caseId" />
+      <Property Id="eb549855-3331-4475-a5ef-80146d6ad6de" name="FactId" type="Int32" label="FactId : Int32" nullable="true" kind="Persistent" fieldName="_factId" />
+      <Property Id="7bc96288-38fd-4c58-bd5d-0db264bdcafa" name="WitnessId" type="Int32" label="WitnessId : Int32" nullable="true" kind="Persistent" fieldName="_witnessId" />
+      <AssociationTargets>
+        <Association Id="0e05cd4c-745b-43eb-91fe-fd5fbc7733a2" SourceMultiplicity="ZeroOne" name="Witness_FactHasWitness">
+          <DomainClassMoniker name="/CaseXLEntities/Witness" />
+          <targetNavigationalProperty>
+            <associationDefinesTargetProperty Id="bd0d902f-a021-4242-b1eb-6e5e708571ac">
+              <NavigationalPropertyMoniker name="/CaseXLEntities/Witness/Witness_Facts" />
+            </associationDefinesTargetProperty>
+          </targetNavigationalProperty>
+          <sourceNavigationalProperty>
+            <associationDefinesSourceProperty Id="b063492c-93fa-4697-b29e-0b8075c387f0">
+              <NavigationalPropertyMoniker name="/CaseXLEntities/Witness_Fact/Witness" />
+            </associationDefinesSourceProperty>
+          </sourceNavigationalProperty>
+        </Association>
+      </AssociationTargets>
+      <navigationalProperties>
+        <classHasNavigationalProperties Id="baccfc19-48e8-4bfc-b000-bec0e330ed4b">
+          <NavigationalProperty Id="a595701e-c2e3-41aa-82f5-dd1c3fc1452a" name="Witness" type="Witness" label="Witness : Witness" nullable="true" kind="Persistent" fieldName="_witness" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+        <classHasNavigationalProperties Id="1dff87e5-ec81-40de-919b-f615673ea728">
+          <NavigationalProperty Id="05e7ca16-5efa-4712-939d-592c68cb57e1" name="Fact_Witness_Questions" type="IList&lt;Fact_Witness_Question&gt;" label="Fact_Witness_Questions : IList&lt;Fact_Witness_Question&gt;" nullable="true" kind="Persistent" fieldName="_fact_Witness_Questions" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+      </navigationalProperties>
+    </DomainClass>
+    <DomainClass Id="cf94ed26-2850-4755-b155-69a43e17f345" name="Exhibits_Fact" namespace="CaseXL.Data" showPropertiesCompartment="true" identityMechanism="DatabaseServerCalculated" concurrencyMode="Changed" showNavigationCompartment="true" showImplementationCompartment="true">
+      <Property Id="d5c2324b-9d57-429d-b66a-8b70bbd1caf1" name="Id" type="Int32" label="Id : Int32" kind="Persistent" identity="true" fieldName="_id" />
+      <Property Id="dfc99173-76bd-446c-a9a0-dfd19a0b84d0" name="CaseId" type="Int32" label="CaseId : Int32" nullable="true" kind="Persistent" fieldName="_caseId" />
+      <Property Id="6d0d5ead-2c3b-4d6a-8e6f-b1418021bc73" name="ExhibitId" type="Int32" label="ExhibitId : Int32" nullable="true" kind="Persistent" fieldName="_exhibitId" />
+      <Property Id="8a11dcc6-321a-4250-a7f3-92aa981d902e" name="FactId" type="Int32" label="FactId : Int32" nullable="true" kind="Persistent" fieldName="_factId" />
+      <AssociationTargets>
+        <Association Id="48c2ebdb-edca-4ffe-8d00-74fa465cabfa" SourceMultiplicity="ZeroOne" name="Exhibits_FactHasExhibit">
+          <DomainClassMoniker name="/CaseXLEntities/Exhibit" />
+          <targetNavigationalProperty>
+            <associationDefinesTargetProperty Id="d86a9f4b-8597-40c1-ad53-1436cea72164">
+              <NavigationalPropertyMoniker name="/CaseXLEntities/Exhibit/Exhibits_Facts" />
+            </associationDefinesTargetProperty>
+          </targetNavigationalProperty>
+          <sourceNavigationalProperty>
+            <associationDefinesSourceProperty Id="1d989007-685d-4730-9a86-03ac40046abf">
+              <NavigationalPropertyMoniker name="/CaseXLEntities/Exhibits_Fact/Exhibit" />
+            </associationDefinesSourceProperty>
+          </sourceNavigationalProperty>
+        </Association>
+        <Association Id="8a84b5a2-dd89-4e2b-8959-ad83aafca349" SourceMultiplicity="ZeroOne" name="Exhibits_FactHasCase">
+          <DomainClassMoniker name="/CaseXLEntities/Case" />
+          <targetNavigationalProperty>
+            <associationDefinesTargetProperty Id="d8724acf-9fd1-4a9e-903d-943077856ada">
+              <NavigationalPropertyMoniker name="/CaseXLEntities/Case/Exhibits_Facts" />
+            </associationDefinesTargetProperty>
+          </targetNavigationalProperty>
+          <sourceNavigationalProperty>
+            <associationDefinesSourceProperty Id="a9a8f214-5a07-405c-8aee-96d13c1038c4">
+              <NavigationalPropertyMoniker name="/CaseXLEntities/Exhibits_Fact/Case" />
+            </associationDefinesSourceProperty>
+          </sourceNavigationalProperty>
+        </Association>
+      </AssociationTargets>
+      <navigationalProperties>
+        <classHasNavigationalProperties Id="4161ba61-cfd3-4e72-8bbf-fdfbd487046a">
+          <NavigationalProperty Id="ed8e8898-8360-4eb7-b717-46829c68b4eb" name="Exhibit" type="Exhibit" label="Exhibit : Exhibit" nullable="true" kind="Persistent" fieldName="_exhibit" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+        <classHasNavigationalProperties Id="02d614de-23a5-4b8e-88b3-2829d17c0fcc">
+          <NavigationalProperty Id="4e61a6a6-57bf-41b1-b9eb-b3a2e05e182a" name="Case" type="Case" label="Case : Case" nullable="true" kind="Persistent" fieldName="_case" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+      </navigationalProperties>
+    </DomainClass>
+    <DomainClass Id="3a5fb4ec-04ee-410f-a042-f2cb16ede59d" name="Fact" namespace="CaseXL.Data" showPropertiesCompartment="true" identityMechanism="DatabaseServerCalculated" concurrencyMode="Changed" showNavigationCompartment="true" showImplementationCompartment="true">
+      <Property Id="5c15ebdd-5734-4709-82f8-660154189b59" name="Id" type="Int32" label="Id : Int32" kind="Persistent" identity="true" fieldName="_id" />
+      <Property Id="8d2b89bb-d353-4abd-a83f-86904801ef35" name="Case_Id" type="Int32" label="Case_Id : Int32" kind="Persistent" fieldName="_case_Id" />
+      <Property Id="8ce8ce1f-9178-4fac-ba90-ec6f0f050c74" name="Date" type="DateTime" label="Date : DateTime" nullable="true" kind="Persistent" fieldName="_date" />
+      <Property Id="d3b84975-86f9-4f0e-bcb2-e1f586dab3f0" name="Description" label="Description : String" kind="Persistent" fieldName="_description" />
+      <Property Id="9c392779-b6fa-45aa-8fdf-09e8e5100e3e" name="Dte" type="DateTime" label="Dte : DateTime" nullable="true" kind="Persistent" fieldName="_dte" />
+      <Property Id="a188f9ac-57bb-457e-8eae-488bc340fa7f" name="Evaluation" label="Evaluation : String" kind="Persistent" fieldName="_evaluation" />
+      <Property Id="d529a131-20b5-43bb-b5f3-6a7219e8da9e" name="Evaluation_Id" type="Int32" label="Evaluation_Id : Int32" nullable="true" kind="Persistent" fieldName="_evaluation_Id" />
+      <Property Id="6d861bc4-2991-47f7-83f4-1628b0e17aa8" name="Issue_Id" type="Int32" label="Issue_Id : Int32" kind="Persistent" fieldName="_issue_Id" />
+      <Property Id="3051da12-1168-4638-b9b1-a73dfb60b779" name="Source" label="Source : String" kind="Persistent" fieldName="_source" />
+      <AssociationTargets>
+        <Association Id="540c1d60-e96f-46a4-9290-87a20a8d8316" SourceMultiplicity="One" name="FactHasCase">
+          <DomainClassMoniker name="/CaseXLEntities/Case" />
+          <targetNavigationalProperty>
+            <associationDefinesTargetProperty Id="2798f958-b189-460d-b541-8e1d935007d3">
+              <NavigationalPropertyMoniker name="/CaseXLEntities/Case/Facts" />
+            </associationDefinesTargetProperty>
+          </targetNavigationalProperty>
+          <sourceNavigationalProperty>
+            <associationDefinesSourceProperty Id="001f27f5-3729-46c9-80d3-1d29955b1739">
+              <NavigationalPropertyMoniker name="/CaseXLEntities/Fact/Case" />
+            </associationDefinesSourceProperty>
+          </sourceNavigationalProperty>
+        </Association>
+        <Association Id="ebb8e145-8377-4137-b397-00d0b1a8c07b" SourceMultiplicity="ZeroOne" name="FactHasEvaluation">
+          <DomainClassMoniker name="/CaseXLEntities/Evaluation" />
+          <targetNavigationalProperty>
+            <associationDefinesTargetProperty Id="fe972dc8-be0b-46e9-a512-bc2c982d6634">
+              <NavigationalPropertyMoniker name="/CaseXLEntities/Evaluation/Facts" />
+            </associationDefinesTargetProperty>
+          </targetNavigationalProperty>
+          <sourceNavigationalProperty>
+            <associationDefinesSourceProperty Id="af8e4387-b524-49b4-9a4d-df9aa775cb87">
+              <NavigationalPropertyMoniker name="/CaseXLEntities/Fact/Evaluation1" />
+            </associationDefinesSourceProperty>
+          </sourceNavigationalProperty>
+        </Association>
+      </AssociationTargets>
+      <navigationalProperties>
+        <classHasNavigationalProperties Id="d08324b3-71e3-489a-b979-8abd47f92cd5">
+          <NavigationalProperty Id="a3055a8d-3600-4988-a786-59f8fd31cbfe" name="Case" type="Case" label="Case : Case" nullable="true" kind="Persistent" fieldName="_case" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+        <classHasNavigationalProperties Id="e570f894-d284-4ff3-bf05-930a271a5485">
+          <NavigationalProperty Id="e46f4f4f-9b8f-4daf-b4ad-c8c4b38af5ac" name="Evaluation1" type="Evaluation" label="Evaluation1 : Evaluation" nullable="true" kind="Persistent" fieldName="_evaluation1" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+      </navigationalProperties>
+    </DomainClass>
+    <DomainClass Id="27f112af-f55c-42b4-bdfc-9d7b3aa8f5fb" name="Question" namespace="CaseXL.Data" showPropertiesCompartment="true" identityMechanism="DatabaseServerCalculated" concurrencyMode="Changed" showNavigationCompartment="true" showImplementationCompartment="true">
+      <Property Id="fbf41e10-fff2-4d51-ba0f-0ea18f5e7323" name="Id" type="Int32" label="Id : Int32" kind="Persistent" identity="true" fieldName="_id" />
+      <Property Id="486b4ed5-2cfb-4ca5-b836-3a31fafb3726" name="Answer" label="Answer : String" kind="Persistent" fieldName="_answer" />
+      <Property Id="2370217a-4d1a-4d8d-bfbe-735f19ef8ba2" name="Question1" label="Question1 : String" kind="Persistent" fieldName="_question1" />
+      <Property Id="c4c15b7b-be9f-4835-9658-168058dc39f8" name="Witness_Id" type="Int32" label="Witness_Id : Int32" nullable="true" kind="Persistent" fieldName="_witness_Id" />
+      <AssociationTargets>
+        <Association Id="cf1a6051-fee2-4c45-9f60-8256bd9341c1" SourceMultiplicity="ZeroOne" name="QuestionHasWitness">
+          <DomainClassMoniker name="/CaseXLEntities/Witness" />
+          <targetNavigationalProperty>
+            <associationDefinesTargetProperty Id="4f8b3cc6-d5ee-4999-bd79-3d834e22ff07">
+              <NavigationalPropertyMoniker name="/CaseXLEntities/Witness/Questions" />
+            </associationDefinesTargetProperty>
+          </targetNavigationalProperty>
+          <sourceNavigationalProperty>
+            <associationDefinesSourceProperty Id="b33f1a45-5650-4c24-ba07-0e1b98c2bfa1">
+              <NavigationalPropertyMoniker name="/CaseXLEntities/Question/Witness" />
+            </associationDefinesSourceProperty>
+          </sourceNavigationalProperty>
+        </Association>
+      </AssociationTargets>
+      <navigationalProperties>
+        <classHasNavigationalProperties Id="f028626f-c434-424d-8b1f-86787299a248">
+          <NavigationalProperty Id="3e4ac467-b092-4bda-b0a6-8bc78a758cda" name="Witness" type="Witness" label="Witness : Witness" nullable="true" kind="Persistent" fieldName="_witness" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+      </navigationalProperties>
+    </DomainClass>
+    <DomainClass Id="35dc10ff-2de7-4bb8-9a30-87f75ac4ee59" name="Exhibits_Type" namespace="CaseXL.Data" showPropertiesCompartment="true" identityMechanism="DatabaseServerCalculated" concurrencyMode="Changed" showNavigationCompartment="true" showImplementationCompartment="true">
+      <Property Id="d55770c8-2cb3-4cdd-8d2e-4140ac83b7af" name="Id" type="Int32" label="Id : Int32" kind="Persistent" identity="true" fieldName="_id" />
+      <Property Id="759668ba-e8fa-408b-a59f-0ee62bd46e34" name="Typer" label="Typer : String" kind="Persistent" fieldName="_typer" />
+      <navigationalProperties>
+        <classHasNavigationalProperties Id="4e5a9c95-1063-4714-816b-400353e1ca0b">
+          <NavigationalProperty Id="7cca997b-c301-402a-bb2e-f3ab8a1e5fc2" name="Exhibits" type="IList&lt;Exhibit&gt;" label="Exhibits : IList&lt;Exhibit&gt;" nullable="true" kind="Persistent" fieldName="_exhibits" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+      </navigationalProperties>
+    </DomainClass>
+    <DomainClass Id="e8237b18-bbc9-4017-8a27-7e09596a87f5" name="Issue_Question" namespace="CaseXL.Data" showPropertiesCompartment="true" identityMechanism="DatabaseServerCalculated" concurrencyMode="Changed" showNavigationCompartment="true" showImplementationCompartment="true">
+      <Property Id="ccda2af5-8fc1-42ab-b642-b6f370d3cdb0" name="Id" type="Int32" label="Id : Int32" kind="Persistent" identity="true" fieldName="_id" />
+      <Property Id="bee26231-e651-48ee-863d-cc6d3ca22278" name="Answer" label="Answer : String" kind="Persistent" fieldName="_answer" />
+      <Property Id="65084b25-e2b2-4886-80ac-390a054330fc" name="Issue_Id" type="Int32" label="Issue_Id : Int32" nullable="true" kind="Persistent" fieldName="_issue_Id" />
+      <Property Id="deacc087-23db-46c1-a9fa-9065ea200271" name="Question" label="Question : String" kind="Persistent" fieldName="_question" />
+      <AssociationTargets>
+        <Association Id="1af3e70d-d94f-43ab-8fdc-e40a6af8f978" SourceMultiplicity="ZeroOne" name="Issue_QuestionHasIssue">
+          <DomainClassMoniker name="/CaseXLEntities/Issue" />
+          <targetNavigationalProperty>
+            <associationDefinesTargetProperty Id="1b8733b7-0236-4198-baf2-77deb6738914">
+              <NavigationalPropertyMoniker name="/CaseXLEntities/Issue/Issue_Questions" />
+            </associationDefinesTargetProperty>
+          </targetNavigationalProperty>
+          <sourceNavigationalProperty>
+            <associationDefinesSourceProperty Id="296ad547-c0e2-4548-a86f-582ac4a1d5e5">
+              <NavigationalPropertyMoniker name="/CaseXLEntities/Issue_Question/Issue" />
+            </associationDefinesSourceProperty>
+          </sourceNavigationalProperty>
+        </Association>
+      </AssociationTargets>
+      <navigationalProperties>
+        <classHasNavigationalProperties Id="a64b09fb-25f2-4686-b06d-e354c3e362f5">
+          <NavigationalProperty Id="2c7cb0c2-a420-424b-a99e-d3f37c4f9074" name="Issue" type="Issue" label="Issue : Issue" nullable="true" kind="Persistent" fieldName="_issue" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+      </navigationalProperties>
+    </DomainClass>
+    <DomainClass Id="de49ce0c-22c7-4c11-aee5-57c7a04eadea" name="App_User" namespace="CaseXL.Data" showPropertiesCompartment="true" identityMechanism="DatabaseServerCalculated" concurrencyMode="Changed" showNavigationCompartment="true" showImplementationCompartment="true">
+      <Property Id="b6455947-4cac-4a8d-9b3f-ab67a66c567e" name="Id" type="Int32" label="Id : Int32" kind="Persistent" identity="true" fieldName="_id" />
+      <Property Id="8f1f8937-50c9-4346-a36c-c6a84ff5739e" name="ContactNo" label="ContactNo : String" kind="Persistent" fieldName="_contactNo" />
+      <Property Id="2e2a3616-96d3-421e-ba96-f35df250a1d2" name="CreditCard" label="CreditCard : String" kind="Persistent" fieldName="_creditCard" />
+      <Property Id="186de8b7-a9ec-4432-baf1-34dfa44fcd9a" name="CVNNo" label="CVNNo : String" kind="Persistent" fieldName="_cVNNo" />
+      <Property Id="b6872fec-1655-4f38-af91-35be1d94e198" name="Email" label="Email : String" kind="Persistent" fieldName="_email" />
+      <Property Id="76be44ca-1d45-45cf-9d47-63c2babc42ae" name="FirmId" type="Int32" label="FirmId : Int32" kind="Persistent" fieldName="_firmId" />
+      <Property Id="a01c3bcd-5177-41b5-b499-1858c0cf6ed0" name="FirstName" label="FirstName : String" kind="Persistent" fieldName="_firstName" />
+      <Property Id="e3aaebee-6d92-43a5-9ee3-c1bedb908ab2" name="LastName" label="LastName : String" kind="Persistent" fieldName="_lastName" />
+      <Property Id="3daff13f-e361-4652-b290-6a5df7644739" name="SignOnDate" type="DateTime" label="SignOnDate : DateTime" kind="Persistent" fieldName="_signOnDate" />
+      <Property Id="d128d9b3-c5aa-47c1-af9c-63e2bdb3d540" name="SubscriptionNo" type="Int64" label="SubscriptionNo : Int64" kind="Persistent" fieldName="_subscriptionNo" />
+      <Property Id="2dd33ad7-91a6-4ba6-9a81-72bc3c8f4d31" name="UserName" label="UserName : String" kind="Persistent" fieldName="_userName" />
+      <AssociationTargets>
+        <Association Id="9c46bea4-ae9b-4454-94c3-76613d7cfcf5" SourceMultiplicity="ZeroOne" name="App_UserHasFirm">
+          <DomainClassMoniker name="/CaseXLEntities/Firm" />
+          <targetNavigationalProperty>
+            <associationDefinesTargetProperty Id="300ad82c-2fa4-45b1-bd07-3e26efcbcfe3">
+              <NavigationalPropertyMoniker name="/CaseXLEntities/Firm/App_Users" />
+            </associationDefinesTargetProperty>
+          </targetNavigationalProperty>
+          <sourceNavigationalProperty>
+            <associationDefinesSourceProperty Id="0e9da2a3-4c3a-4fe4-b9d9-5e6d0be51f3a">
+              <NavigationalPropertyMoniker name="/CaseXLEntities/App_User/Firm" />
+            </associationDefinesSourceProperty>
+          </sourceNavigationalProperty>
+        </Association>
+      </AssociationTargets>
+      <navigationalProperties>
+        <classHasNavigationalProperties Id="2976788e-5d55-47c6-8151-8c86f4737e3a">
+          <NavigationalProperty Id="48ca9c5f-6054-415e-8a6e-dd2008e4b08b" name="Firm" type="Firm" label="Firm : Firm" nullable="true" kind="Persistent" fieldName="_firm" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+      </navigationalProperties>
+    </DomainClass>
+    <DomainClass Id="500d1cb8-1119-402b-9496-490c782366a2" name="RestPwd" namespace="CaseXL.Data" showPropertiesCompartment="true" identityMechanism="DatabaseServerCalculated" concurrencyMode="Changed" showNavigationCompartment="true" showImplementationCompartment="true">
+      <Property Id="6faf3a0f-25fb-4057-adcc-605ee9e6317d" name="Id" type="Int32" label="Id : Int32" kind="Persistent" identity="true" fieldName="_id" />
+      <Property Id="4e53b1ff-de97-4b21-a774-551a942e4caa" name="RandomCode" type="Int32" label="RandomCode : Int32" nullable="true" kind="Persistent" fieldName="_randomCode" />
+      <Property Id="31b6e62f-e79c-462a-b229-ebe17f417cab" name="UserName" label="UserName : String" kind="Persistent" fieldName="_userName" />
+    </DomainClass>
+    <DomainClass Id="60c4f019-c5be-45f2-bf15-5cffa7afb78a" name="Document" namespace="CaseXL.Data" showPropertiesCompartment="true" identityMechanism="DatabaseServerCalculated" concurrencyMode="Changed" showNavigationCompartment="true" showImplementationCompartment="true">
+      <Property Id="c9a1f36b-22e9-4c32-ab1c-8538642e407b" name="Id" type="Int32" label="Id : Int32" kind="Persistent" identity="true" fieldName="_id" />
+      <Property Id="694ad25b-9f56-4cf5-b393-133cbea8d8de" name="Doc_Name" label="Doc_Name : String" kind="Persistent" fieldName="_doc_Name" />
+      <Property Id="9eb11aea-68be-4a7c-9c25-56a3159c4f59" name="Doc_Type" type="Int32" label="Doc_Type : Int32" nullable="true" kind="Persistent" fieldName="_doc_Type" />
+      <Property Id="7199b136-5ff6-4890-b239-01dca44119d2" name="Doc_Url" label="Doc_Url : String" kind="Persistent" fieldName="_doc_Url" />
+      <Property Id="76b8c059-6098-4153-acfa-b65514c40dcb" name="Doc_ParentId" type="Int32" label="Doc_ParentId : Int32" nullable="true" kind="Persistent" fieldName="_doc_ParentId" />
+    </DomainClass>
+    <DomainClass Id="ccf4696a-14a0-4d51-ac00-de3138081e63" name="Fact_Witness_Question" namespace="CaseXL.Data" showPropertiesCompartment="true" identityMechanism="DatabaseServerCalculated" concurrencyMode="Changed" showNavigationCompartment="true" showImplementationCompartment="true">
+      <Property Id="9ee0f482-6afa-4653-8441-68ba4171c5bb" name="Id" type="Int32" label="Id : Int32" kind="Persistent" identity="true" fieldName="_id" />
+      <Property Id="6007cb46-d9b3-4a21-ae90-c4e073fc7503" name="Answer" label="Answer : String" kind="Persistent" fieldName="_answer" />
+      <Property Id="91f23e81-22e9-4fe0-a7b3-3368bddf1f2d" name="Asked" type="Boolean" label="Asked : Boolean" kind="Persistent" fieldName="_asked" />
+      <Property Id="23933f59-5d8a-4aaa-b58e-f0405a3a6af8" name="Question" label="Question : String" kind="Persistent" fieldName="_question" />
+      <Property Id="78604eda-626a-430e-8471-25575e785a38" name="Question_Number" type="Double" label="Question_Number : Double" nullable="true" kind="Persistent" fieldName="_question_Number" />
+      <Property Id="478c582a-4e02-4203-b86b-0b2e32848497" name="Witness_Fact_Id" type="Int32" label="Witness_Fact_Id : Int32" kind="Persistent" fieldName="_witness_Fact_Id" />
+      <AssociationTargets>
+        <Association Id="d881a42f-5cd2-4b66-875f-2ad71591ae4e" SourceMultiplicity="One" name="Fact_Witness_QuestionHasWitness_Fact">
+          <DomainClassMoniker name="/CaseXLEntities/Witness_Fact" />
+          <targetNavigationalProperty>
+            <associationDefinesTargetProperty Id="7b2a953a-1d1c-4159-aaec-c3a3898271f8">
+              <NavigationalPropertyMoniker name="/CaseXLEntities/Witness_Fact/Fact_Witness_Questions" />
+            </associationDefinesTargetProperty>
+          </targetNavigationalProperty>
+          <sourceNavigationalProperty>
+            <associationDefinesSourceProperty Id="60650afe-12be-4be5-9d5f-85ff537e48a2">
+              <NavigationalPropertyMoniker name="/CaseXLEntities/Fact_Witness_Question/Witness_Fact" />
+            </associationDefinesSourceProperty>
+          </sourceNavigationalProperty>
+        </Association>
+      </AssociationTargets>
+      <navigationalProperties>
+        <classHasNavigationalProperties Id="acf7fc9d-3c0d-4e14-a415-242e0965a3cc">
+          <NavigationalProperty Id="fcf72ea9-3727-4fe9-b5b3-e69dfae520f0" name="Witness_Fact" type="Witness_Fact" label="Witness_Fact : Witness_Fact" nullable="true" kind="Persistent" fieldName="_witness_Fact" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+      </navigationalProperties>
+    </DomainClass>
+  </Types>
+  <domainContext>
+    <domainModelHasDomainContext Id="9c4833b4-7b09-4a1a-af28-4cc45c5d8fa9">
+      <domainContainer name="CaseXLEntities" namespace="CaseXL.Data" showPropertiesCompartment="true">
+        <entitySetProperty name="Staffs" namespace="CaseXL.Data" type="Staff" label="Staffs : IQueryable&lt;CaseXL.Data.Staff&gt;" />
+        <entitySetProperty name="Partners" namespace="CaseXL.Data" type="Partner" label="Partners : IQueryable&lt;CaseXL.Data.Partner&gt;" />
+        <entitySetProperty name="Issues" namespace="CaseXL.Data" type="Issue" label="Issues : IQueryable&lt;CaseXL.Data.Issue&gt;" />
+        <entitySetProperty name="Firms" namespace="CaseXL.Data" type="Firm" label="Firms : IQueryable&lt;CaseXL.Data.Firm&gt;" />
+        <entitySetProperty name="Case_Types" namespace="CaseXL.Data" type="Case_Type" label="Case_Types : IQueryable&lt;CaseXL.Data.Case_Type&gt;" />
+        <entitySetProperty name="Cases" namespace="CaseXL.Data" type="Case" label="Cases : IQueryable&lt;CaseXL.Data.Case&gt;" />
+        <entitySetProperty name="Witnesses" namespace="CaseXL.Data" type="Witness" label="Witnesses : IQueryable&lt;CaseXL.Data.Witness&gt;" />
+        <entitySetProperty name="Exhibits" namespace="CaseXL.Data" type="Exhibit" label="Exhibits : IQueryable&lt;CaseXL.Data.Exhibit&gt;" />
+        <entitySetProperty name="Evaluations" namespace="CaseXL.Data" type="Evaluation" label="Evaluations : IQueryable&lt;CaseXL.Data.Evaluation&gt;" />
+        <entitySetProperty name="Issues_Facts" namespace="CaseXL.Data" type="Issues_Fact" label="Issues_Facts : IQueryable&lt;CaseXL.Data.Issues_Fact&gt;" />
+        <entitySetProperty name="Witness_Facts" namespace="CaseXL.Data" type="Witness_Fact" label="Witness_Facts : IQueryable&lt;CaseXL.Data.Witness_Fact&gt;" />
+        <entitySetProperty name="Exhibits_Facts" namespace="CaseXL.Data" type="Exhibits_Fact" label="Exhibits_Facts : IQueryable&lt;CaseXL.Data.Exhibits_Fact&gt;" />
+        <entitySetProperty name="Facts" namespace="CaseXL.Data" type="Fact" label="Facts : IQueryable&lt;CaseXL.Data.Fact&gt;" />
+        <entitySetProperty name="Questions" namespace="CaseXL.Data" type="Question" label="Questions : IQueryable&lt;CaseXL.Data.Question&gt;" />
+        <entitySetProperty name="Exhibits_Types" namespace="CaseXL.Data" type="Exhibits_Type" label="Exhibits_Types : IQueryable&lt;CaseXL.Data.Exhibits_Type&gt;" />
+        <entitySetProperty name="Issue_Questions" namespace="CaseXL.Data" type="Issue_Question" label="Issue_Questions : IQueryable&lt;CaseXL.Data.Issue_Question&gt;" />
+        <entitySetProperty name="App_Users" namespace="CaseXL.Data" type="App_User" label="App_Users : IQueryable&lt;CaseXL.Data.App_User&gt;" />
+        <entitySetProperty name="RestPwds" namespace="CaseXL.Data" type="RestPwd" label="RestPwds : IQueryable&lt;CaseXL.Data.RestPwd&gt;" />
+        <entitySetProperty name="Documents" namespace="CaseXL.Data" type="Document" label="Documents : IQueryable&lt;CaseXL.Data.Document&gt;" />
+        <entitySetProperty name="Fact_Witness_Questions" namespace="CaseXL.Data" type="Fact_Witness_Question" label="Fact_Witness_Questions : IQueryable&lt;CaseXL.Data.Fact_Witness_Question&gt;" />
+      </domainContainer>
+    </domainModelHasDomainContext>
+  </domainContext>
+</DomainModel>

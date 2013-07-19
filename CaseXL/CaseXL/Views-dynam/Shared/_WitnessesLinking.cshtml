@@ -1,0 +1,58 @@
+﻿
+@model CaseXL.ViewModels.WitnessesLinkingVM
+<div style="background: lightgrey">
+    @(Html.Kendo().Grid<CaseXL.ViewModels.WitnessVM>().Name("witnessGrid")
+    .Columns(col =>
+    {
+        col.Bound(b => b.FullName).Width(350);
+        col.Bound(b => b.Docs_Authored).Width(200);
+        col.Bound(b => b.Docs_Received).Width(200);
+        col.Bound(b => b.Email).Width(300);
+
+        col.Template(@<text></text>).ClientTemplate("<input type='checkbox' #= IsSelected ? checked='checked':'' # class='chkbx' style='cursor:pointer' />")
+        .HeaderTemplate("<input type='checkbox' id='masterCheckBox' style='cursor:pointer' onclick='checkAll(this)'/>").Width(50);
+    }
+    )
+       .DataSource(dataSource => dataSource
+       .Ajax()
+       .Model(model => model.Id(m => m.WitnessId))
+       .Batch(true)
+       .Read(read => read.Action("_Witnesses", "Home", new { @caseid = Model.CaseID, @factID = Model.FactID }))
+       .Update(up => up.Action("_UpdateWitnesses", "Home", new { @caseid = Model.CaseID, @factID = Model.FactID }))
+    )
+     .Editable(ed => ed.Mode(GridEditMode.InCell))
+     .ToolBar(tb => tb.Save())
+     .Events(eve =>
+      {
+          eve.SaveChanges("SaveChanges");
+          eve.Change("Change");
+      }
+      )
+      .Filterable ()
+    )
+</div>
+<script type="text/javascript">
+    $(function () {
+        $('#witnessGrid').on('click', '.chkbx', function () {
+
+            kendo.ui.progress($("#witnessGrid"), true);
+            var checked = $(this).is(':checked');
+            var grid = $('#witnessGrid').data().kendoGrid;
+            var dataItem = grid.dataItem($(this).closest('tr'));
+            dataItem.set('IsSelected', checked);
+        })
+    })
+    function checkAll(ele) {
+        var state = $(ele).is(':checked');
+        var grid = $('#witnessGrid').data().kendoGrid;
+        $.each(grid.dataSource.view(), function () {
+            if (this['IsSelected'] != state)
+                this.dirty = true;
+            this['IsSelected'] = state;
+        });
+        var data = grid.dataSource.data();
+        var grid = $("#witnessGrid").data("kendoGrid");
+        var data = grid.dataSource.data();
+        grid.refresh();
+    }
+</script>

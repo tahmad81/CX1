@@ -1,0 +1,136 @@
+﻿@(Html.Kendo().Grid<CaseXL.ViewModels.FactsVM>().Name("grdFacts")
+
+    .Columns(columns =>
+    {
+        columns.Bound(c => c.ID).Visible(false);
+        columns.Bound(c => c.CaseID).Visible(false);
+        columns.Bound(c => c.Description).Template(@<text></text>)
+
+              .ClientTemplate(@"<a class=""k-button-icontext k-grid-edit"" href=""\#"">#=Description#</a>");
+
+        columns.Bound(c => c.Date).Format("{0:MM/dd/yyyy (hh:mm tt)}");
+        columns.Bound(c => c.Source);
+        columns.ForeignKey(c => c.Evaluation_Id, new SelectList(CaseXL.Common.Repository.GetEvaluations(), "ID", "Name")).Title("Evaluation");
+        columns.Bound(c => c.ID).Template(@<text></text>)
+              .Title("Linking").Width(142)
+              .ClientTemplate(@"<select  onchange='Linking(this)' id='course-#=ID#' style='width:140px'>
+                           <option value='0'>----Select ----</option>
+                           <option >Issues</option>
+                           <option >Witnesses</option>
+                           <option >Exhibits</option>
+                           </select>");
+        columns.Bound(c => c.ID).Title("").Width(38).Filterable(false).Sortable(false).Template(@<text></text>)
+
+                     .ClientTemplate(@"<img src='../Images/delete-icon.png' style='width:38px; height:20px;cursor:pointer' class=""k-button-icontext k-grid-delete""/>")
+                    ;
+    })
+                .ToolBar(tol =>
+                    {
+                        tol.Create().Text("New Fact");
+
+
+                    }
+                    )
+                .DataSource(dataSource => dataSource
+                    .Ajax()
+                    .Model(model => model.Id(m => m.CaseID))
+                    .Read(read => read.Action("_Facts", "Home"))
+                    .Update(up => up.Action("_FactsEdit", "Home"))
+                    .Create(cr => cr.Action("_FactsCreate", "Home"))
+                    .Destroy(des => des.Action("_FactDelete", "Home"))
+                    .Events(eve => eve.RequestEnd("onRequestEnd"))
+                )
+                .Pageable()
+                .Sortable()
+                  .Groupable()
+                .Selectable()
+                .Filterable()
+                .Reorderable(red => red.Columns(true))
+                .Navigatable(nav => nav.Enabled(true))
+                .Resizable(res => res.Columns(true))
+                .Editable(edit =>
+                edit.Mode(GridEditMode.PopUp)
+                ).Events(eve =>
+                    {
+                        eve.Edit("onEdit");
+
+                    }
+
+                        )
+            )
+<input type="button" class="k-button" onclick="refresh()" value="Refresh" />
+<script type="text/javascript">
+
+    function refresh() {
+
+
+        $("#grdFacts").data("kendoGrid").dataSource.read();
+
+    }
+    function Linkchange(e) {
+        debugger;
+        var grid = $('#grdFacts').data().kendoGrid;
+        var dataItem = grid.dataItem($(e).closest('tr'));
+        alert(e.text());
+
+
+    }
+
+
+</script>
+<script id="template" type="text/kendo-tmpl">
+  <div style="padding:5px; background:lightgray;border-radius:4px">
+    
+     <div style="border:1px solid gray;border-radius:3px">
+     <div align="center" style="font-weight:bold">Witnesses</div>
+        @Html.Partial("_greenBar")
+  
+    
+    @(Html.Kendo().Grid<CaseXL.ViewModels.FactsVM>().Name("Wit#=ID#")
+       .Columns(columns =>
+       {
+           columns.Bound(c => c.ID).Visible(false);
+           columns.Bound(c => c.CaseID).Visible(false);
+           columns.Bound(c => c.Date).Format("{0:MM/dd/yyyy}");
+           columns.Bound(c => c.Description);
+           columns.Bound(c => c.Source);
+           columns.Bound(c => c.Linked_Issues);
+           columns.Bound(c => c.Evaluation);
+       }).Filterable()
+           .Groupable()
+           .Sortable()
+           .DataSource(dataSource => dataSource
+           .Ajax()
+
+           .Read(read => read.Action("_Facts", "Home", new { id = "#=ID#" }))
+       )
+       .ToClientTemplate()
+       )
+   
+   </div>
+    </br>
+      <div style="border:1px solid gray;border-radius:3px">
+      <div align="center" style="font-weight:bold">Exhibits</div>
+      @Html.Partial("_greenBar")
+    @(Html.Kendo().Grid<CaseXL.ViewModels.FactsVM>().Name("Exh#=ID#")
+       .Columns(columns =>
+       {
+           columns.Bound(c => c.ID).Visible(false);
+           columns.Bound(c => c.CaseID).Visible(false);
+           columns.Bound(c => c.Date).Format("{0:MM/dd/yyyy}");
+           columns.Bound(c => c.Description);
+           columns.Bound(c => c.Source);
+           columns.Bound(c => c.Linked_Issues);
+           columns.Bound(c => c.Evaluation);
+       }).Filterable()
+           .Groupable()
+           .Sortable()
+           .DataSource(dataSource => dataSource
+           .Ajax()
+           .Read(read => read.Action("_Facts", "Home", new { id = "#=ID#" }))
+       )
+       .ToClientTemplate()
+       )
+    </div>
+    </div>
+</script>

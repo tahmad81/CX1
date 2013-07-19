@@ -1,0 +1,70 @@
+﻿@model CaseXL.ViewModels.IssuesVM
+
+@{
+    ViewBag.Title = "Index";
+    ViewBag.Cases = CaseXL.Common.Repository.GetCases();
+}
+
+<h2>Issues</h2>
+@using (Html.BeginForm("Issue_Create", "Issues"))
+{
+    <table>
+        <tr>
+            <td>
+                @Html.LabelFor(m => m.Case_Name)
+            </td>
+            <td>
+                @(Html.Kendo().ComboBoxFor(m => m.SelectedCase).BindTo(new SelectList(ViewBag.Cases as List<CaseXL.Infrastructure.ComboModelBase>, "ID", "Name"))
+                 .SelectedIndex(0).HighlightFirst(true)
+
+            )
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @Html.LabelFor(m => m.Issue_Name)
+            </td>
+            <td>
+                @Html.TextBoxFor(m => m.Issue_Name)
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @Html.LabelFor(m => m.Issue_Exp)
+            </td>
+            <td>
+                @Html.TextAreaFor(m => m.Issue_Exp, new {@style="width:400px" })
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input type="submit" class="k-button" value="Save" />
+            </td>
+        </tr>
+    </table>
+
+}
+@if (Model != null)
+{
+    @(Html.Kendo().Grid(Model.Issues).Name("gridIssues")
+    .DataSource(dataSource => dataSource
+        .Ajax()
+        .Model(model => model.Id(m => m.Case_ID))
+        .Read(read => read.Action("_Issues", "Issues"))
+    )
+    .Columns(columns =>
+    {
+        columns.Bound(c => c.Case_ID).Visible(false);
+        columns.Bound(c => c.Case_Name);
+        columns.Bound(c => c.Case_Type_Name);
+        columns.Bound(c => c.Issue_Name);
+        columns.Bound(c => c.Issue_Exp);
+    })
+    .Pageable()
+    .Sortable()
+    .Groupable()
+    .Filterable()
+    .Editable(ed => ed.Mode(GridEditMode.PopUp)
+
+))
+}

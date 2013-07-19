@@ -1,0 +1,53 @@
+﻿@{
+    ViewBag.Title = "Staff";
+ 
+}
+<h2>Staff</h2>
+@(Html.Kendo().Grid<CaseXL.ViewModels.StaffVM>().Name("gridStaff")
+    .DataSource(dataSource => dataSource
+        .Ajax()
+        .Model(model => model.Id(m => m.ID))
+        .Read(read => read.Action("_Staff", "Staff"))
+        .Update(up => up.Action("_StaffEdit", "Staff"))
+        .Create(up => up.Action("_StaffCreate", "Staff"))
+        .Destroy(dest => dest.Action("_StaffDelete", "Staff"))
+    ).ToolBar(tool => tool.Create().Text("New Staff"))
+    .Columns(columns =>
+    {
+        
+        columns.Bound(c => c.ID).Visible(true);
+        columns.Bound(c => c.FirstName);
+        columns.Bound(c => c.LastName);
+        columns.ForeignKey(c => c.PartnerID, new SelectList(CaseXL.Common.Repository.GetPartners(1), "ID", "Name")).Title("Partner Name");
+        columns.Command(cmd =>
+            {
+                cmd.Edit().Text("Update Staff");
+                cmd.Destroy().Text("Delete Staff");
+
+            }).Width(245);
+    })
+    .Events(eve =>
+        {
+            eve.Edit("onEdit");
+            
+
+        }
+            )
+    .Pageable()
+    .Sortable()
+    .Groupable()
+    .Filterable()
+    .Editable(ed => ed.Mode(GridEditMode.PopUp)
+
+))
+<script type="text/javascript">
+    function onEdit(e) {
+        debugger;
+        if (e.model.isNew()) {
+            e.container.find('[data-role=combobox]').data().kendoComboBox.select(0);
+            e.container.kendoWindow("title", "New Staff");
+        }
+        else
+            e.container.kendoWindow("title", "Edit Staff");
+    }
+</script>

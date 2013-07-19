@@ -1,0 +1,100 @@
+﻿@(Html.Kendo().Grid<CaseXL.ViewModels.WitnessVM>().Name("grdwitFacts")
+
+    .Columns(columns =>
+    {
+        columns.Bound(c => c.ID).Visible(false);
+
+        columns.Bound(c => c.FullName).Template(@<text></text>)
+
+              .ClientTemplate(@"<a class=""k-button-icontext k-grid-edit"" href=""\#"">#=FullName#</a>");
+        columns.Bound(c => c.Email).Visible(true);
+        columns.Bound(c => c.Docs_Authored).Visible(true);
+        columns.Bound(c => c.Docs_Received).Visible(true);
+
+        columns.Bound(c => c.ID).Title("").Width(38).Filterable(false).Sortable(false).Template(@<text></text>)
+
+                     .ClientTemplate(@"<img src='../Images/delete-icon.png'  title=""Delete Witness"" style='width:38px; height:20px;cursor:pointer' class=""k-button-icontext k-grid-delete""/>");
+    })
+                .ToolBar(tol => tol.Create().Text("New Witness"))
+                .DataSource(dataSource => dataSource
+                    .Ajax()
+                    .Model(model => model.Id(m => m.WitnessId))
+
+                    .Read(read => read.Action("_WitnessesByCase", "Home"))
+                       .Update(up => up.Action("_UpdateWitnessesByCase", "Home"))
+                       .Create(cr => cr.Action("_CreateWitnessByCase", "Home"))
+                       .Destroy(des => des.Action("_DeleteWitnessByCase", "Home"))
+                )
+                .Pageable()
+                  .Groupable()
+                  .Resizable(res=> res.Columns(true)
+
+                  )
+                       .Reorderable (red=> red.Columns(true))
+                .Navigatable(nav=> nav.Enabled(true))
+            
+                .Sortable()
+                .ClientDetailTemplateId("tmp_Questions")
+                .Selectable()
+                .Filterable()
+                .Editable(edit =>
+                edit.Mode(GridEditMode.PopUp)
+
+                )
+
+            )
+<input type="button" class="k-button" onclick="refresh()" value="Refresh" />
+<script id="tmp_Questions" type="text/kendo-tmpl">
+     <div style="padding:5px;border-radius:4px;background:lightgray">
+     <div style="border:1px solid gray;border-radius:3px;background:lightgray">
+     <div align="center" style="font-weight:bold">Questions</div>
+        @Html.Partial("_greenBar")
+  
+    
+    @(Html.Kendo().Grid<CaseXL.ViewModels.QuestionVM>().Name("Wit#=ID#")
+       .Columns(columns =>
+       {
+           columns.Bound(c => c.Id).Visible(false);
+           columns.Bound(c => c.Witness_Id).Visible(false);
+
+           columns.Bound(o => o.Question).Width(300).ClientTemplate(@"<a class=""k-button-icontext k-grid-edit"" href=""\\#=Question\\#"">\\#=Question\\#</a>");
+           columns.Bound(c => c.Answer).Width(300);
+           columns.Bound(c => c.Id).Title("").Width(6).Filterable(false).Sortable(false).Template(@<text></text>)
+
+                     .ClientTemplate(@"<img src='../Images/delete-icon.png' title=""Delete Question"" style='width:16px; height:18px;cursor:pointer' class=""k-button-icontext k-grid-delete""/>");
+   
+
+
+       })
+       .Filterable()
+           .Groupable()
+           .Sortable()
+           .DataSource(dataSource => dataSource
+           .Ajax()
+            .Model(model => model.Id(m => m.Id))
+           .Read(read => read.Action("_QuestionsByWitness", "Home", new { witnessId = "#=ID#" }))
+           .Update(up => up.Action("_QuestionsByWitnessUpdate", "Home"))
+             .Create(cr => cr.Action("_QuestionsByWitnessCreate", "Home", new  {  witnessId = "#=ID#"}))
+                       .Destroy(des => des.Action("_QuestionsByWitnessDelete", "Home"))
+       )
+        .Editable(edit =>
+         edit.Mode(GridEditMode.PopUp))
+        .ToolBar(tol => tol.Create().Text("New Question"))
+        .Events( eve =>eve.Edit("onEditQuestion"))
+
+
+       .ToClientTemplate()
+       )
+   
+   </div>
+
+
+</script>
+
+<script type="text/javascript">
+    function refresh() {
+
+        $("#grdwitFacts").data("kendoGrid").dataSource.read();
+
+    }
+</script>

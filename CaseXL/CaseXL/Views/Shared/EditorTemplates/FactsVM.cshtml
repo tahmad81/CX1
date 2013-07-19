@@ -1,0 +1,43 @@
+﻿@model CaseXL.ViewModels.FactsVM
+
+@{
+    ViewBag.Title = "Facts";
+    
+}
+<table style="width: 400px">
+    <tr>
+        <td>
+            @Html.HiddenFor(m => m.ID)
+            @Html.LabelFor(m => m.Description)
+        </td>
+        <td>
+            @Html.TextBoxFor(m => m.Description)
+        </td>
+    </tr>
+    <tr>
+        <td>
+            @Html.LabelFor(m => m.Date)
+        </td>
+        <td>
+            @Html.Kendo().DateTimePickerFor(m => m.Date).Format("MM/dd/yyyy (hh:mm tt)")
+        </td>
+    </tr>
+    <tr>
+        <td>
+            @Html.LabelFor(m => m.Source)
+        </td>
+        <td>
+            @Html.TextBoxFor(m => m.Source)
+           
+        </td>
+    </tr>
+    <tr>
+        <td>
+             @Html.LabelFor(m => m.Evaluation_Text)
+        </td>
+        <td>
+            @(Html.Kendo().ComboBoxFor(m => m.Evaluation_Id).BindTo(new SelectList(CaseXL.Common.Repository.GetEvaluations(), "ID", "Name")).Placeholder("Select Evaluation").SelectedIndex(0))
+          
+        </td>
+    </tr>
+</table>

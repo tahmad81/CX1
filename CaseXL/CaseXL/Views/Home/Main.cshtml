@@ -1,0 +1,525 @@
+﻿@{
+  
+}
+<div style="margin-bottom: 10px; font-weight: bold">
+    Select Case
+
+    @(Html.Kendo().DropDownList().Name("Cases")
+    .Events(eve =>
+        eve.Change("CaseChanged")
+        )
+    .BindTo(ViewBag.Cases)
+
+    )
+    <input type="button" class="k-button actionButton" onclick="window.location = '/Case/Index'" value="Manage Cases" />
+</div>
+<table style="border: none" class="aligment-left-part">
+    <tr>
+        <td style="width: 15px">
+            <div class="span3 left-menu">
+                <div class="padding10">
+                    <a onclick="MenuSelected(this)" id="1" class="btn btn-block btn-large btn-primary">Facts</a>
+                    <a class="btn btn-block btn-large btn-primary" onclick="MenuSelected(this)" id="2">Witnesses</a>
+                    <a class="btn btn-block btn-large btn-primary" onclick="MenuSelected(this)" id="3">Exhibits</a>
+                    <a class="btn btn-block btn-large btn-primary" onclick="MenuSelected(this)" id="4">Issues</a>
+                    <a class="btn btn-block btn-large btn-primary" onclick="MenuSelected(this)" id="5">Trialinq</a>
+
+                </div>
+            </div>
+        </td>
+        <td rowspan="2" id="dvCenter">
+            @*<div id="dvCenter"  style="vertical-align:top; background:green">
+            </div>*@
+
+        </td>
+    </tr>
+</table>
+
+<script>
+    $("#vertical").kendoSplitter({
+        orientation: "vertical",
+        panes: [
+            { collapsible: false }
+        ]
+    });
+
+    $("#horizontal").kendoSplitter({
+        panes: [
+            { collapsible: true },
+            { collapsible: false }
+        ]
+    });
+    $("#treeview").kendoTreeView();
+
+	</script>
+
+<style scoped>
+    #treeview .k-sprite {
+        background-image: url("/Images/Issues-transparent.png");
+        width: 50px;
+        height: 90px;
+    }
+
+    .k-treeview .k-sprite {
+        vertical-align: middle;
+    }
+
+
+    .k-treeview .k-image {
+        vertical-align: middle;
+    }
+
+    .k-treeview .k-in {
+        vertical-align: middle;
+        font-weight: bold;
+    }
+
+        .k-treeview .k-in.k-state-selected,
+        .k-treeview .k-in.k-state-focused {
+            padding: 0px;
+        }
+
+    treeview .k-image {
+        margin-right: 0;
+    }
+</style>
+
+<div id="dialog">
+    <img id="busyLoading" src="../../Content/kendo/2012.3.1315/Black/loading-image.gif"
+        class="centered" />
+</div>
+<div id="window"></div>
+@(Html.Kendo().Window().Name("Details")
+    .Title("Issue Linking")
+    .Visible(false)
+    .Modal(true)
+    .Draggable(true)
+    .Events(eve =>
+        {
+
+        }
+        )
+   .Height(400).HtmlAttributes(new { @style = "background:lightgrey" })
+    .Content(@<div id="dvpopup">
+    </div>
+
+)
+   )
+
+<script type="text/javascript">
+    function onRequestEnd(e) {
+        if (e.response.Data && e.response.Data.length) {
+            var offsetMiliseconds = new Date().getTimezoneOffset() * 60000;
+            var persons = e.response.Data;
+            for (var i = 0; i < persons.length; i++) {
+                persons[i].Date = persons[i].Date.replace(/\d+/,
+                function (n) { return parseInt(n) + offsetMiliseconds }
+            );
+            }
+        }
+    }
+    function onEdit(e) {
+        debugger;
+        if (e.model.isNew()) {
+            e.container.find('[data-role=combobox]').data().kendoComboBox.select(0);
+            e.container.kendoWindow("title", "New Fact");
+        }
+        else
+            e.container.kendoWindow("title", "Edit Fact");
+    }
+    function onEditExhibit(e) {
+        debugger;
+        if (e.model.isNew()) {
+            e.container.find('[data-role=combobox]').data().kendoComboBox.select(0);
+            e.container.kendoWindow("title", "New Exhibit");
+        }
+        else
+            e.container.kendoWindow("title", "Edit Exhibit");
+    }
+    function onEditQuestion(e) {
+
+        debugger;
+
+        if (e.model.isNew()) {
+            //e.container.find('[data-role=combobox]').data().kendoComboBox.select(0);
+            e.container.kendoWindow("title", "New Question");
+
+        }
+        else
+            e.container.kendoWindow("title", "Edit Question");
+    }
+    function onEditIssues(e) {
+
+        debugger;
+
+        if (e.model.isNew()) {
+            //e.container.find('[data-role=combobox]').data().kendoComboBox.select(0);
+            e.container.kendoWindow("title", "New Issue");
+
+        }
+        else
+            e.container.kendoWindow("title", "Edit Issue");
+    }
+    function SaveChanges(e) {
+        debugger;
+        //  kendo.ui.progress($(this), true);
+        this.dataSource.one("change", function (e, data) {
+            var wnd = $("#window").data("kendoWindow");
+            wnd.close();
+        });
+    }
+    function DoAjaxPostAndMore(btnClicked) {
+        debugger;
+        var $form = $(btnClicked).parents('form');
+
+        $.ajax({
+            type: "POST",
+            url: $form.attr('action'),
+            data: $form.serialize(),
+            error: function (xhr, status, error) {
+                alert("error");
+                //do something about the error
+            },
+            success: function (response) {
+                //do something with response
+                alert("succedd");
+
+            }
+        });
+
+        return false;// if it's a link to prevent post
+
+    }
+    function Change(e) {
+        debugger;
+        var row = this.select();
+        var id = row.data("uid");
+        $("#log").html("<input name='rowid' type='hidden' id='rowid' value='" + id + "' />");
+    }
+    function Linking(e) {
+
+        var grid = $('#grdFacts').data().kendoGrid;
+        var dataItem = grid.dataItem($(e).closest('tr'));
+        var wnd = $("#Details").data("kendoWindow");
+        var dropdownlist = $("#Cases").data("kendoDropDownList");
+        var id = dropdownlist.dataItem().Value;
+        var tst = $('#grdFacts').data().kendoGrid.dataItem($(e).closest("tr"));
+        var row = $("#grdFacts").data("kendoGrid").tbody.find("tr[data-uid='" + dataItem.uid + "']");
+        var url;
+        var title;
+        var width;
+        debugger;
+        if (e.value == "Issues") {
+            title = "Issue Linking";
+            url = "/Home/_IssueLinking/?caseid=" + id + "&factID=" + dataItem.ID;
+            width = 500;
+        }
+        else if (e.value == "Witnesses") {
+            title = "Witness Linking";
+            url = "/Home/_WitnessLinking/?caseid=" + id + "&factID=" + dataItem.ID;
+            width = 1050;
+        }
+        else if (e.value == "Exhibits") {
+            title = "Exhibit Linking";
+            url = "/Home/_ExhibitsLinking/?caseid=" + id + "&factID=" + dataItem.ID;
+            width = 1050;
+        }
+
+        var window = $("#window"),
+        wndObject;
+        if (!(wndObject = window.data("kendoWindow"))) {
+            wndObject = window.kendoWindow({
+                modal: true,
+                height: 400,
+                close: function (data) {
+                    // alert(e.id);
+                    $(e).val("0");
+                    return true;
+                }
+            }).data("kendoWindow");
+        }
+
+
+
+        window.width(width);
+        wndObject.title(title);
+        $.ajax({
+            type: "GET",
+            url: url,
+            dataType: "html",
+            success: function (evt) {
+                UnblockUI();
+
+                wndObject.center().open();
+                wndObject.content(evt);
+            },
+            error: function (req, status, error) {
+                UnblockUI();
+                alert("Error!Occured");
+            }
+        });
+
+
+
+        //******************************************
+        //window.kendoWindow({
+        //    modal: true,
+        //    height: 400,
+        //    close: function (data) {
+        //        $(e).val("0");
+        //        return true;
+        //    }
+        //});
+        //window.width(width);
+        //window.data("kendoWindow").title(title);
+        //window.data("kendoWindow").center().open();
+        //$.ajax({
+        //    type: "GET",
+        //    url: url,
+        //    dataType: "html",
+        //    success: function (evt) {
+        //        UnblockUI();
+        //        $('#window').html(evt);
+        //    },
+        //    error: function (req, status, error) {
+        //        UnblockUI();
+        //        alert("Error!Occured");
+        //    }
+        //});
+        //*******************************************
+    }
+    var cbtn;
+    $(document).ready(
+         function () {
+             $('#busyLoading').hide();
+         });
+    //function MenuSelected(e) {
+    //    debugger;
+    //    var dropdownlist = $("#Cases").data("kendoDropDownList");
+    //    var id = dropdownlist.dataItem().Value;
+
+    //    LoadData(id, e.node.id);
+    //}
+    function MenuSelected(e) {
+        debugger;
+        var dropdownlist = $("#Cases").data("kendoDropDownList");
+        var id = dropdownlist.dataItem().Value;
+
+        $(e).addClass("btn btn-large btn-danger btn-block active");
+        if (cbtn != null) {
+            $(cbtn).removeClass("btn btn-large btn-danger btn-block active");
+            $(cbtn).addClass("btn btn-block btn-large btn-primary");
+        }
+        cbtn = e;
+        LoadData(id, e.id);
+    }
+    function CaseChanged(e) {
+        debugger;
+        var treeview = $("#tvLnks").data("kendoTreeView");
+        var tvItem = treeview.select();
+        var dropdownlist = $("#Cases").data("kendoDropDownList");
+        var id = dropdownlist.dataItem().Value;
+        if (tvItem != null) {
+            LoadData(id, tvItem.index() + 1);
+        }
+    }
+    function LoadData(id, text) {
+        debugger;
+        if (id != null && text != null) {
+            if (text == "1") {
+                LoadFacts(id);
+            }
+            else if (text == "2") {
+                LoadWitnesses(id);
+
+            }
+            else if (text == "3") {
+                LoadExhibits(id);
+
+            }
+            else if (text == "4") {
+                LoadIssues(id);
+
+            }
+            else if (text == "5") {
+                LoadTrialinq(id);
+
+            }
+        }
+    }
+    function LoadIssues(id) {
+        BlockUI();
+        $.ajax({
+            type: "GET",
+            url: "/Home/_GetIssues/?caseid=" + id,
+            dataType: "html",
+            success: function (evt) {
+                UnblockUI();
+                $('#dvCenter').html(evt);
+            },
+            error: function (req, status, error) {
+                UnblockUI();
+                alert("Error!Occured");
+            }
+        });
+
+
+
+    }
+    function LoadExhibits(id) {
+        BlockUI();
+        $.ajax({
+            type: "GET",
+            url: "/Home/_GetExhibits/?caseid=" + id,
+            dataType: "html",
+            success: function (evt) {
+                UnblockUI();
+                $('#dvCenter').html(evt);
+            },
+            error: function (req, status, error) {
+                UnblockUI();
+                alert("Error!Occured");
+            }
+        });
+
+
+
+    }
+    function LoadWitnesses(id) {
+        BlockUI();
+        $.ajax({
+            type: "GET",
+            url: "/Home/_GetWitnesses/?caseid=" + id,
+            dataType: "html",
+            success: function (evt) {
+                UnblockUI();
+                $('#dvCenter').html(evt);
+            },
+            error: function (req, status, error) {
+                UnblockUI();
+                alert("Error!Occured");
+            }
+        });
+
+
+    }
+    function LoadFacts(id) {
+        BlockUI();
+        $.ajax({
+            type: "GET",
+            url: "/Home/_GetFacts/?caseid=" + id,
+            dataType: "html",
+            success: function (evt) {
+                UnblockUI();
+                $('#dvCenter').html(evt);
+            },
+            error: function (req, status, error) {
+                UnblockUI();
+                alert("Error!Occured");
+            }
+        });
+
+
+    }
+    function LoadTrialinq(id) {
+        BlockUI();
+        $.ajax({
+            type: "GET",
+            url: "/Home/_GetTrialinq/?caseid=" + id,
+            dataType: "html",
+            success: function (evt) {
+                UnblockUI();
+                $('#dvCenter').html(evt);
+            },
+            error: function (req, status, error) {
+                UnblockUI();
+                alert("Error!Occured");
+            }
+        });
+    }
+    function BlockUI() {
+        $.blockUI({
+            message: $('#busyLoading'),
+            css: {
+                top: '44%',
+                left: '50%',
+                width: '0px'
+            }
+        });
+    }
+    function UnblockUI() {
+        $.unblockUI();
+    }
+    function witnessSelected(e) {
+
+        var combo = $("#witnesscombo").data("kendoComboBox");
+        //  $("#grdFacts").data("kendoGrid").dataSource.data([])
+        $("#factcombo").data("kendoComboBox").dataSource.read();
+    }
+    function SelectedWitness() {
+
+        $("#factcombo").data("kendoComboBox").dataSource.data([]);
+        var combo = $("#witnesscombo").data("kendoComboBox");
+        var id = combo.value();
+        return { id: combo.value() }
+    }
+    //Change event of fact dropdown.
+    function factSelected(e) {
+
+        var combo = $("#factcombo").data("kendoComboBox");
+        var data = combo.dataItem();
+        if (data != null) {
+            var id = combo.dataItem().Name;
+
+            $("#grdFacts").data("kendoGrid").dataSource.read();
+        }
+    }
+    function FactsLoaded(e) {
+
+        var combo = $("#factcombo").data("kendoComboBox");
+        //var data = combo.dataItem();
+        // var item = combo.select(0);
+        var data = combo.dataItem();
+        if (data != null) {
+            var id = combo.dataItem().Name;
+            $("#grdFacts").data("kendoGrid").dataSource.read();
+        }
+    }
+    //Grid loaddata event handler.
+    function LoadQuestions() {
+
+        var combo = $("#factcombo").data("kendoComboBox");
+        var data = combo.dataItem();
+        if (data != null) {
+            var id = combo.dataItem().ID;
+
+            return { Id: id }
+        }
+    }
+    function FactwitnessId(e) {
+
+
+        var combo = $("#factcombo").data("kendoComboBox");
+        var data = combo.dataItem();
+        if (data != null) {
+            var id = combo.dataItem().ID;
+
+            e.Fact_Id = id;
+            return { Id: id }
+        }
+    }
+    function SetBackground(e) {
+        // debugger;
+        // var data = this;
+        // var selected = $.map(this.select(), function (e) {
+
+        //     debugger;
+        //     return $(item).text();
+        // })
+        // $('#grdFacts input[type="checkbox"]').parent().css("background", "red");
+        //// $('#Grid input[type="checkbox"]:checked').parent().css("background", "green");
+
+    }
+</script>
+
+

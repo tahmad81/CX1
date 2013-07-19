@@ -1,0 +1,48 @@
+﻿@model CaseXL.Models.LogOnModel
+@{
+    ViewBag.Title = "Log On";
+}
+<h2>Log On</h2>
+<p>
+    Please enter your username and password.
+</p>
+
+@Html.ValidationSummary(true, "Login was unsuccessful. Please correct the errors and try again.")
+@using (Html.BeginForm())
+{
+    <div>
+
+        <fieldset>
+            <legend>Account Information</legend>
+            <div class="editor-label">
+                @Html.LabelFor(m => m.UserName)
+            </div>
+            <div class="editor-field">
+                @Html.TextBoxFor(m => m.UserName)
+                @Html.ValidationMessageFor(m => m.UserName)
+            </div>
+            <div class="editor-label">
+                @Html.LabelFor(m => m.Password)
+            </div>
+            <div class="editor-field">
+                @Html.PasswordFor(m => m.Password)
+                @Html.ValidationMessageFor(m => m.Password)
+            </div>
+            <div class="editor-label">
+                @Html.CheckBoxFor(m => m.RememberMe)
+                @Html.LabelFor(m => m.RememberMe)
+                <br />
+                <br />
+                <a href="/Account/ResetPassword">Forgot / Change Password</a>
+            </div>
+            <p>
+                <input type="submit" class="k-button actionButton" value="Log On" />
+                <input type="button" class="k-button actionButton" onclick="window.location = '/Account/Register'" value="Signup" />
+
+            </p>
+        </fieldset>
+
+
+    </div>
+    
+}

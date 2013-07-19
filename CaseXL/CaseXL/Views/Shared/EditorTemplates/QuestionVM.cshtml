@@ -1,0 +1,26 @@
+﻿@model CaseXL.ViewModels.QuestionVM
+<table>
+    <tr>
+        <td>
+            @Html.LabelFor(m => m.Question)
+
+        </td>
+        <td>
+            @Html.TextAreaFor(m => m.Question, new  {@style="width:450px" })
+        </td>
+    </tr>
+    <tr>
+        <td>
+            @Html.LabelFor(m => m.Answer)
+        </td>
+        <td>
+            @Html.TextAreaFor(m => m.Answer,new  {@style="width:450px" })
+        </td>
+    </tr>
+</table>
+
+<style>
+.k-widget.k-window{
+    width: 590px; 
+}
+</style>

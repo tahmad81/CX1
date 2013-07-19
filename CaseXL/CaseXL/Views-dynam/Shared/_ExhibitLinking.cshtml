@@ -1,0 +1,58 @@
+﻿@*Date, Name, Description, Type, Author, Recipient, Source, Linked Issues, Linked File. The Exhibits/Linked File*@
+@model CaseXL.ViewModels.ExhibitLinkingVM
+
+<div style="background: lightgrey">
+    @(Html.Kendo().Grid<CaseXL.ViewModels.ExhibitVM>().Name("exhibitGrid")
+    .Columns(col =>
+    {
+        col.Bound(b => b.Date).Width(100).Format("{0:MM/dd/yyyy}");
+        col.Bound(b => b.Author).Width(250);
+        col.Bound(b => b.Description).Width(350);
+        col.Bound(b => b.Name).Width(300);
+
+        col.Template(@<text></text>).ClientTemplate("<input type='checkbox' #= IsSelected ? checked='checked':'' # class='chkbx' style='cursor:pointer' />")
+        .HeaderTemplate("<input type='checkbox' id='masterCheckBox' style='cursor:pointer' onclick='checkAll(this)'/>").Width(50);
+    }
+    )
+       .DataSource(dataSource => dataSource
+       .Ajax()
+       .Model(model => model.Id(m => m.Exhibit_Id))
+       .Batch(true)
+       .Read(read => read.Action("_Exhibits", "Home", new { @caseid = Model.CaseID, @factID = Model.FactID }))
+       .Update(up => up.Action("_UpdateExhibits", "Home", new { @caseid = Model.CaseID, @factID = Model.FactID }))
+                )
+     .Editable(ed => ed.Mode(GridEditMode.InCell))
+     .ToolBar(tb => tb.Save())
+     .Events(eve =>
+      {
+          eve.SaveChanges("SaveChanges");
+          eve.Change("Change");
+      }
+      )
+    )
+</div>
+<script type="text/javascript">
+    $(function () {
+        $('#exhibitGrid').on('click', '.chkbx', function () {
+
+            kendo.ui.progress($("#exhibitGrid"), true);
+            var checked = $(this).is(':checked');
+            var grid = $('#exhibitGrid').data().kendoGrid;
+            var dataItem = grid.dataItem($(this).closest('tr'));
+            dataItem.set('IsSelected', checked);
+        })
+    })
+    function checkAll(ele) {
+        var state = $(ele).is(':checked');
+        var grid = $('#exhibitGrid').data().kendoGrid;
+        $.each(grid.dataSource.view(), function () {
+            if (this['IsSelected'] != state)
+                this.dirty = true;
+            this['IsSelected'] = state;
+        });
+        var data = grid.dataSource.data();
+        var grid = $("#exhibitGrid").data("kendoGrid");
+        var data = grid.dataSource.data();
+        grid.refresh();
+    }
+</script>

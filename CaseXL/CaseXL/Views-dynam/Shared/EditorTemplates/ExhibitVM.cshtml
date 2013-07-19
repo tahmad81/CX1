@@ -1,0 +1,69 @@
+﻿@model CaseXL.ViewModels.ExhibitVM
+
+<table style="width: 400px">
+    <tr>
+        <td>
+            @Html.LabelFor(m => m.Name)
+        </td>
+        <td>
+            @Html.TextBoxFor(m => m.Name)
+        </td>
+    </tr>
+    <tr>
+        <td>
+            @Html.LabelFor(m => m.Date)
+        </td>
+        <td>
+            @Html.Kendo().DatePickerFor(m => m.Date).Format("MM/dd/yyyy")
+        </td>
+    </tr>
+    <tr>
+        <td>
+            @Html.LabelFor(m => m.Author)
+        </td>
+        <td>
+            @Html.TextBoxFor(m => m.Author)
+        </td>
+    </tr>
+    <tr>
+        <td>
+            @Html.LabelFor(m => m.Description)
+        </td>
+        <td>
+            @Html.TextBoxFor(m => m.Description)
+        </td>
+    </tr>
+    <tr>
+        <td>
+            @Html.LabelFor(m => m.Source)
+        </td>
+        <td>
+            @Html.TextBoxFor(m => m.Source)
+        </td>
+    </tr>
+    <tr>
+        <td>
+            @Html.LabelFor(m => m.Author)
+        </td>
+        <td>
+            @Html.TextBoxFor(m => m.Author)
+        </td>
+    </tr>
+    <tr>
+        <td>
+            @Html.LabelFor(m => m.Recepient)
+        </td>
+        <td>
+            @Html.TextBoxFor(m => m.Recepient)
+        </td>
+    </tr>
+    <tr>
+        <td>
+            @Html.LabelFor(m => m.Type_Id)
+        </td>
+        <td>
+            @(Html.Kendo().ComboBoxFor(m => m.Type_Id).BindTo(new SelectList(CaseXL.Common.Repository.GetExhibitTypes(), "ID", "Name")))
+        </td>
+    </tr>
+</table>
+

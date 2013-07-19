@@ -1,0 +1,37 @@
+﻿@model CaseXL.ViewModels.WitnessVM
+<table style="width: 400px">
+    <tr>
+        <td>
+            @Html.HiddenFor(m => m.WitnessId)
+               @Html.LabelFor(m => m.FullName)
+
+        </td>
+        <td>
+            @Html.TextBoxFor(m => m.FullName)
+        </td>
+    </tr>
+    <tr>
+        <td>
+            @Html.LabelFor(m => m.Email)
+        </td>
+        <td>
+            @Html.TextBoxFor(m => m.Email)
+        </td>
+    </tr>
+    <tr>
+        <td>
+            @Html.LabelFor(m => m.Docs_Authored)
+        </td>
+        <td>
+             @Html.TextBoxFor(m => m.Docs_Authored)
+        </td>
+    </tr>
+    <tr>
+        <td>
+            @Html.LabelFor(m => m.Docs_Received)
+        </td>
+        <td>
+             @Html.TextBoxFor(m => m.Docs_Received)
+        </td>
+    </tr>
+</table>

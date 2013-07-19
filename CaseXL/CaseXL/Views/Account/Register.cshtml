@@ -1,0 +1,109 @@
+﻿@model CaseXL.Models.RegisterModel
+@{
+    ViewBag.Title = "Register";
+}
+
+<h2>Register</h2>
+
+@Html.ValidationSummary(true, "Signup was unsuccessful. Please correct the errors and try again.")
+@using (Html.BeginForm())
+{
+    <div>
+        <fieldset>
+            <legend>Account Information</legend>
+
+            <div class="editor-label">
+                @Html.LabelFor(m => m.UserName)
+            </div>
+            <div class="editor-field">
+                @Html.TextBoxFor(m => m.UserName)
+
+                @Html.ValidationMessageFor(m => m.UserName)
+            </div>
+            <div class="editor-label">
+                @Html.LabelFor(m => m.Password)
+            </div>
+            <div class="editor-field">
+                @Html.PasswordFor(m => m.Password)
+                @Html.ValidationMessageFor(m => m.Password)
+            </div>
+            <div class="editor-label">
+                @Html.LabelFor(m => m.ConfirmPassword)
+            </div>
+            <div class="editor-label">
+                @Html.PasswordFor(m => m.ConfirmPassword)
+                @Html.ValidationMessageFor(m => m.ConfirmPassword)
+            </div>
+            <div class="editor-label">
+                @Html.LabelFor(m => m.Email)
+            </div>
+            <div class="editor-label">
+                @Html.TextBoxFor(m => m.Email)
+                @Html.ValidationMessageFor(m => m.Email)
+            </div>
+            <div class="editor-label">
+                @Html.LabelFor(m => m.FirstName)
+            </div>
+            <div class="editor-label">
+                @Html.TextBoxFor(m => m.FirstName)
+                @Html.ValidationMessageFor(m => m.FirstName)
+            </div>
+            <div class="editor-label">
+                @Html.LabelFor(m => m.LastName)
+            </div>
+            <div class="editor-label">
+                @Html.TextBoxFor(m => m.LastName)
+                @Html.ValidationMessageFor(m => m.LastName)
+            </div>
+            <div class="editor-label">
+                @Html.LabelFor(m => m.Firm_Code)
+            </div>
+            <div class="editor-label">
+                @Html.TextBoxFor(m => m.Firm_Code)
+                @Html.ValidationMessageFor(m => m.Firm_Code)
+            </div>
+            <div class="editor-label">
+                @Html.LabelFor(m => m.CCNumber)
+            </div>
+            <div class="editor-label">
+                @Html.TextBoxFor(m => m.CCNumber)
+                @Html.LabelFor(m => m.CVNNumber)
+                @Html.TextBoxFor(m => m.CVNNumber, new { @style = "width:50px" })
+                @Html.ValidationMessageFor(m => m.CVNNumber)<br />
+                @Html.ValidationMessageFor(m => m.CCNumber)
+            </div>
+
+            <div class="editor-label">
+                @Html.LabelFor(m => m.Exp_Date)
+            </div>
+            <div class="editor-label">
+                @(Html.Kendo().DatePickerFor(m => m.Exp_Date).Format("{0:MMM/yyyy}").Depth(CalendarView.Year).Start(CalendarView.Year).HtmlAttributes(new { @id = "dt" })
+                )
+                @Html.ValidationMessageFor(m => m.Exp_Date)
+            </div>
+            <p>
+
+                <input type="submit" class="k-button actionButton" value="Signup" />
+            </p>
+            <div class="AuthorizeNetSeal">
+                <script type="text/javascript" lang="javascript">var ANS_customer_id = "4ee51c21-88e6-407f-8dd6-c38594c9b793";</script>
+                <script type="text/javascript" lang="javascript" src="//verify.authorize.net/anetseal/seal.js"></script>
+                <a href="http://www.authorize.net/" id="AuthorizeNetText" target="_blank">Online Payment Service</a>
+                <br />
+                <script type="text/javascript" src="https://seal.godaddy.com/getSeal?sealID=leGL7JLTQNMYTkoM371RRCPe6cEX68yRc4oF7jziwqrVSJqe8X"></script>
+            </div>
+
+        </fieldset>
+    </div>
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        debugger;
+        $.validator.methods.date =
+            function (value, element) {
+              
+            return this.optional(element) || kendo.parseDate(value, "MMM/yyyy");
+        }
+    });
+</script>

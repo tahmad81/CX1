@@ -1,0 +1,91 @@
+﻿@(Html.Kendo().Grid<CaseXL.ViewModels.IssuesVM>().Name("issuebyCaseGrid")
+    .Columns(col =>
+    {
+        col.Bound(b => b.Id).Visible(false);
+        col.Bound(b => b.Case_ID).Visible(false);
+        col.Bound(b => b.Issue_Name).Width(250).Template(@<text></text>)
+        .ClientTemplate(@"<a class=""k-button-icontext k-grid-edit"" href=""\#"">#=Issue_Name#</a>"); ;
+        col.Bound(b => b.Description).Width(350);
+        col.Bound(c => c.Id).Title("").Width(8).Filterable(false).Sortable(false).Template(@<text></text>)
+        .ClientTemplate(@"<img src='../Images/delete-icon.png'  title=""Delete Witness"" style='width:22px; height:20px;cursor:pointer' class=""k-button-icontext k-grid-delete""/>");
+    }
+     )
+       .DataSource(dataSource => dataSource
+       .Ajax()
+       .Model(model => model.Id(m => m.Id))
+       .Read(read => read.Action("_IssuesByCase", "Home"))
+       .Update(up => up.Action("_UpdateIssueByCase", "Home"))
+       .Create(cr => cr.Action("_CreateIssueByCase", "Home"))
+       .Destroy(des => des.Action("_DeleteIssueByCase", "Home"))
+    )
+                .Pageable()
+                .Groupable()
+                     .Reorderable (red=> red.Columns(true))
+                .Navigatable(nav=> nav.Enabled(true))
+            
+                .Sortable()
+        .ClientDetailTemplateId("tmp_Questions_Issues")
+                .Selectable()
+                .Filterable()
+                .Resizable(res=> res.Columns(true))
+                .Editable(edit =>
+                edit.Mode(GridEditMode.PopUp)
+    )
+        .Events( eve =>eve.Edit("onEditIssues"))
+     .Editable(ed => ed.Mode(GridEditMode.PopUp))
+     .ToolBar(tb => tb.Create().Text("New Issue"))
+    )
+<input type="button" class="k-button" onclick="refresh()" value="Refresh" />
+<script type="text/javascript">
+    function refresh() {
+
+        $("#issuebyCaseGrid").data("kendoGrid").dataSource.read();
+
+    }
+</script>
+<script id="tmp_Questions_Issues" type="text/kendo-tmpl">
+     <div style="padding:5px;border-radius:4px;background:lightgray">
+     <div style="border:1px solid gray;border-radius:3px;background:lightgray">
+     <div align="center" style="font-weight:bold">Questions</div>
+        @Html.Partial("_greenBar")
+  
+    
+    @(Html.Kendo().Grid<CaseXL.ViewModels.QuestionVM>().Name("issue#=Id#")
+       .Columns(columns =>
+       {
+           columns.Bound(c => c.Id).Visible(false);
+           columns.Bound(c => c.Witness_Id).Visible(false);
+
+           columns.Bound(o => o.Question).Width(300).ClientTemplate(@"<a class=""k-button-icontext k-grid-edit"" href=""\\#=Question\\#"">\\#=Question\\#</a>");
+           columns.Bound(c => c.Answer).Width(300);
+           columns.Bound(c => c.Id).Title("").Width(6).Filterable(false).Sortable(false).Template(@<text></text>)
+
+                     .ClientTemplate(@"<img src='../Images/delete-icon.png' title=""Delete Question"" style='width:16px; height:18px;cursor:pointer' class=""k-button-icontext k-grid-delete""/>");
+   
+
+
+       })
+       .Filterable()
+           .Groupable()
+           .Sortable()
+           .DataSource(dataSource => dataSource
+           .Ajax()
+            .Model(model => model.Id(m => m.Id))
+           .Read(read => read.Action("_QuestionsByIssues", "Home", new { issueId = "#=Id#" }))
+           .Update(up => up.Action("_QuestionsByIssuesUpdate", "Home"))
+             .Create(cr => cr.Action("_QuestionsByIssuesCreate", "Home", new  {  issueId = "#=Id#"}))
+                       .Destroy(des => des.Action("_QuestionsByIssuesDelete", "Home"))
+       )
+        .Editable(edit =>
+         edit.Mode(GridEditMode.PopUp))
+        .ToolBar(tol => tol.Create().Text("New Question"))
+        .Events( eve =>eve.Edit("onEditQuestion"))
+
+
+       .ToClientTemplate()
+       )
+   
+   </div>
+
+
+</script>

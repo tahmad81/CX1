@@ -1,0 +1,20 @@
+﻿
+.colc {
+    background: lightgrey;
+    cursor: pointer;
+}
+
+    /*This is how the text will look on mouse over. Note "hover" is the most important change here*/
+    .colc:hover {
+        background: grey;
+        border-radius: 6px;
+    }
+
+.centered {
+    position: fixed;
+    top: 50%;
+    left: 55%;
+    margin-top: -50px;
+    margin-left: -100px;
+  
+}

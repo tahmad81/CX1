@@ -1,0 +1,158 @@
+/* Sign up */
+#customer-signup { }
+  #customer-signup #header {
+    width: 100%;
+    background: #299FB4;
+    height: 387px;
+    box-shadow: inset 0 -3px 2px rgba(0,0,0,0.1), 0 1px 0 #fff;
+  }
+  #customer-signup a {
+    color: #299FB4;
+  }
+  #customer-signup a.btn-primary {
+    color: #fff;
+  }
+.icon-signup,
+.icon-confirm,
+.icon-coupon,
+#customer-signup #header .logo {
+  background: url('../img/ui_sign-up.png');
+}
+.icon-coupon,
+.icon-confirm,
+.icon-signup {
+  width: 131px;
+  height: 107px;
+  display: block;
+}
+.icon-signup,
+.icon-confirm {
+  margin: 37px auto 20px;
+  background-position: 0 -83px;
+  left: 23px;
+}
+.icon-signup {
+  position: relative;
+}
+.icon-coupon {
+  width: 106px;
+  height: 82px;
+  margin: 16px auto 0;
+}
+.icon-confirm {
+  background-position: -131px -83px;
+}
+    #customer-signup #header .logo {
+      width: 271px;
+      height: 83px;
+      background-position: -106px 0;
+      margin: 39px auto;
+    }
+  #customer-signup #main {
+    position: absolute;
+    top: 152px;
+    width: 100%;
+    padding-bottom: 70px;
+  }
+  #customer-signup .container {
+    width: 730px;
+  }
+    #customer-signup .container .page-container {
+      border-radius: 20px;
+      box-shadow: 0 1px 10px rgba(0,0,0,0.4);
+      float: none;
+    }
+      #customer-signup .container .page-container h1 {
+        margin-bottom: 30px;
+        text-align   : center;
+        font-size    : 39px;
+        font-weight  : 400;
+        color        : #808080;
+      }
+      #customer-signup .container .page-container h2 {
+        font-size  : 33px;
+        font-weight: 300;
+        color      : #4D4D4D;
+      }
+      #customer-signup .container .page-container p {
+        font-size  : 20px;
+        font-weight: 300;
+        line-height: 30px;
+        color      : #6E6E6E;
+      }
+        #customer-signup .container .page-container p .label {
+          width       : 70px;
+          margin-right: 10px;
+          padding     : 0;
+          text-shadow : none;
+          font-size   : 20px;
+          font-weight : 300;
+          color       : #B2B2B2;
+          background  : none;
+        }
+    #customer-signup .container .page-container label {
+      font-size  : 25px;
+      font-weight: 300;
+    }
+    #customer-signup .container .page-container input[type="text"],
+    #customer-signup .container .page-container input[type="password"] {
+      padding    : 13px 8px;
+      text-indent: 0;
+      font-size  : 25px;
+      font-weight: 300;
+    }
+    #customer-signup .container .page-container label {
+      margin-bottom: 22px;
+      margin-top: 12px;
+    }
+    #customer-signup .container .page-container input[name="business-name"],
+    #customer-signup .container .page-container input[name="website"],
+    #customer-signup .container .page-container input[name="password"],
+    #customer-signup .container .page-container input[name="coupon-code"],
+    #customer-signup .container .page-container input[name="confirm-password"],
+    #customer-signup .container .page-container input[name="email"] {
+      width: 536px;
+    }
+    #customer-signup .container .page-container label[for="first-name"],
+    #customer-signup .container .page-container label[for="last-name"] {
+      display: inline-block;
+      width: 45%;
+    }
+    #customer-signup .container .page-container label[for="first-name"] {
+      margin-right: 33px;
+    }
+    #customer-signup .container .page-container input[name="phone"],
+    #customer-signup .container .page-container input[name="first-name"],
+    #customer-signup .container .page-container input[name="last-name"] {
+      width: 45%;
+    }
+    #customer-signup .container .page-container input[name="first-name"] {
+      margin-right: 16px;
+    }
+    #customer-signup .container .page-container input[name="coupon-code"] {
+      margin-bottom: 30px;
+    }
+    #customer-signup .copyright {
+      clear     : both;
+      margin-top: 20px;
+      color     : #757575;
+    }
+  hr.coupon {
+    margin-top   : -2px;
+    margin-bottom: 30px;
+    border-top   : 2px dashed #299FB4;
+  }
+ #customer-signup .btn-large {
+    width    : 150px;
+    font-size: 23px;
+ }
+ /* ----------- Coupon Signup */
+ #customer-signup .img-restaurant {
+  margin: 30px auto;
+  display: block;
+ }
+ #customer-signup h1 + h3 {
+  text-align: center;
+  font-weight: 300;
+  margin-top: -20px;
+ }

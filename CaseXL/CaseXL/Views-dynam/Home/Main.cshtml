@@ -1,0 +1,397 @@
+﻿@{
+  
+}
+<div style="margin-bottom: 10px; font-weight: bold">
+    Select Case
+
+    @(Html.Kendo().DropDownList().Name("Cases")
+    .Events(eve =>
+        eve.Change("CaseChanged")
+        )
+    .BindTo(ViewBag.Cases)
+
+    )
+    <input type="button" class="k-button actionButton" onclick="window.location = '/Case/Index'" value="Manage Cases" />
+</div>
+@(Html.Kendo().Splitter()
+      .Name("vertical")
+      .Orientation(SplitterOrientation.Vertical).HtmlAttributes(new { @style = "height:500px" })
+      .Panes(verticalPanes =>
+      {
+          verticalPanes.Add()
+              .HtmlAttributes(new { id = "top-pane" })
+              .Scrollable(false)
+              .Collapsible(false)
+              .Content(
+                Html.Kendo().Splitter()
+                    .Name("horizontal")
+                    .HtmlAttributes(new { style = "height: 100%" })
+                    .Panes(horizontalPanes =>
+                    {
+                        horizontalPanes.Add()
+                            .HtmlAttributes(new { id = "left-pane", @style = "border:0px solid black" })
+                            .Size("180px")
+                            .Collapsible(true)
+                            .Content(@<div style="height: 100%; background: lightgrey">
+                                @(Html.Kendo().TreeView().Name("tvLnks")
+                                .Items(tvitem =>
+                            {
+                                tvitem.Add().Text("Facts").HtmlAttributes(new { @style = "cursor:hand" });
+                                tvitem.Add().Text("Witnesses");
+                                tvitem.Add().Text("Exhibits");
+                                tvitem.Add().Text("Issues");
+                                
+                            }
+                            )
+                            .Events(events =>
+                            events.Select("MenuSelected")
+                            )
+                            )
+                            </div>);
+                        horizontalPanes.Add()
+                        .HtmlAttributes(new { id = "center-pane" })
+                        .Content(@<div id="dvCenter" style="height: 100%; background: lightgrey; border: 0px solid red">
+                        </div>);
+
+                    }).ToHtmlString()
+              );
+      })
+)
+<div id="dialog">
+    <img id="busyLoading" src="../../Content/kendo/2012.3.1315/Black/loading-image.gif"
+        class="centered" />
+</div>
+<div id="window"></div>
+@(Html.Kendo().Window().Name("Details")
+    .Title("Issue Linking")
+    .Visible(false)
+    .Modal(true)
+    .Draggable(true)
+    .Events(eve =>
+        {
+
+        }
+        )
+   .Height(400).HtmlAttributes(new { @style = "background:lightgrey" })
+    .Content(@<div id="dvpopup">
+    </div>
+
+)
+   )
+
+<script type="text/javascript">
+    function onRequestEnd(e) {
+        if (e.type == "read") {
+            var offsetMiliseconds = new Date().getTimezoneOffset() * 60000;
+            var persons = e.response.Data;
+            for (var i = 0; i < persons.length; i++) {
+                persons[i].Date = persons[i].Date.replace(/\d+/,
+                    function (n) { return parseInt(n) + offsetMiliseconds }
+                 );
+            }
+        }
+    }
+
+    function onEdit(e) {
+        debugger;
+        if (e.model.isNew()) {
+            e.container.find('[data-role=combobox]').data().kendoComboBox.select(0);
+            e.container.kendoWindow("title", "New Fact");
+        }
+        else
+            e.container.kendoWindow("title", "Edit Fact");
+    }
+    function onEditExhibit(e) {
+        debugger;
+        if (e.model.isNew()) {
+            e.container.find('[data-role=combobox]').data().kendoComboBox.select(0);
+            e.container.kendoWindow("title", "New Exhibit");
+        }
+        else
+            e.container.kendoWindow("title", "Edit Exhibit");
+    }
+    function onEditQuestion(e) {
+
+        debugger;
+
+        if (e.model.isNew()) {
+            //e.container.find('[data-role=combobox]').data().kendoComboBox.select(0);
+            e.container.kendoWindow("title", "New Question");
+
+        }
+        else
+            e.container.kendoWindow("title", "Edit Question");
+    }
+    function onEditIssues(e) {
+
+        debugger;
+
+        if (e.model.isNew()) {
+            //e.container.find('[data-role=combobox]').data().kendoComboBox.select(0);
+            e.container.kendoWindow("title", "New Issue");
+
+        }
+        else
+            e.container.kendoWindow("title", "Edit Issue");
+    }
+    function SaveChanges(e) {
+        debugger;
+        //  kendo.ui.progress($(this), true);
+        this.dataSource.one("change", function (e, data) {
+            var wnd = $("#window").data("kendoWindow");
+            wnd.close();
+        });
+    }
+    function DoAjaxPostAndMore(btnClicked) {
+        debugger;
+        var $form = $(btnClicked).parents('form');
+
+        $.ajax({
+            type: "POST",
+            url: $form.attr('action'),
+            data: $form.serialize(),
+            error: function (xhr, status, error) {
+                alert("error");
+                //do something about the error
+            },
+            success: function (response) {
+                //do something with response
+                alert("succedd");
+
+            }
+        });
+
+        return false;// if it's a link to prevent post
+
+    }
+    function Change(e) {
+        debugger;
+        var row = this.select();
+        var id = row.data("uid");
+        $("#log").html("<input name='rowid' type='hidden' id='rowid' value='" + id + "' />");
+    }
+    function Linking(e) {
+
+        var grid = $('#grdFacts').data().kendoGrid;
+        var dataItem = grid.dataItem($(e).closest('tr'));
+        var wnd = $("#Details").data("kendoWindow");
+        var dropdownlist = $("#Cases").data("kendoDropDownList");
+        var id = dropdownlist.dataItem().Value;
+        var tst = $('#grdFacts').data().kendoGrid.dataItem($(e).closest("tr"));
+        var row = $("#grdFacts").data("kendoGrid").tbody.find("tr[data-uid='" + dataItem.uid + "']");
+        var url;
+        var title;
+        var width;
+        debugger;
+        if (e.value == "Issues") {
+            title = "Issue Linking";
+            url = "/Home/_IssueLinking/?caseid=" + id + "&factID=" + dataItem.ID;
+            width = 500;
+        }
+        else if (e.value == "Witnesses") {
+            title = "Witness Linking";
+            url = "/Home/_WitnessLinking/?caseid=" + id + "&factID=" + dataItem.ID;
+            width = 1050;
+        }
+        else if (e.value == "Exhibits") {
+            title = "Exhibit Linking";
+            url = "/Home/_ExhibitsLinking/?caseid=" + id + "&factID=" + dataItem.ID;
+            width = 1050;
+        }
+
+        var window = $("#window"),
+        wndObject;
+        if (!(wndObject = window.data("kendoWindow"))) {
+            wndObject = window.kendoWindow({
+                modal: true,
+                height: 400,
+                close: function (data) {
+                    // alert(e.id);
+                    $(e).val("0");
+                    return true;
+                }
+            }).data("kendoWindow");
+        }
+
+
+
+        window.width(width);
+        wndObject.title(title);
+        $.ajax({
+            type: "GET",
+            url: url,
+            dataType: "html",
+            success: function (evt) {
+                UnblockUI();
+
+                wndObject.center().open();
+                wndObject.content(evt);
+            },
+            error: function (req, status, error) {
+                UnblockUI();
+                alert("Error!Occured");
+            }
+        });
+
+
+
+        //******************************************
+        //window.kendoWindow({
+        //    modal: true,
+        //    height: 400,
+        //    close: function (data) {
+        //        $(e).val("0");
+        //        return true;
+        //    }
+        //});
+        //window.width(width);
+        //window.data("kendoWindow").title(title);
+        //window.data("kendoWindow").center().open();
+        //$.ajax({
+        //    type: "GET",
+        //    url: url,
+        //    dataType: "html",
+        //    success: function (evt) {
+        //        UnblockUI();
+        //        $('#window').html(evt);
+        //    },
+        //    error: function (req, status, error) {
+        //        UnblockUI();
+        //        alert("Error!Occured");
+        //    }
+        //});
+        //*******************************************
+    }
+
+    $(document).ready(
+         function () {
+             $('#busyLoading').hide();
+         });
+    function MenuSelected(e) {
+
+        var dropdownlist = $("#Cases").data("kendoDropDownList");
+        var id = dropdownlist.dataItem().Value;
+
+        LoadData(id, e.node.textContent);
+    }
+    function CaseChanged(e) {
+
+        var treeview = $("#tvLnks").data("kendoTreeView");
+        var tvItem = treeview.select();
+        var dropdownlist = $("#Cases").data("kendoDropDownList");
+        var id = dropdownlist.dataItem().Value;
+        if (tvItem.text() != null) {
+            LoadData(id, tvItem.text());
+        }
+    }
+    function LoadData(id, text) {
+        if (id != null && text != null) {
+            if (text == "Facts") {
+                LoadFacts(id);
+            }
+            else if (text == "Witnesses") {
+                LoadWitnesses(id);
+
+            }
+            else if (text == "Exhibits") {
+                LoadExhibits(id);
+
+            }
+            else if (text == "Issues") {
+                LoadIssues(id);
+
+            }
+        }
+    }
+    function LoadIssues(id) {
+        BlockUI();
+        $.ajax({
+            type: "GET",
+            url: "/Home/_GetIssues/?caseid=" + id,
+            dataType: "html",
+            success: function (evt) {
+                UnblockUI();
+                $('#dvCenter').html(evt);
+            },
+            error: function (req, status, error) {
+                UnblockUI();
+                alert("Error!Occured");
+            }
+        });
+
+
+
+    }
+    function LoadExhibits(id) {
+        BlockUI();
+        $.ajax({
+            type: "GET",
+            url: "/Home/_GetExhibits/?caseid=" + id,
+            dataType: "html",
+            success: function (evt) {
+                UnblockUI();
+                $('#dvCenter').html(evt);
+            },
+            error: function (req, status, error) {
+                UnblockUI();
+                alert("Error!Occured");
+            }
+        });
+
+
+
+    }
+    function LoadWitnesses(id) {
+        BlockUI();
+        $.ajax({
+            type: "GET",
+            url: "/Home/_GetWitnesses/?caseid=" + id,
+            dataType: "html",
+            success: function (evt) {
+                UnblockUI();
+                $('#dvCenter').html(evt);
+            },
+            error: function (req, status, error) {
+                UnblockUI();
+                alert("Error!Occured");
+            }
+        });
+
+
+    }
+    function LoadFacts(id) {
+        BlockUI();
+        $.ajax({
+            type: "GET",
+            url: "/Home/_GetFacts/?caseid=" + id,
+            dataType: "html",
+            success: function (evt) {
+                UnblockUI();
+                $('#dvCenter').html(evt);
+            },
+            error: function (req, status, error) {
+                UnblockUI();
+                alert("Error!Occured");
+            }
+        });
+
+
+    }
+    function BlockUI() {
+        $.blockUI({
+            message: $('#busyLoading'),
+            css: {
+                top: '44%',
+                left: '50%',
+                width: '0px'
+            }
+        });
+    }
+    function UnblockUI() {
+        $.unblockUI();
+    }
+
+
+</script>
+
+

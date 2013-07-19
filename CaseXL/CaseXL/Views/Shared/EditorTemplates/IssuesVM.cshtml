@@ -1,0 +1,27 @@
+﻿@model CaseXL.ViewModels.IssuesVM
+<table>
+    <tr>
+        <td>
+            @Html.LabelFor(m => m.Issue_Name)
+
+        </td>
+        <td>
+            @Html.TextBoxFor(m => m.Issue_Name)
+        </td>
+    </tr>
+    <tr>
+        <td>
+            @Html.LabelFor(m => m.Description)
+        </td>
+        <td>
+           @Html.TextAreaFor(m => m.Description,new  {@style="width:350px" })
+        </td>
+    </tr>
+</table>
+
+<style>
+.k-widget.k-window{
+    width: 460px; 
+    
+}
+</style>

@@ -1,0 +1,130 @@
+﻿@(Html.Kendo().Grid<CaseXL.ViewModels.ExhibitVM>().Name("exGrid")
+    .Columns(col =>
+    {
+        col.Bound(c => c.Name).Width(400).Template(@<text></text>)
+        .ClientTemplate(@"<a class=""k-button-icontext k-grid-edit"" href=""\#"">#=Name#</a>");
+        col.Bound(b => b.Date).Width(100).Format("{0:MM/dd/yyyy}");
+        col.Bound(b => b.Author).Width(250);
+        col.Bound(b => b.Description).Width(350);
+        col.Bound(b => b.Source).Width(300);
+
+        col.Bound(b => b.Recipient).Width(300);
+        col.ForeignKey(c => c.Type_Id, new SelectList(CaseXL.Common.Repository.GetExhibitTypes(), "ID", "Name")).Title("Type");
+
+        col.Bound(c => c.Exhibit_Id).Title("").Width(6).Filterable(false).Sortable(false).Template(@<text></text>)
+        .ClientTemplate(@"<img src='../Images/delete-icon.png' title=""Delete Question"" style='width:16px; height:18px;cursor:pointer' class=""k-button-icontext k-grid-delete""/>");
+    }
+    )
+       .DataSource(dataSource => dataSource
+       .Ajax()
+       .Model(model => model.Id(m => m.Exhibit_Id))
+
+       .Read(read => read.Action("_ExhibitsByCase", "Home"))
+       .Update(up => up.Action("_UpdateExhibitByCase", "Home"))
+       .Create(cr => cr.Action("_CreateExhibitByCase", "Home"))
+       .Destroy(des => des.Action("_DeleteExhibitByCase", "Home"))
+
+    )
+   .ClientDetailTemplateId("tmp_Exhib_Docs")
+      .Pageable()
+        .Groupable()
+                .Sortable()
+                
+                .Selectable()
+                     .Reorderable(red => red.Columns(true))
+                .Navigatable(nav => nav.Enabled(true))
+
+                .Filterable()
+                .Resizable(res => res.Columns(true))
+    .Events(eve => eve.Edit("onEditExhibit"))
+     .Editable(ed => ed.Mode(GridEditMode.PopUp))
+     .ToolBar(tb => tb.Create().Text("New Exhibit"))
+    )
+<input type="button" class="k-button" onclick="refresh()" value="Refresh" />
+<script id="tmp_Exhib_Docs" type="text/kendo-tmpl">
+     <div style="padding:5px;border-radius:4px;background:lightgray">
+     <div style="border:1px solid gray;border-radius:3px;background:lightgray">
+     <div align="center" style="font-weight:bold">Documents</div>
+        @Html.Partial("_greenBar")
+  
+<input type="button" class="k-button" value="Choose File(s) from Dropbox" onclick="Choose()" name="selected-file" id="db-chooser" />
+@(Html.Kendo().Grid<CaseXL.ViewModels.DocsVM>().Name("grddocs")
+
+    .Columns(columns =>
+    {
+        columns.Bound(c => c.Id).Visible(false);
+        columns.Bound(c => c.Parent_Id).Visible(false);
+        columns.Bound(c => c.Name).Template(@<text></text>)
+        .ClientTemplate(@"<a href=\\#=Link\\# target='_blank' title=\\#=Link\\#>\\#=Name\\#</a>");
+        columns.Bound(c => c.Id).Title("").Width(8).Filterable(false).Sortable(false).Template(@<text></text>)
+        .ClientTemplate(@"<img src='../Images/delete-icon.png'  title=""Delete Case"" style='width:22px; height:20px;cursor:pointer' class=""k-button-icontext k-grid-delete""/>");
+    })
+
+                .DataSource(dataSource => dataSource
+                    .Ajax()
+                    .Model(model => model.Id(m => m.Id))
+                       .Create(cr => cr.Action("_CreateDoc", "Home",new { @exbId = "#=Exhibit_Id#" }))
+                       .Destroy(des => des.Action("_DeleteDoc", "Home"))
+                       .Read(red => red.Action("_ExbDocs", "Home", new { @exbId = "#=Exhibit_Id#" }))
+                )
+                  .Pageable()
+                  .Groupable()
+                  .Resizable(res => res.Columns(true)
+                  )
+                .Reorderable(red => red.Columns(true))
+                .Navigatable(nav => nav.Enabled(true))
+                .Sortable()
+                .Selectable()
+                .Filterable()
+                .Editable(edit =>
+                edit.Mode(GridEditMode.PopUp)
+
+                ).Events(eve =>
+        {
+
+
+        }
+            ).ToClientTemplate()
+
+            )
+   </div>
+
+
+</script>
+<script type="text/javascript">
+    function refresh() {
+        $("#grddocs").data("kendoGrid").dataSource.read();
+    }
+    var options = {
+        linkType: "preview",
+        // "preview" (default) is a preview link to the document for sharing,
+        // "direct" is an expiring link to download the contents of the file.
+        // For more information about link types, see <a href="#link-types">Link types</a>
+        multiselect: true,
+        // false (default) limits selection to a single file,
+        // true enables multiple file selection.
+        success: function (files) {
+            // Required. Called when a user selects an item in the Chooser
+
+            var grid = $("#grddocs").data("kendoGrid");
+            
+            for (var ctr = 0; ctr < files.length; ctr++) {
+                
+                grid.dataSource.add({ Name: files[ctr].name, Link: files[ctr].link });
+             
+            }
+
+            grid.dataSource.sync();
+            debugger;
+
+            debugger;
+        },
+        cancel: function () {
+            // Called when the user closes the dialog
+            // without selecting a file and does not include any parameters.
+        }
+    };
+    function Choose() {
+        Dropbox.choose(options);
+    }
+</script>

@@ -1,0 +1,143 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{3866D58C-B90F-477A-BCC4-EEFFA79616F7}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CaseXL.Data</RootNamespace>
+    <AssemblyName>CaseXL.Data</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Core">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.CSharp">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Data">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xml">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Telerik.OpenAccess, Version=2013.1.219.3, Culture=neutral, PublicKeyToken=7ce17eeaf1d59342, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Program Files (x86)\Telerik\OpenAccess ORM\bin\Telerik.OpenAccess.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Telerik.OpenAccess.35.Extensions, Version=2013.1.219.3, Culture=neutral, PublicKeyToken=7ce17eeaf1d59342, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Program Files (x86)\Telerik\OpenAccess ORM\bin\Telerik.OpenAccess.35.Extensions.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Case.generated.cs">
+      <DependentUpon>CaseXLEntities.rlinq</DependentUpon>
+    </Compile>
+    <Compile Include="CaseXLEntities.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CaseXLEntities.rlinq</DependentUpon>
+    </Compile>
+    <Compile Include="Case_Type.generated.cs">
+      <DependentUpon>CaseXLEntities.rlinq</DependentUpon>
+    </Compile>
+    <Compile Include="Evaluation.generated.cs">
+      <DependentUpon>CaseXLEntities.rlinq</DependentUpon>
+    </Compile>
+    <Compile Include="Exhibit.generated.cs">
+      <DependentUpon>CaseXLEntities.rlinq</DependentUpon>
+    </Compile>
+    <Compile Include="Exhibits_Fact.generated.cs">
+      <DependentUpon>CaseXLEntities.rlinq</DependentUpon>
+    </Compile>
+    <Compile Include="Exhibits_Type.generated.cs">
+      <DependentUpon>CaseXLEntities.rlinq</DependentUpon>
+    </Compile>
+    <Compile Include="Fact.generated.cs">
+      <DependentUpon>CaseXLEntities.rlinq</DependentUpon>
+    </Compile>
+    <Compile Include="Firm.generated.cs">
+      <DependentUpon>CaseXLEntities.rlinq</DependentUpon>
+    </Compile>
+    <Compile Include="Issue.generated.cs">
+      <DependentUpon>CaseXLEntities.rlinq</DependentUpon>
+    </Compile>
+    <Compile Include="Issues_Fact.generated.cs">
+      <DependentUpon>CaseXLEntities.rlinq</DependentUpon>
+    </Compile>
+    <Compile Include="Issue_Question.generated.cs">
+      <DependentUpon>CaseXLEntities.rlinq</DependentUpon>
+    </Compile>
+    <Compile Include="Partner.generated.cs">
+      <DependentUpon>CaseXLEntities.rlinq</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Question.generated.cs">
+      <DependentUpon>CaseXLEntities.rlinq</DependentUpon>
+    </Compile>
+    <Compile Include="Staff.generated.cs">
+      <DependentUpon>CaseXLEntities.rlinq</DependentUpon>
+    </Compile>
+    <Compile Include="Witness.generated.cs">
+      <DependentUpon>CaseXLEntities.rlinq</DependentUpon>
+    </Compile>
+    <Compile Include="Witness_Fact.generated.cs">
+      <DependentUpon>CaseXLEntities.rlinq</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.Config" />
+    <None Include="CaseXLEntities.rlinq.diagram">
+      <DependentUpon>CaseXLEntities.rlinq</DependentUpon>
+    </None>
+    <OpenAccessDeploy Include="CaseXLEntities.rlinq">
+      <Generator>MetaModelCodeGenerator</Generator>
+      <LastGenOutput>CaseXLEntities.cs</LastGenOutput>
+    </OpenAccessDeploy>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <Import Condition="Exists('$(MSBuildExtensionsPath)\OpenAccess.targets')" Project="$(MSBuildExtensionsPath)\OpenAccess.targets" />
+</Project>

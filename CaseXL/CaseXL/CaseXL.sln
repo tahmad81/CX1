@@ -1,0 +1,39 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CaseXL", "CaseXL\CaseXL.csproj", "{36D7A7AB-D385-48CF-A35B-8021B133A3DE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CaseXL.Data", "..\CaseXL.Data\CaseXL.Data.csproj", "{3866D58C-B90F-477A-BCC4-EEFFA79616F7}"
+EndProject
+Global
+	GlobalSection(SourceCodeControl) = preSolution
+		SccNumberOfProjects = 3
+		SccProjectName0 = $/CaseXLMVC/CaseXL
+		SccLocalPath0 = ..
+		SccProvider0 = MSSCCI:Dynamsoft\u0020SourceAnywhere\u0020Hosted
+		SccProjectFilePathRelativizedFromConnection0 = CaseXL\\
+		SccProjectUniqueName1 = ..\\CaseXL.Data\\CaseXL.Data.csproj
+		SccLocalPath1 = ..
+		SccProjectFilePathRelativizedFromConnection1 = CaseXL.Data\\
+		SccProjectUniqueName2 = CaseXL\\CaseXL.csproj
+		SccLocalPath2 = ..
+		SccProjectFilePathRelativizedFromConnection2 = CaseXL\\CaseXL\\
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{36D7A7AB-D385-48CF-A35B-8021B133A3DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36D7A7AB-D385-48CF-A35B-8021B133A3DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36D7A7AB-D385-48CF-A35B-8021B133A3DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36D7A7AB-D385-48CF-A35B-8021B133A3DE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3866D58C-B90F-477A-BCC4-EEFFA79616F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3866D58C-B90F-477A-BCC4-EEFFA79616F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3866D58C-B90F-477A-BCC4-EEFFA79616F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3866D58C-B90F-477A-BCC4-EEFFA79616F7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

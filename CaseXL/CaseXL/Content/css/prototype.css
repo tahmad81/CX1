@@ -1,0 +1,9 @@
+/* ------------- Edit */
+.edit .edit-placeholder,
+.edit.active .edit-active {
+  display: block;
+}
+.edit .edit-active,
+.edit.active .edit-placeholder {
+  display: none;
+}
