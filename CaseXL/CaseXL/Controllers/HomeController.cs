@@ -7,641 +7,589 @@ using System.Web.Mvc;
 using Kendo.Mvc.UI;
 using Kendo.Mvc.Extensions;
 using CaseXL.Infrastructure;
-using CaseXL.Data;
 using CaseXL.Common;
+using CaseXL.Data;
 using CaseXL.ViewModels;
 namespace CaseXL.Controllers
 {
     public class HomeController : Controller
     {
-        // Methods
-        public ActionResult _CreateDoc([DataSourceRequest] DataSourceRequest request, DocsVM model, int? exbId)
+        public ActionResult Index()
         {
-            using (CaseXLEntities entities = new CaseXLEntities())
+            ViewBag.Message = "Welcome to ASP.NET MVC!";
+
+            return View();
+        }
+
+        public ActionResult About()
+        {
+            return View();
+        }
+        [Authorize]
+        public ActionResult Main(int? caseID, string msg)
+        {
+
+            SetfirmInSession();
+
+            var cases = Common.Repository.GetCases();
+            Session["caseid"] = caseID;
+            ViewBag.Cases = new SelectList(cases, "ID", "Name", caseID.GetValueOrDefault());
+
+            return View();
+        }
+        public ActionResult _GetFacts(int caseid)
+        {
+            Session["caseid"] = caseid;
+            return PartialView("_Facts");
+        }
+        public ActionResult Test(int? id)
+        {
+
+            return null;
+        }
+        public ActionResult _Facts([DataSourceRequest] DataSourceRequest request)
+        {
+            using (CaseXL.Data.CaseXLEntities context = new CaseXL.Data.CaseXLEntities())
             {
-                Document entity = new Document
+
+                var data = (from facts in context.Facts.Where(a => a.Case_Id == int.Parse(Session["caseid"].ToString()))
+                            select new ViewModels.FactsVM
+                            {
+                                CaseID = facts.Case_Id,
+                                Date = facts.Date,
+                                Description = facts.Description,
+                                Evaluation = facts.Description,
+                                Source = facts.Source,
+                                ID = facts.Id,
+                                Evaluation_Id = facts.Evaluation1.Id,
+                                Evaluation_Text = facts.Evaluation1.Evaluation_Text
+                            }).OrderBy(o => o.Date).ToList();
+
+
+                return Json(data.ToDataSourceResult(request));
+            }
+        }
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult Checkboxes(string[] checkedNodes, List<CaseXL.ViewModels.IssuesVM> model)
+        {
+
+            return null;
+        }
+        public ActionResult _IssueLinking(int? caseid, int? factID)
+        {
+
+            return PartialView("_IssueLinking", new ViewModels.IssueLinkingVM() { CaseID = caseid, FactID = factID });
+
+        }
+        public ActionResult _WitnessLinking(int? caseid, int? factID)
+        {
+
+            return PartialView("_WitnessesLinking", new ViewModels.WitnessesLinkingVM() { CaseID = caseid, FactID = factID });
+
+        }
+        public ActionResult _ExhibitsLinking(int? caseid, int? factID)
+        {
+
+            return PartialView("_ExhibitLinking", new ViewModels.ExhibitLinkingVM() { CaseID = caseid, FactID = factID });
+
+        }
+        public ActionResult _Exhibits([DataSourceRequest] DataSourceRequest request, int? caseid, int? factID)
+        {
+            var issues = Common.Repository.GetExhibitsByFactCase(caseid.Value, factID.Value);
+
+            return Json(issues.ToDataSourceResult(request), JsonRequestBehavior.AllowGet);
+
+        }
+        public ActionResult _UpdateExhibits(int? factID, int? caseid, [DataSourceRequest] DataSourceRequest request, [Bind(Prefix = "models")]IEnumerable<CaseXL.ViewModels.ExhibitVM> updated)
+        {
+            using (CaseXL.Data.CaseXLEntities context = new Data.CaseXLEntities())
+            {
+                var delObjects = updated.Where(a => a.IsSelected == false && a.Fact_Exhibit != null).Select(a => a.Fact_Exhibit).ToList();
+                context.Delete(context.Exhibits_Facts.Where(a => delObjects.Contains(a.Id)));
+                var addObjects = (from addobj in updated.Where(a => a.IsSelected == true && a.Fact_Exhibit == null)
+                                  select new CaseXL.Data.Exhibits_Fact
+                                  {
+                                      CaseId = caseid,
+                                      FactId = factID,
+                                      ExhibitId = addobj.Exhibit_Id
+
+                                  }).ToList();
+                context.Add(addObjects);
+                context.SaveChanges();
+            }
+            return Json(true);
+        }
+        public ActionResult _Issues([DataSourceRequest] DataSourceRequest request, int? caseid, int? factID)
+        {
+            var issues = Common.Repository.GetIssuesByFactCase(caseid.Value, factID.Value);
+
+            return Json(issues.ToDataSourceResult(request));
+
+        }
+        public ActionResult _Witnesses([DataSourceRequest] DataSourceRequest request, int? caseid, int? factID)
+        {
+            var witnesses = Common.Repository.GetWitnessesByCaseFact(caseid.Value, factID.Value);
+            return Json(witnesses.ToDataSourceResult(request));
+        }
+        public ActionResult _UpdateWitnesses(int? factID, int? caseid, [DataSourceRequest] DataSourceRequest request, [Bind(Prefix = "models")]IEnumerable<CaseXL.ViewModels.WitnessVM> updated)
+        {
+            using (CaseXL.Data.CaseXLEntities context = new Data.CaseXLEntities())
+            {
+                var delObjects = updated.Where(a => a.IsSelected == false && a.Issue_Witness_Id != null).Select(a => a.ID).ToList();
+                context.Delete(context.Witness_Facts.Where(a => delObjects.Contains(a.Id)));
+                var addObjects = (from addobj in updated.Where(a => a.IsSelected == true && a.Issue_Witness_Id == null)
+                                  select new CaseXL.Data.Witness_Fact
+                                  {
+                                      CaseId = caseid,
+                                      FactId = factID,
+                                      WitnessId = addobj.WitnessId
+                                  }).ToList();
+
+                context.Add(addObjects);
+                context.SaveChanges();
+            }
+            return Json(true);
+        }
+        public ActionResult _UpdateIssues(int? factID, int? caseid, [DataSourceRequest] DataSourceRequest request, [Bind(Prefix = "models")]IEnumerable<CaseXL.ViewModels.IssuesVM> updated)
+        {
+            using (CaseXL.Data.CaseXLEntities context = new Data.CaseXLEntities())
+            {
+                var delObjects = updated.Where(a => a.IsSelected == false).Select(a => a.Issue_Fact_Id).ToList();
+                context.Delete(context.Issues_Facts.Where(a => delObjects.Contains(a.Id)));
+
+                var addObjects = (from addobj in updated.Where(a => a.IsSelected == true && a.Issue_Fact_Id == null)
+                                  select new CaseXL.Data.Issues_Fact
+                                  {
+                                      Case_Id = caseid,
+                                      Fact_Id = factID,
+                                      Issue_Id = addobj.Id
+                                  }).ToList();
+
+                context.Add(addObjects);
+                context.SaveChanges();
+            }
+            return Json(true);
+        }
+        public ActionResult _FactDelete([DataSourceRequest] DataSourceRequest request, ViewModels.FactsVM model)
+        {
+            using (CaseXL.Data.CaseXLEntities context = new Data.CaseXLEntities())
+            {
+                var objtoDelete = context.Facts.Where(a => a.Id == model.ID).FirstOrDefault();
+                if (objtoDelete != null)
+                {
+                    context.Delete(objtoDelete);
+                    context.SaveChanges();
+                }
+                return Json(new[] { model }.ToDataSourceResult(request, ModelState));
+            }
+
+        }
+        public ActionResult _FactsEdit([DataSourceRequest] DataSourceRequest request, ViewModels.FactsVM model)
+        {
+            using (CaseXL.Data.CaseXLEntities context = new Data.CaseXLEntities())
+            {
+                var objtoUpdate = context.Facts.Where(a => a.Id == model.ID).FirstOrDefault();
+                if (objtoUpdate != null)
+                {
+                    objtoUpdate.Evaluation_Id = model.Evaluation_Id;
+                    objtoUpdate.Date = model.Date;
+                    objtoUpdate.Source = model.Source;
+                    objtoUpdate.Description = model.Description;
+
+                    context.SaveChanges();
+                }
+                return Json(new[] { model }.ToDataSourceResult(request, ModelState));
+            }
+
+        }
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult _FactsCreate([DataSourceRequest] DataSourceRequest request, ViewModels.FactsVM model)
+        {
+            using (CaseXL.Data.CaseXLEntities context = new Data.CaseXLEntities())
+            {
+                var objtoUpdate = new CaseXL.Data.Fact();
+
+                if (objtoUpdate != null)
+                {
+                    objtoUpdate.Evaluation_Id = model.Evaluation_Id;
+                    objtoUpdate.Date = model.Date;
+                    objtoUpdate.Source = model.Source;
+                    objtoUpdate.Description = model.Description;
+                    objtoUpdate.Case_Id = int.Parse(Session["caseid"].ToString());
+                    context.Add(objtoUpdate);
+                    context.SaveChanges();
+                    model.ID = objtoUpdate.Id;
+                    model.CaseID = objtoUpdate.Case_Id;
+                }
+
+                return Json(new[] { model }.ToDataSourceResult(request, ModelState), JsonRequestBehavior.AllowGet);
+            }
+
+        }
+        public ActionResult _GetWitnesses(int? caseid)
+        {
+            Session["caseid"] = caseid;
+            return PartialView("_Witnesses");
+
+
+        }
+        public ActionResult _WitnessesByCase([DataSourceRequest] DataSourceRequest request)
+        {
+            var data = Common.Repository.GetWitnessesByCase(int.Parse(Session["caseid"].ToString()));
+            return Json(data.ToDataSourceResult(request));
+
+        }
+        public ActionResult _UpdateWitnessesByCase([DataSourceRequest] DataSourceRequest request, ViewModels.WitnessVM model)
+        {
+            using (CaseXL.Data.CaseXLEntities context = new Data.CaseXLEntities())
+            {
+                var data = context.Witnesses.Where(a => a.Id == model.WitnessId).FirstOrDefault();
+                data.Email = model.Email;
+                data.Name = model.FullName;
+                context.SaveChanges();
+
+            }
+            return Json(new[] { model }.ToDataSourceResult(request, ModelState));
+        }
+        public ActionResult _CreateWitnessByCase([DataSourceRequest] DataSourceRequest request, ViewModels.WitnessVM model)
+        {
+            using (CaseXL.Data.CaseXLEntities context = new Data.CaseXLEntities())
+            {
+                CaseXL.Data.Witness witness = new Data.Witness();
+                witness.Email = model.Email;
+                witness.Name = model.FullName;
+                witness.CaseId = int.Parse(Session["caseid"].ToString());
+                context.Add(witness);
+                context.SaveChanges();
+                model.WitnessId = model.ID = witness.Id;
+
+            }
+            return Json(new[] { model }.ToDataSourceResult(request, ModelState));
+        }
+        public ActionResult _DeleteWitnessByCase([DataSourceRequest] DataSourceRequest request, ViewModels.WitnessVM model)
+        {
+            using (CaseXL.Data.CaseXLEntities context = new Data.CaseXLEntities())
+            {
+                var data = context.Witnesses.Where(a => a.Id == model.WitnessId).FirstOrDefault();
+                context.Delete(data);
+                context.SaveChanges();
+            }
+            return Json(new[] { model }.ToDataSourceResult(request, ModelState));
+        }
+        public ActionResult _QuestionsByWitness([DataSourceRequest] DataSourceRequest request, int? witnessId)
+        {
+            var data = Common.Repository.GetQuestionsByWitness(witnessId.GetValueOrDefault());
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult _QuestionsByWitnessUpdate([DataSourceRequest] DataSourceRequest request, ViewModels.QuestionVM model)
+        {
+            using (CaseXL.Data.CaseXLEntities context = new Data.CaseXLEntities())
+            {
+                var data = context.Questions.Where(a => a.Id == model.Id).FirstOrDefault();
+                data.Question1 = model.Question;
+                data.Answer = model.Answer;
+                context.SaveChanges();
+            }
+            return Json(new[] { model }.ToDataSourceResult(request, ModelState));
+        }
+        public ActionResult _QuestionsByWitnessCreate([DataSourceRequest] DataSourceRequest request, ViewModels.QuestionVM model, int? witnessId)
+        {
+            using (CaseXL.Data.CaseXLEntities context = new Data.CaseXLEntities())
+            {
+                var data = new CaseXL.Data.Question();
+                data.Question1 = model.Question;
+                data.Answer = model.Answer;
+                data.Witness_Id = witnessId;
+                context.Add(data);
+                context.SaveChanges();
+                model.Id = data.Id;
+                model.Witness_Id = witnessId;
+            }
+            return Json(new[] { model }.ToDataSourceResult(request, ModelState));
+        }
+        public ActionResult _QuestionsByWitnessDelete([DataSourceRequest] DataSourceRequest request, ViewModels.QuestionVM model)
+        {
+            using (CaseXL.Data.CaseXLEntities context = new Data.CaseXLEntities())
+            {
+                var data = context.Questions.Where(a => a.Id == model.Id).FirstOrDefault();
+                context.Delete(data);
+                context.SaveChanges();
+            }
+            return Json(new[] { model }.ToDataSourceResult(request, ModelState));
+        }
+        public ActionResult _GetExhibits(int? caseid)
+        {
+            Session["caseid"] = caseid;
+            return PartialView("_Exhibits");
+
+
+        }
+        public JsonResult _ExhibitsByCase([DataSourceRequest] DataSourceRequest request)
+        {
+            var data = Common.Repository.GetExhibitsByCase(int.Parse(Session["caseid"].ToString()));
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult _DeleteExhibitByCase([DataSourceRequest] DataSourceRequest request, ViewModels.ExhibitVM model)
+        {
+            using (CaseXL.Data.CaseXLEntities context = new Data.CaseXLEntities())
+            {
+                var data = context.Exhibits.Where(a => a.Id == model.Exhibit_Id).FirstOrDefault();
+                context.Delete(data);
+                context.SaveChanges();
+            }
+            return Json(new[] { model }.ToDataSourceResult(request, ModelState));
+        }
+        public ActionResult _CreateExhibitByCase([DataSourceRequest] DataSourceRequest request, ViewModels.ExhibitVM model)
+        {
+            using (CaseXL.Data.CaseXLEntities context = new Data.CaseXLEntities())
+            {
+                CaseXL.Data.Exhibit exhibit = new Data.Exhibit();
+                exhibit.Author = model.Author;
+                exhibit.CaseId = int.Parse(Session["caseid"].ToString());
+                exhibit.Date = model.Date;
+                exhibit.Description = model.Description;
+                exhibit.Name = model.Name;
+                exhibit.Recepient = model.Recipient;
+                exhibit.Source = model.Source;
+                exhibit.Type_Id = model.Type_Id;
+                context.Add(exhibit);
+                context.SaveChanges();
+                model.Exhibit_Id = exhibit.Id;
+                model.CaseId = exhibit.CaseId;
+
+            }
+            return Json(new[] { model }.ToDataSourceResult(request, ModelState));
+        }
+        public ActionResult _UpdateExhibitByCase([DataSourceRequest] DataSourceRequest request, ViewModels.ExhibitVM model)
+        {
+            using (CaseXL.Data.CaseXLEntities context = new Data.CaseXLEntities())
+            {
+                var objtoUpdate = context.Exhibits.Where(a => a.Id == model.Exhibit_Id).FirstOrDefault();
+
+                objtoUpdate.Author = model.Author;
+                objtoUpdate.CaseId = int.Parse(Session["caseid"].ToString());
+                objtoUpdate.Date = model.Date;
+                objtoUpdate.Description = model.Description;
+                objtoUpdate.Name = model.Name;
+                objtoUpdate.Recepient = model.Recipient;
+                objtoUpdate.Source = model.Source;
+                objtoUpdate.Type_Id = model.Type_Id;
+                context.Add(objtoUpdate);
+                context.SaveChanges();
+                model.Exhibit_Id = objtoUpdate.Id;
+
+            }
+            return Json(new[] { model }.ToDataSourceResult(request, ModelState));
+        }
+
+        #region IssuesByCase
+        public ActionResult _GetIssues(int? caseid)
+        {
+            Session["caseid"] = caseid;
+            return PartialView("_Issues");
+
+
+        }
+        public ActionResult _IssuesByCase([DataSourceRequest] DataSourceRequest request)
+        {
+            var data = Common.Repository.GetIssuesByCases(int.Parse(Session["caseid"].ToString()));
+            return Json(data.ToDataSourceResult(request));
+
+        }
+        public ActionResult _UpdateIssueByCase([DataSourceRequest] DataSourceRequest request, ViewModels.IssuesVM model)
+        {
+            using (CaseXL.Data.CaseXLEntities context = new Data.CaseXLEntities())
+            {
+                var data = context.Issues.Where(a => a.Id == model.Id).FirstOrDefault();
+                data.Issue_Name = model.Issue_Name;
+                data.Description = model.Description;
+                context.SaveChanges();
+            }
+            return Json(new[] { model }.ToDataSourceResult(request, ModelState));
+        }
+        public ActionResult _CreateIssueByCase([DataSourceRequest] DataSourceRequest request, ViewModels.IssuesVM model)
+        {
+            using (CaseXL.Data.CaseXLEntities context = new Data.CaseXLEntities())
+            {
+                CaseXL.Data.Issue issue = new Data.Issue();
+                issue.Issue_Name = model.Issue_Name;
+                issue.Description = model.Description;
+                issue.Case_ID = int.Parse(Session["caseid"].ToString());
+                context.Add(issue);
+                context.SaveChanges();
+                model.Id = issue.Id;
+                model.Case_ID = issue.Case_ID;
+            }
+            return Json(new[] { model }.ToDataSourceResult(request, ModelState));
+        }
+        public ActionResult _DeleteIssueByCase([DataSourceRequest] DataSourceRequest request, ViewModels.IssuesVM model)
+        {
+            using (CaseXL.Data.CaseXLEntities context = new Data.CaseXLEntities())
+            {
+                var data = context.Issues.Where(a => a.Id == model.Id).FirstOrDefault();
+                if (data != null)
+                {
+                    context.Delete(data);
+                    context.SaveChanges();
+                }
+            }
+            return Json(new[] { model }.ToDataSourceResult(request, ModelState));
+        }
+        #region Questions
+
+        public ActionResult _QuestionsByIssues([DataSourceRequest] DataSourceRequest request, int? issueId)
+        {
+            var data = Common.Repository.GetQuestionsByIssues(issueId.GetValueOrDefault());
+            return Json(data.ToDataSourceResult(request));
+        }
+        public ActionResult _QuestionsByIssuesUpdate([DataSourceRequest] DataSourceRequest request, ViewModels.QuestionVM model)
+        {
+            using (CaseXL.Data.CaseXLEntities context = new Data.CaseXLEntities())
+            {
+                var data = context.Issue_Questions.Where(a => a.Id == model.Id).FirstOrDefault();
+                data.Question = model.Question;
+                data.Answer = model.Answer;
+                context.SaveChanges();
+            }
+            return Json(new[] { model }.ToDataSourceResult(request, ModelState));
+        }
+        public ActionResult _QuestionsByIssuesCreate([DataSourceRequest] DataSourceRequest request, ViewModels.QuestionVM model, int? issueId)
+        {
+            using (CaseXL.Data.CaseXLEntities context = new Data.CaseXLEntities())
+            {
+                var data = new CaseXL.Data.Issue_Question();
+                data.Question = model.Question;
+                data.Answer = model.Answer;
+                data.Issue_Id = issueId;
+                context.Add(data);
+                context.SaveChanges();
+                model.Id = data.Id;
+                model.Issue_Id = issueId;
+            }
+            return Json(new[] { model }.ToDataSourceResult(request, ModelState));
+        }
+        public ActionResult _QuestionsByIssuesDelete([DataSourceRequest] DataSourceRequest request, ViewModels.QuestionVM model)
+        {
+            using (CaseXL.Data.CaseXLEntities context = new Data.CaseXLEntities())
+            {
+                var data = context.Issue_Questions.Where(a => a.Id == model.Id).FirstOrDefault();
+                context.Delete(data);
+                context.SaveChanges();
+            }
+            return Json(new[] { model }.ToDataSourceResult(request, ModelState));
+        }
+
+
+        #endregion
+        #endregion
+        #region Documents
+        public ActionResult _ExbDocs([DataSourceRequest] DataSourceRequest request, int? exbId)
+        {
+
+            return Json(Common.Repository.GetDocuments(1, exbId.Value).ToDataSourceResult(request));
+        }
+        public ActionResult _CreateDoc([DataSourceRequest] DataSourceRequest request, ViewModels.DocsVM model, int? exbId)
+        {
+            using (CaseXL.Data.CaseXLEntities context = new CaseXL.Data.CaseXLEntities())
+            {
+                CaseXL.Data.Document doc = new Data.Document()
                 {
                     Doc_Type = 1,
                     Doc_Name = model.Name,
                     Doc_Url = model.Link,
-                    Doc_ParentId = new int?(exbId.Value)
+                    Doc_ParentId = exbId.Value
+
                 };
-                entities.Add(entity);
-                entities.SaveChanges();
-                model.Id = entity.Id;
-                return base.Json(QueryableExtensions.ToDataSourceResult(new DocsVM[] { model }, request, base.ModelState));
+                context.Add(doc);
+                context.SaveChanges();
+                model.Id = doc.Id;
+
+                return Json(new[] { model }.ToDataSourceResult(request, ModelState));
             }
         }
-
-        public ActionResult _CreateExhibitByCase([DataSourceRequest] DataSourceRequest request, ExhibitVM model)
+        public ActionResult _DeleteDoc([DataSourceRequest] DataSourceRequest request, ViewModels.DocsVM model)
         {
-            using (CaseXLEntities entities = new CaseXLEntities())
+            using (CaseXL.Data.CaseXLEntities context = new CaseXL.Data.CaseXLEntities())
             {
-                Exhibit entity = new Exhibit
-                {
-                    Author = model.Author,
-                    CaseId = new int?(int.Parse(base.Session["caseid"].ToString())),
-                    Date = model.Date,
-                    Description = model.Description,
-                    Name = model.Name,
-                    Recepient = model.Recipient,
-                    Source = model.Source,
-                    Type_Id = new int?(model.Type_Id)
-                };
-                entities.Add(entity);
-                entities.SaveChanges();
-                model.Exhibit_Id = entity.Id;
-                model.CaseId = entity.CaseId;
-            }
-            return base.Json(QueryableExtensions.ToDataSourceResult(new ExhibitVM[] { model }, request, base.ModelState));
-        }
-
-        public ActionResult _CreateIssueByCase([DataSourceRequest] DataSourceRequest request, IssuesVM model)
-        {
-            using (CaseXLEntities entities = new CaseXLEntities())
-            {
-                Issue entity = new Issue
-                {
-                    Issue_Name = model.Issue_Name,
-                    Description = model.Description,
-                    Case_ID = int.Parse(base.Session["caseid"].ToString())
-                };
-                entities.Add(entity);
-                entities.SaveChanges();
-                model.Id = entity.Id;
-                model.Case_ID = entity.Case_ID;
-            }
-            return base.Json(QueryableExtensions.ToDataSourceResult(new IssuesVM[] { model }, request, base.ModelState));
-        }
-
-        public ActionResult _CreateWitnessByCase([DataSourceRequest] DataSourceRequest request, WitnessVM model)
-        {
-            using (CaseXLEntities entities = new CaseXLEntities())
-            {
-                Witness entity = new Witness
-                {
-                    Email = model.Email,
-                    Name = model.FullName,
-                    CaseId = new int?(int.Parse(base.Session["caseid"].ToString()))
-                };
-                entities.Add(entity);
-                entities.SaveChanges();
-                model.WitnessId = model.ID = entity.Id;
-            }
-            return base.Json(QueryableExtensions.ToDataSourceResult(new WitnessVM[] { model }, request, base.ModelState));
-        }
-
-        public ActionResult _DeleteDoc([DataSourceRequest] DataSourceRequest request, DocsVM model)
-        {
-            using (CaseXLEntities entities = new CaseXLEntities())
-            {
-                Document entity = (from a in entities.Documents
-                                   where a.Id == model.Id
-                                   select a).FirstOrDefault<Document>();
-                entities.Delete(entity);
-                entities.SaveChanges();
-                return base.Json(QueryableExtensions.ToDataSourceResult(new DocsVM[] { model }, request, base.ModelState));
+                var objToDelete = context.Documents.Where(a => a.Id == model.Id).FirstOrDefault();
+                context.Delete(objToDelete);
+                context.SaveChanges();
+                return Json(new[] { model }.ToDataSourceResult(request, ModelState));
             }
         }
+        #endregion
 
-        public ActionResult _DeleteExhibitByCase([DataSourceRequest] DataSourceRequest request, ExhibitVM model)
+        private void SetfirmInSession()
         {
-            using (CaseXLEntities entities = new CaseXLEntities())
+            using (CaseXL.Data.CaseXLEntities context = new CaseXL.Data.CaseXLEntities())
             {
-                Exhibit entity = (from a in entities.Exhibits
-                                  where a.Id == model.Exhibit_Id
-                                  select a).FirstOrDefault<Exhibit>();
-                entities.Delete(entity);
-                entities.SaveChanges();
-            }
-            return base.Json(QueryableExtensions.ToDataSourceResult(new ExhibitVM[] { model }, request, base.ModelState));
-        }
-
-        public ActionResult _DeleteIssueByCase([DataSourceRequest] DataSourceRequest request, IssuesVM model)
-        {
-            using (CaseXLEntities entities = new CaseXLEntities())
-            {
-                Issue entity = (from a in entities.Issues
-                                where a.Id == model.Id
-                                select a).FirstOrDefault<Issue>();
-                if (entity != null)
-                {
-                    entities.Delete(entity);
-                    entities.SaveChanges();
-                }
-            }
-            return base.Json(QueryableExtensions.ToDataSourceResult(new IssuesVM[] { model }, request, base.ModelState));
-        }
-
-        public ActionResult _DeleteWitnessByCase([DataSourceRequest] DataSourceRequest request, WitnessVM model)
-        {
-            using (CaseXLEntities entities = new CaseXLEntities())
-            {
-                Witness entity = (from a in entities.Witnesses
-                                  where a.Id == model.WitnessId
-                                  select a).FirstOrDefault<Witness>();
-                entities.Delete(entity);
-                entities.SaveChanges();
-            }
-            return base.Json(QueryableExtensions.ToDataSourceResult(new WitnessVM[] { model }, request, base.ModelState));
-        }
-
-        public ActionResult _ExbDocs([DataSourceRequest] DataSourceRequest request, int? exbId)
-        {
-            return base.Json(QueryableExtensions.ToDataSourceResult(Repository.GetDocuments(1, exbId.Value), request));
-        }
-
-        public ActionResult _Exhibits([DataSourceRequest] DataSourceRequest request, int? caseid, int? factID)
-        {
-            List<ExhibitVM> exhibitsByFactCase = Repository.GetExhibitsByFactCase(caseid.Value, factID.Value);
-            return base.Json(QueryableExtensions.ToDataSourceResult(exhibitsByFactCase, request), JsonRequestBehavior.AllowGet);
-        }
-
-        public JsonResult _ExhibitsByCase([DataSourceRequest] DataSourceRequest request)
-        {
-            List<ExhibitVM> exhibitsByCase = Repository.GetExhibitsByCase(int.Parse(base.Session["caseid"].ToString()));
-            return base.Json(QueryableExtensions.ToDataSourceResult(exhibitsByCase, request));
-        }
-
-        public ActionResult _ExhibitsLinking(int? caseid, int? factID)
-        {
-            ExhibitLinkingVM model = new ExhibitLinkingVM
-            {
-                CaseID = caseid,
-                FactID = factID
-            };
-            return this.PartialView("_ExhibitLinking", model);
-        }
-
-        public ActionResult _FactDelete([DataSourceRequest] DataSourceRequest request, FactsVM model)
-        {
-            using (CaseXLEntities entities = new CaseXLEntities())
-            {
-                Fact entity = (from a in entities.Facts
-                               where a.Id == model.ID
-                               select a).FirstOrDefault<Fact>();
-                if (entity != null)
-                {
-                    entities.Delete(entity);
-                    entities.SaveChanges();
-                }
-                return base.Json(QueryableExtensions.ToDataSourceResult(new FactsVM[] { model }, request, base.ModelState));
+                var user = context.App_Users.Where(a => a.UserName == HttpContext.User.Identity.Name).FirstOrDefault();
+                SessionBase.Firm = user.Firm;
             }
         }
-
-        public ActionResult _Facts([DataSourceRequest] DataSourceRequest request)
-        {
-            using (CaseXLEntities entities = new CaseXLEntities())
-            {
-                List<FactsVM> list = (from facts in entities.Facts
-                                      where facts.Case_Id == int.Parse(this.Session["caseid"].ToString())
-                                      select new FactsVM { CaseID = facts.Case_Id, Date = facts.Date, Description = facts.Description, Evaluation = facts.Description, Source = facts.Source, ID = facts.Id, Evaluation_Id = facts.Evaluation1.Id, Evaluation_Text = facts.Evaluation1.Evaluation_Text } into o
-                                      orderby o.Date
-                                      select o).ToList<FactsVM>();
-                return base.Json(QueryableExtensions.ToDataSourceResult(list, request));
-            }
-        }
-
+        #region REfactor
         public ActionResult _FactsByWitness([DataSourceRequest] DataSourceRequest request, int? id)
         {
             if (id.HasValue)
             {
-                return base.Json(Repository.GetFactsByWitness(id.Value), JsonRequestBehavior.AllowGet);
+                return Json(Repository.GetFactsByWitness(id.Value), JsonRequestBehavior.AllowGet);
             }
             return null;
         }
-
-        [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult _FactsCreate([DataSourceRequest] DataSourceRequest request, FactsVM model)
-        {
-            using (CaseXLEntities entities = new CaseXLEntities())
-            {
-                Fact entity = new Fact();
-                if (entity != null)
-                {
-                    entity.Evaluation_Id = new int?(model.Evaluation_Id);
-                    entity.Date = model.Date;
-                    entity.Source = model.Source;
-                    entity.Description = model.Description;
-                    entity.Case_Id = int.Parse(base.Session["caseid"].ToString());
-                    entities.Add(entity);
-                    entities.SaveChanges();
-                    model.ID = entity.Id;
-                    model.CaseID = entity.Case_Id;
-                }
-                return base.Json(QueryableExtensions.ToDataSourceResult(new FactsVM[] { model }, request, base.ModelState), JsonRequestBehavior.AllowGet);
-            }
-        }
-
-        public ActionResult _FactsEdit([DataSourceRequest] DataSourceRequest request, FactsVM model)
-        {
-            using (CaseXLEntities entities = new CaseXLEntities())
-            {
-                Fact fact = (from a in entities.Facts
-                             where a.Id == model.ID
-                             select a).FirstOrDefault<Fact>();
-                if (fact != null)
-                {
-                    fact.Evaluation_Id = new int?(model.Evaluation_Id);
-                    fact.Date = model.Date;
-                    fact.Source = model.Source;
-                    fact.Description = model.Description;
-                    entities.SaveChanges();
-                }
-                return base.Json(QueryableExtensions.ToDataSourceResult(new FactsVM[] { model }, request, base.ModelState));
-            }
-        }
-
-        public ActionResult _GetExhibits(int? caseid)
-        {
-            base.Session["caseid"] = caseid;
-            return base.PartialView("_Exhibits");
-        }
-
-        public ActionResult _GetFacts(int caseid)
-        {
-            base.Session["caseid"] = caseid;
-            return base.PartialView("_Facts");
-        }
-
-        public ActionResult _GetIssues(int? caseid)
-        {
-            base.Session["caseid"] = caseid;
-            return base.PartialView("_Issues");
-        }
-
         public ActionResult _GetTrialinq(int? caseid)
         {
             base.Session["caseid"] = caseid;
             return base.PartialView("_Trialinq");
         }
-
-        public ActionResult _GetWitnesses(int? caseid)
-        {
-            base.Session["caseid"] = caseid;
-            return base.PartialView("_Witnesses");
-        }
-
-        public ActionResult _IssueLinking(int? caseid, int? factID)
-        {
-            IssueLinkingVM model = new IssueLinkingVM
-            {
-                CaseID = caseid,
-                FactID = factID
-            };
-            return this.PartialView("_IssueLinking", model);
-        }
-
-        public ActionResult _Issues([DataSourceRequest] DataSourceRequest request, int? caseid, int? factID)
-        {
-            List<IssuesVM> issuesByFactCase = Repository.GetIssuesByFactCase(caseid.Value, factID.Value);
-            return base.Json(QueryableExtensions.ToDataSourceResult(issuesByFactCase, request));
-        }
-
-        public ActionResult _IssuesByCase([DataSourceRequest] DataSourceRequest request)
-        {
-            List<IssuesVM> issuesByCases = Repository.GetIssuesByCases(int.Parse(base.Session["caseid"].ToString()));
-            return base.Json(QueryableExtensions.ToDataSourceResult(issuesByCases, request));
-        }
-
         public ActionResult _QuestionsByFacts([DataSourceRequest] DataSourceRequest request, int? Id)
         {
-            List<FactWitnessQuestionVM> questionsByFact = Repository.GetQuestionsByFact(Id.GetValueOrDefault());
-            return base.Json(QueryableExtensions.ToDataSourceResult(questionsByFact, request));
+            var questionsByFact = Repository.GetQuestionsByFact(Id.GetValueOrDefault());
+            return Json(questionsByFact.ToDataSourceResult(request));
         }
-
         public ActionResult _QuestionsByFactsCreate(int? Id, [DataSourceRequest] DataSourceRequest request, FactWitnessQuestionVM model)
         {
-            using (CaseXLEntities entities = new CaseXLEntities())
+            using (CaseXLEntities context = new CaseXLEntities())
             {
-                Fact_Witness_Question entity = new Fact_Witness_Question();
-                entity.Question = model.Question;
-                entity.Answer = model.Answer;
-                entity.Witness_Fact_Id = model.Witness_Id.Value;
-                entity.Asked = model.Asked;
-                entities.Add(entity);
-                entities.SaveChanges();
+                Fact_Witness_Question entity = new Fact_Witness_Question
+                {
+                    Question = model.Question,
+                    Answer = model.Answer,
+                    Witness_Fact_Id = model.Fact_Id,
+                    Asked = model.Asked
+                };
+                context.Add(entity);
+                context.SaveChanges();
                 model.Id = entity.Id;
             }
-            return base.Json(QueryableExtensions.ToDataSourceResult(new FactWitnessQuestionVM[] { model }, request, base.ModelState));
+            return Json(new[] { model }.ToDataSourceResult(request, ModelState));
         }
 
         public ActionResult _QuestionsByFactsUpdate([DataSourceRequest] DataSourceRequest request, FactWitnessQuestionVM model)
         {
             using (CaseXLEntities entities = new CaseXLEntities())
             {
-                //ParameterExpression expression;
-                Fact_Witness_Question question = entities.Fact_Witness_Questions.Where(a => a.Id == model.Id).FirstOrDefault();
+                Fact_Witness_Question question = (from a in entities.Fact_Witness_Questions
+                                                  where a.Id == model.Id
+                                                  select a).FirstOrDefault<Fact_Witness_Question>();
                 question.Question = model.Question;
                 question.Answer = model.Answer;
                 question.Asked = model.Asked;
                 entities.SaveChanges();
             }
-            return base.Json(QueryableExtensions.ToDataSourceResult(new FactWitnessQuestionVM[] { model }, request, base.ModelState));
+            return Json(new[] { model }.ToDataSourceResult(request, ModelState));
         }
-
-        public ActionResult _QuestionsByIssues([DataSourceRequest] DataSourceRequest request, int? issueId)
-        {
-            List<QuestionVM> questionsByIssues = Repository.GetQuestionsByIssues(issueId.GetValueOrDefault());
-            return base.Json(QueryableExtensions.ToDataSourceResult(questionsByIssues, request));
-        }
-
-        public ActionResult _QuestionsByIssuesCreate([DataSourceRequest] DataSourceRequest request, QuestionVM model, int? issueId)
-        {
-            using (CaseXLEntities entities = new CaseXLEntities())
-            {
-                Issue_Question entity = new Issue_Question
-                {
-                    Question = model.Question,
-                    Answer = model.Answer,
-                    Issue_Id = issueId
-                };
-                entities.Add(entity);
-                entities.SaveChanges();
-                model.Id = entity.Id;
-                model.Issue_Id = issueId;
-            }
-            return base.Json(QueryableExtensions.ToDataSourceResult(new QuestionVM[] { model }, request, base.ModelState));
-        }
-
-        public ActionResult _QuestionsByIssuesDelete([DataSourceRequest] DataSourceRequest request, QuestionVM model)
-        {
-            using (CaseXLEntities entities = new CaseXLEntities())
-            {
-                Issue_Question entity = (from a in entities.Issue_Questions
-                                         where a.Id == model.Id
-                                         select a).FirstOrDefault<Issue_Question>();
-                entities.Delete(entity);
-                entities.SaveChanges();
-            }
-            return base.Json(QueryableExtensions.ToDataSourceResult(new QuestionVM[] { model }, request, base.ModelState));
-        }
-
-        public ActionResult _QuestionsByIssuesUpdate([DataSourceRequest] DataSourceRequest request, QuestionVM model)
-        {
-            using (CaseXLEntities entities = new CaseXLEntities())
-            {
-                Issue_Question question = (from a in entities.Issue_Questions
-                                           where a.Id == model.Id
-                                           select a).FirstOrDefault<Issue_Question>();
-                question.Question = model.Question;
-                question.Answer = model.Answer;
-                entities.SaveChanges();
-            }
-            return base.Json(QueryableExtensions.ToDataSourceResult(new QuestionVM[] { model }, request, base.ModelState));
-        }
-
-        public ActionResult _QuestionsByWitness([DataSourceRequest] DataSourceRequest request, int? witnessId)
-        {
-            List<QuestionVM> questionsByWitness = Repository.GetQuestionsByWitness(witnessId.GetValueOrDefault());
-            return base.Json(QueryableExtensions.ToDataSourceResult(questionsByWitness, request));
-        }
-
-        public ActionResult _QuestionsByWitnessCreate([DataSourceRequest] DataSourceRequest request, QuestionVM model, int? witnessId)
-        {
-            using (CaseXLEntities entities = new CaseXLEntities())
-            {
-                Question entity = new Question
-                {
-                    Question1 = model.Question,
-                    Answer = model.Answer,
-                    Witness_Id = witnessId
-                };
-                entities.Add(entity);
-                entities.SaveChanges();
-                model.Id = entity.Id;
-                model.Witness_Id = witnessId;
-            }
-            return base.Json(QueryableExtensions.ToDataSourceResult(new QuestionVM[] { model }, request, base.ModelState));
-        }
-
-        public ActionResult _QuestionsByWitnessDelete([DataSourceRequest] DataSourceRequest request, QuestionVM model)
-        {
-            using (CaseXLEntities entities = new CaseXLEntities())
-            {
-                Question entity = (from a in entities.Questions
-                                   where a.Id == model.Id
-                                   select a).FirstOrDefault<Question>();
-                entities.Delete(entity);
-                entities.SaveChanges();
-            }
-            return base.Json(QueryableExtensions.ToDataSourceResult(new QuestionVM[] { model }, request, base.ModelState));
-        }
-
-        public ActionResult _QuestionsByWitnessUpdate([DataSourceRequest] DataSourceRequest request, QuestionVM model)
-        {
-            using (CaseXLEntities entities = new CaseXLEntities())
-            {
-                Question question = (from a in entities.Questions
-                                     where a.Id == model.Id
-                                     select a).FirstOrDefault<Question>();
-                question.Question1 = model.Question;
-                question.Answer = model.Answer;
-                entities.SaveChanges();
-            }
-            return base.Json(QueryableExtensions.ToDataSourceResult(new QuestionVM[] { model }, request, base.ModelState));
-        }
-
         public ActionResult _QuestionsFactsDelete([DataSourceRequest] DataSourceRequest request, FactWitnessQuestionVM model)
         {
             using (CaseXLEntities entities = new CaseXLEntities())
             {
-                Fact_Witness_Question entity = entities.Fact_Witness_Questions.Where(a => a.Id == model.Id).FirstOrDefault();
+                Fact_Witness_Question entity = (from a in entities.Fact_Witness_Questions
+                                                where a.Id == model.Id
+                                                select a).FirstOrDefault<Fact_Witness_Question>();
                 entities.Delete(entity);
                 entities.SaveChanges();
             }
-            return base.Json(QueryableExtensions.ToDataSourceResult(new FactWitnessQuestionVM[] { model }, request, base.ModelState));
+            return Json(new[] { model }.ToDataSourceResult(request, ModelState));
         }
-
-        public ActionResult _UpdateExhibitByCase([DataSourceRequest] DataSourceRequest request, ExhibitVM model)
-        {
-            using (CaseXLEntities entities = new CaseXLEntities())
-            {
-                Exhibit entity = (from a in entities.Exhibits
-                                  where a.Id == model.Exhibit_Id
-                                  select a).FirstOrDefault<Exhibit>();
-                entity.Author = model.Author;
-                entity.CaseId = new int?(int.Parse(base.Session["caseid"].ToString()));
-                entity.Date = model.Date;
-                entity.Description = model.Description;
-                entity.Name = model.Name;
-                entity.Recepient = model.Recipient;
-                entity.Source = model.Source;
-                entity.Type_Id = new int?(model.Type_Id);
-                entities.Add(entity);
-                entities.SaveChanges();
-                model.Exhibit_Id = entity.Id;
-            }
-            return base.Json(QueryableExtensions.ToDataSourceResult(new ExhibitVM[] { model }, request, base.ModelState));
-        }
-
-        public ActionResult _UpdateExhibits(int? factID, int? caseid, [DataSourceRequest] DataSourceRequest request, [Bind(Prefix = "models")] IEnumerable<ExhibitVM> updated)
-        {
-            Func<ExhibitVM, Exhibits_Fact> selector = null;
-            using (CaseXLEntities entities = new CaseXLEntities())
-            {
-                List<int?> delObjects = (from a in updated
-                                         where !a.IsSelected && a.Fact_Exhibit.HasValue
-                                         select a.Fact_Exhibit).ToList<int?>();
-                entities.Delete(from a in entities.Exhibits_Facts
-                                              where delObjects.Contains(a.Id)
-                                              select a);
-                if (selector == null)
-                {
-                    selector = addobj => new Exhibits_Fact { CaseId = caseid, FactId = factID, ExhibitId = new int?(addobj.Exhibit_Id) };
-                }
-                List<Exhibits_Fact> list = (from a in updated
-                                            where a.IsSelected && !a.Fact_Exhibit.HasValue
-                                            select a).Select<ExhibitVM, Exhibits_Fact>(selector).ToList<Exhibits_Fact>();
-                entities.Add(list);
-                entities.SaveChanges();
-            }
-            return base.Json(true);
-        }
-
-        public ActionResult _UpdateIssueByCase([DataSourceRequest] DataSourceRequest request, IssuesVM model)
-        {
-            using (CaseXLEntities entities = new CaseXLEntities())
-            {
-                Issue issue = (from a in entities.Issues
-                               where a.Id == model.Id
-                               select a).FirstOrDefault<Issue>();
-                issue.Issue_Name = model.Issue_Name;
-                issue.Description = model.Description;
-                entities.SaveChanges();
-            }
-            return base.Json(QueryableExtensions.ToDataSourceResult(new IssuesVM[] { model }, request, base.ModelState));
-        }
-
-        public ActionResult _UpdateIssues(int? factID, int? caseid, [DataSourceRequest] DataSourceRequest request, [Bind(Prefix = "models")] IEnumerable<IssuesVM> updated)
-        {
-            Func<IssuesVM, Issues_Fact> selector = null;
-            using (CaseXLEntities entities = new CaseXLEntities())
-            {
-                List<int?> delObjects = (from a in updated
-                                         where !a.IsSelected
-                                         select a.Issue_Fact_Id).ToList<int?>();
-                entities.Delete(from a in entities.Issues_Facts
-                                              where delObjects.Contains(a.Id)
-                                              select a);
-                if (selector == null)
-                {
-                    selector = addobj => new Issues_Fact { Case_Id = caseid, Fact_Id = factID, Issue_Id = new int?(addobj.Id) };
-                }
-                List<Issues_Fact> list = (from a in updated
-                                          where a.IsSelected && !a.Issue_Fact_Id.HasValue
-                                          select a).Select<IssuesVM, Issues_Fact>(selector).ToList<Issues_Fact>();
-                entities.Add(list);
-                entities.SaveChanges();
-            }
-            return base.Json(true);
-        }
-
-        public ActionResult _UpdateWitnesses(int? factID, int? caseid, [DataSourceRequest] DataSourceRequest request, [Bind(Prefix = "models")] IEnumerable<WitnessVM> updated)
-        {
-            Func<WitnessVM, Witness_Fact> selector = null;
-            using (CaseXLEntities entities = new CaseXLEntities())
-            {
-                List<int> delObjects = (from a in updated
-                                        where !a.IsSelected && a.Issue_Witness_Id.HasValue
-                                        select a.ID).ToList<int>();
-                entities.Delete(from a in entities.Witness_Facts
-                                              where delObjects.Contains(a.Id)
-                                              select a);
-                if (selector == null)
-                {
-                    selector = addobj => new Witness_Fact { CaseId = caseid, FactId = factID, WitnessId = new int?(addobj.WitnessId) };
-                }
-                List<Witness_Fact> list = (from a in updated
-                                           where a.IsSelected && !a.Issue_Witness_Id.HasValue
-                                           select a).Select<WitnessVM, Witness_Fact>(selector).ToList<Witness_Fact>();
-                entities.Add(list);
-                entities.SaveChanges();
-            }
-            return base.Json(true);
-        }
-
-        public ActionResult _UpdateWitnessesByCase([DataSourceRequest] DataSourceRequest request, WitnessVM model)
-        {
-            using (CaseXLEntities entities = new CaseXLEntities())
-            {
-                Witness witness = (from a in entities.Witnesses
-                                   where a.Id == model.WitnessId
-                                   select a).FirstOrDefault<Witness>();
-                witness.Email = model.Email;
-                witness.Name = model.FullName;
-                entities.SaveChanges();
-            }
-            return base.Json(QueryableExtensions.ToDataSourceResult(new WitnessVM[] { model }, request, base.ModelState));
-        }
-
-        public ActionResult _Witnesses([DataSourceRequest] DataSourceRequest request, int? caseid, int? factID)
-        {
-            List<WitnessVM> witnessesByCaseFact = Repository.GetWitnessesByCaseFact(caseid.Value, factID.Value);
-            return base.Json(QueryableExtensions.ToDataSourceResult(witnessesByCaseFact, request));
-        }
-
-        public ActionResult _WitnessesByCase([DataSourceRequest] DataSourceRequest request)
-        {
-            List<WitnessVM> witnessesByCase = Repository.GetWitnessesByCase(int.Parse(base.Session["caseid"].ToString()));
-            return base.Json(QueryableExtensions.ToDataSourceResult(witnessesByCase, request));
-        }
-
-        public ActionResult _WitnessLinking(int? caseid, int? factID)
-        {
-            WitnessesLinkingVM model = new WitnessesLinkingVM
-            {
-                CaseID = caseid,
-                FactID = factID
-            };
-            return this.PartialView("_WitnessesLinking", model);
-        }
-
-        public ActionResult About()
-        {
-            return base.View();
-        }
-
-        [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult Checkboxes(string[] checkedNodes, List<IssuesVM> model)
-        {
-            return null;
-        }
-
-        public ActionResult Index()
-        {
-            ((dynamic)base.ViewBag).Message = "Welcome to ASP.NET MVC!";
-            return base.View();
-        }
-
-        [Authorize]
-        public ActionResult Main(int? caseID, string msg)
-        {
-            this.SetfirmInSession();
-            List<ComboModelBase> cases = Repository.GetCases();
-            base.Session["caseid"] = caseID;
-            ((dynamic)base.ViewBag).Cases = new SelectList(cases, "ID", "Name", caseID.GetValueOrDefault());
-            return base.View();
-        }
-
-        private void SetfirmInSession()
-        {
-            using (CaseXLEntities entities = new CaseXLEntities())
-            {
-                SessionBase.Firm = (from a in entities.App_Users
-                                    where a.UserName == this.HttpContext.User.Identity.Name
-                                    select a).FirstOrDefault<App_User>().Firm;
-            }
-        }
-
-        public ActionResult Test(int? id)
-        {
-            return null;
-        }
+        #endregion
     }
-
-
-
-
-
 }

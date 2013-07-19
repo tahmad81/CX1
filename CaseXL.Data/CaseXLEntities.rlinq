@@ -241,11 +241,11 @@
         <orm:field name="_caseId" property="CaseId" behavior="readwrite" uniqueId="537bb47d-b004-419e-8e18-ba63fb3d0e4a" type="System.Nullable`1[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]">
           <orm:column name="CaseId" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
         </orm:field>
-        <orm:field name="_witness_Facts" property="Witness_Facts" behavior="readwrite" uniqueId="9f0b7375-7bdd-43d5-bb68-a40908a345de" type="CaseXL.Data.Witness_Fact">
-          <orm:collection element-class="CaseXL.Data.Witness_Fact" inverse-field="_witness" order-by="" uniqueId="0e05cd4c-745b-43eb-91fe-fd5fbc7733a2" />
-        </orm:field>
         <orm:field name="_questions" property="Questions" behavior="readwrite" uniqueId="71c3203e-655d-44e1-901c-5528be042a83" type="CaseXL.Data.Question">
           <orm:collection element-class="CaseXL.Data.Question" inverse-field="_witness" order-by="" uniqueId="cf1a6051-fee2-4c45-9f60-8256bd9341c1" />
+        </orm:field>
+        <orm:field name="_witness_Facts" property="Witness_Facts" behavior="readwrite" uniqueId="6722ba1d-b55f-492a-a71e-09d509011046" type="CaseXL.Data.Witness_Fact">
+          <orm:collection element-class="CaseXL.Data.Witness_Fact" inverse-field="_witness" order-by="" uniqueId="8c9db35f-075f-47d0-887e-e5e72f8c8375" />
         </orm:field>
       </orm:class>
       <orm:class name="Exhibit" uniqueId="410d0689-f89c-41a5-b3c4-0fef03853f0f">
@@ -344,35 +344,6 @@
           </orm:reference>
         </orm:field>
       </orm:class>
-      <orm:class name="Witness_Fact" uniqueId="55a187ca-a49e-47f5-acbc-d352cbed1e8c">
-        <orm:table name="Witness_Facts" />
-        <orm:identity>
-          <orm:key-generator name="autoinc" />
-          <orm:single-field field-name="_id" />
-        </orm:identity>
-        <orm:concurrency strategy="changed" />
-        <orm:field name="_id" property="Id" behavior="readwrite" uniqueId="75db63ba-2352-44ad-9008-0b575c482843" type="System.Int32">
-          <orm:column name="Id" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
-        </orm:field>
-        <orm:field name="_caseId" property="CaseId" behavior="readwrite" uniqueId="af5c4da3-a688-49c1-b393-c63677be533f" type="System.Nullable`1[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]">
-          <orm:column name="CaseId" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
-        </orm:field>
-        <orm:field name="_factId" property="FactId" behavior="readwrite" uniqueId="eb549855-3331-4475-a5ef-80146d6ad6de" type="System.Nullable`1[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]">
-          <orm:column name="FactId" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
-        </orm:field>
-        <orm:field name="_witnessId" property="WitnessId" behavior="readwrite" uniqueId="7bc96288-38fd-4c58-bd5d-0db264bdcafa" type="System.Nullable`1[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]">
-          <orm:column name="WitnessId" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
-        </orm:field>
-        <orm:field name="_witness" property="Witness" behavior="readwrite" uniqueId="a595701e-c2e3-41aa-82f5-dd1c3fc1452a" type="CaseXL.Data.Witness">
-          <orm:reference uniqueId="0e05cd4c-745b-43eb-91fe-fd5fbc7733a2">
-            <orm:sharedfield name="_witnessId" target-class="CaseXL.Data.Witness" target-field="_id" />
-            <orm:constraint name="FK_Witness_Facts_Witnesses" destination-table="Witnesses" />
-          </orm:reference>
-        </orm:field>
-        <orm:field name="_fact_Witness_Questions" property="Fact_Witness_Questions" behavior="readwrite" uniqueId="05e7ca16-5efa-4712-939d-592c68cb57e1" type="CaseXL.Data.Fact_Witness_Question">
-          <orm:collection element-class="CaseXL.Data.Fact_Witness_Question" inverse-field="_witness_Fact" order-by="" uniqueId="d881a42f-5cd2-4b66-875f-2ad71591ae4e" />
-        </orm:field>
-      </orm:class>
       <orm:class name="Exhibits_Fact" uniqueId="cf94ed26-2850-4755-b155-69a43e17f345">
         <orm:table name="Exhibits_Facts" />
         <orm:identity>
@@ -450,6 +421,9 @@
             <orm:sharedfield name="_evaluation_Id" target-class="CaseXL.Data.Evaluation" target-field="_id" />
             <orm:constraint name="FK_Facts_Facts" destination-table="Evaluation" />
           </orm:reference>
+        </orm:field>
+        <orm:field name="_witness_Facts" property="Witness_Facts" behavior="readwrite" uniqueId="88f95905-df0d-43b4-a776-eaf44631d17c" type="CaseXL.Data.Witness_Fact">
+          <orm:collection element-class="CaseXL.Data.Witness_Fact" inverse-field="_fact" order-by="" uniqueId="7ca35b09-e72f-472b-890e-35ffc6745dbb" />
         </orm:field>
       </orm:class>
       <orm:class name="Question" uniqueId="27f112af-f55c-42b4-bdfc-9d7b3aa8f5fb">
@@ -633,12 +607,43 @@
         <orm:field name="_question_Number" property="Question_Number" behavior="readwrite" uniqueId="78604eda-626a-430e-8471-25575e785a38" type="System.Nullable`1[[System.Double, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]">
           <orm:column name="Question_Number" sql-type="float" nullable="true" length="0" scale="0" ado-type="Double" />
         </orm:field>
-        <orm:field name="_witness_Fact" property="Witness_Fact" behavior="readwrite" uniqueId="fcf72ea9-3727-4fe9-b5b3-e69dfae520f0" type="CaseXL.Data.Witness_Fact">
-          <orm:reference uniqueId="d881a42f-5cd2-4b66-875f-2ad71591ae4e">
-            <orm:sharedfield name="_witness_Fact_Id" target-class="CaseXL.Data.Witness_Fact" target-field="_id" />
-            <orm:constraint name="FK_Fact_Witness_Questions_Witness_Facts" destination-table="Witness_Facts" />
+      </orm:class>
+      <orm:class name="Witness_Fact" uniqueId="e13667ea-cf19-4581-93f2-4434efeef8fc">
+        <orm:table name="Witness_Facts" />
+        <orm:identity>
+          <orm:key-generator name="autoinc" />
+          <orm:single-field field-name="_id" />
+        </orm:identity>
+        <orm:concurrency strategy="changed" />
+        <orm:field name="_id" property="Id" behavior="readwrite" uniqueId="59d6c031-5f17-4468-8b5c-e8bfbd5a678b" type="System.Int32">
+          <orm:column nullable="false" primary-key="true" length="0" name="Id" scale="0" sql-type="int" backend-calculated="true" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_caseId" property="CaseId" behavior="readwrite" uniqueId="0de48ebb-74dd-4d3d-8c2d-4a90e56e998a" type="System.Nullable`1[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]">
+          <orm:column nullable="true" length="0" name="CaseId" scale="0" sql-type="int" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_factId" property="FactId" behavior="readwrite" uniqueId="9429a5b8-83a3-40fb-985c-eac9ec9a97af" type="System.Nullable`1[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]">
+          <orm:column nullable="true" length="0" name="FactId" scale="0" sql-type="int" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_witnessId" property="WitnessId" behavior="readwrite" uniqueId="bc1cebda-25d1-46e7-89a1-b3e7d0ec3f7b" type="System.Nullable`1[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]">
+          <orm:column nullable="true" length="0" name="WitnessId" scale="0" sql-type="int" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_witness" property="Witness" behavior="readwrite" uniqueId="a66f911e-f30f-4c01-8d9e-70e9c4e91358" type="CaseXL.Data.Witness">
+          <orm:reference uniqueId="8c9db35f-075f-47d0-887e-e5e72f8c8375">
+            <orm:sharedfield name="_witnessId" target-class="CaseXL.Data.Witness" target-field="_id" />
+            <orm:constraint name="FK_Witness_Facts_Witnesses" destination-table="Witnesses" />
           </orm:reference>
         </orm:field>
+        <orm:field name="_fact" property="Fact" behavior="readwrite" uniqueId="7d52bac8-9a35-47ad-8095-0c74e5c98602" type="CaseXL.Data.Fact">
+          <orm:reference uniqueId="7ca35b09-e72f-472b-890e-35ffc6745dbb">
+            <orm:sharedfield name="_factId" target-class="CaseXL.Data.Fact" target-field="_id" />
+            <orm:constraint name="FK_Witness_Facts_Facts" destination-table="Facts" />
+          </orm:reference>
+        </orm:field>
+        <orm:index name="idx_Witness_Facts_WitnessId">
+          <orm:columnMapping>
+            <orm:column nullable="true" length="0" name="WitnessId" scale="0" sql-type="int" ado-type="Int32" />
+          </orm:columnMapping>
+        </orm:index>
       </orm:class>
     </orm:namespace>
     <orm:schema schema="">
@@ -760,18 +765,6 @@
           <orm:column name="Fact_Id" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
         </orm:constraint>
       </orm:table>
-      <orm:table name="Witness_Facts">
-        <orm:column name="Id" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
-        <orm:column name="CaseId" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
-        <orm:column name="FactId" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
-        <orm:column name="WitnessId" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
-        <orm:constraint name="FK_Witness_Facts_Witnesses" destination-table="Witnesses">
-          <orm:column name="WitnessId" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
-        </orm:constraint>
-        <orm:constraint name="FK_Witness_Facts_Facts">
-          <orm:column name="FactId" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
-        </orm:constraint>
-      </orm:table>
       <orm:table name="Exhibits_Facts">
         <orm:column name="Id" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
         <orm:column name="CaseId" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
@@ -861,8 +854,25 @@
         <orm:column name="Answer" sql-type="nvarchar" nullable="false" length="550" scale="0" ado-type="UnicodeStringVariableLength" />
         <orm:column name="Asked" sql-type="bit" nullable="false" length="0" scale="0" ado-type="Bit" />
         <orm:column name="Question_Number" sql-type="float" nullable="true" length="0" scale="0" ado-type="Double" />
-        <orm:constraint name="FK_Fact_Witness_Questions_Witness_Facts" destination-table="Witness_Facts">
+        <orm:constraint name="FK_Fact_Witness_Questions_Witness_Facts">
           <orm:column name="Witness_Fact_Id" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
+        </orm:constraint>
+      </orm:table>
+      <orm:table name="Witness_Facts">
+        <orm:column nullable="false" primary-key="true" length="0" name="Id" scale="0" sql-type="int" backend-calculated="true" ado-type="Int32" />
+        <orm:column nullable="true" length="0" name="CaseId" scale="0" sql-type="int" ado-type="Int32" />
+        <orm:column nullable="true" length="0" name="FactId" scale="0" sql-type="int" ado-type="Int32" />
+        <orm:column nullable="true" length="0" name="WitnessId" scale="0" sql-type="int" ado-type="Int32" />
+        <orm:index name="idx_Witness_Facts_WitnessId">
+          <orm:columnMapping>
+            <orm:column nullable="true" length="0" name="WitnessId" scale="0" sql-type="int" ado-type="Int32" />
+          </orm:columnMapping>
+        </orm:index>
+        <orm:constraint name="FK_Witness_Facts_Witnesses" destination-table="Witnesses">
+          <orm:column nullable="true" length="0" name="WitnessId" scale="0" sql-type="int" ado-type="Int32" />
+        </orm:constraint>
+        <orm:constraint name="FK_Witness_Facts_Facts" destination-table="Facts">
+          <orm:column nullable="true" length="0" name="FactId" scale="0" sql-type="int" ado-type="Int32" />
         </orm:constraint>
       </orm:table>
     </orm:schema>
@@ -1066,11 +1076,11 @@
       <Property Id="37039b1e-ffc0-46e6-8370-e5cbe72512cb" name="Email" label="Email : String" kind="Persistent" fieldName="_email" />
       <Property Id="537bb47d-b004-419e-8e18-ba63fb3d0e4a" name="CaseId" type="Int32" label="CaseId : Int32" nullable="true" kind="Persistent" fieldName="_caseId" />
       <navigationalProperties>
-        <classHasNavigationalProperties Id="a0583a46-14eb-43c9-b8ca-dc551b5bd244">
-          <NavigationalProperty Id="9f0b7375-7bdd-43d5-bb68-a40908a345de" name="Witness_Facts" type="IList&lt;Witness_Fact&gt;" label="Witness_Facts : IList&lt;Witness_Fact&gt;" nullable="true" kind="Persistent" fieldName="_witness_Facts" isDependent="false" isManaged="false" />
-        </classHasNavigationalProperties>
         <classHasNavigationalProperties Id="e92ee3b5-3163-4ec7-a862-f9bd8cc044f0">
           <NavigationalProperty Id="71c3203e-655d-44e1-901c-5528be042a83" name="Questions" type="IList&lt;Question&gt;" label="Questions : IList&lt;Question&gt;" nullable="true" kind="Persistent" fieldName="_questions" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+        <classHasNavigationalProperties Id="1dfee59f-58c6-45e7-b8a0-ed7a48a31eb5">
+          <NavigationalProperty Id="6722ba1d-b55f-492a-a71e-09d509011046" name="Witness_Facts" type="IList&lt;Witness_Fact&gt;" label="Witness_Facts : IList&lt;Witness_Fact&gt;" nullable="true" kind="Persistent" fieldName="_witness_Facts" isDependent="false" isManaged="false" />
         </classHasNavigationalProperties>
       </navigationalProperties>
     </DomainClass>
@@ -1160,35 +1170,6 @@
         </classHasNavigationalProperties>
       </navigationalProperties>
     </DomainClass>
-    <DomainClass Id="55a187ca-a49e-47f5-acbc-d352cbed1e8c" name="Witness_Fact" namespace="CaseXL.Data" showPropertiesCompartment="true" identityMechanism="DatabaseServerCalculated" concurrencyMode="Changed" showNavigationCompartment="true" showImplementationCompartment="true">
-      <Property Id="75db63ba-2352-44ad-9008-0b575c482843" name="Id" type="Int32" label="Id : Int32" kind="Persistent" identity="true" fieldName="_id" />
-      <Property Id="af5c4da3-a688-49c1-b393-c63677be533f" name="CaseId" type="Int32" label="CaseId : Int32" nullable="true" kind="Persistent" fieldName="_caseId" />
-      <Property Id="eb549855-3331-4475-a5ef-80146d6ad6de" name="FactId" type="Int32" label="FactId : Int32" nullable="true" kind="Persistent" fieldName="_factId" />
-      <Property Id="7bc96288-38fd-4c58-bd5d-0db264bdcafa" name="WitnessId" type="Int32" label="WitnessId : Int32" nullable="true" kind="Persistent" fieldName="_witnessId" />
-      <AssociationTargets>
-        <Association Id="0e05cd4c-745b-43eb-91fe-fd5fbc7733a2" SourceMultiplicity="ZeroOne" name="Witness_FactHasWitness">
-          <DomainClassMoniker name="/CaseXLEntities/Witness" />
-          <targetNavigationalProperty>
-            <associationDefinesTargetProperty Id="bd0d902f-a021-4242-b1eb-6e5e708571ac">
-              <NavigationalPropertyMoniker name="/CaseXLEntities/Witness/Witness_Facts" />
-            </associationDefinesTargetProperty>
-          </targetNavigationalProperty>
-          <sourceNavigationalProperty>
-            <associationDefinesSourceProperty Id="b063492c-93fa-4697-b29e-0b8075c387f0">
-              <NavigationalPropertyMoniker name="/CaseXLEntities/Witness_Fact/Witness" />
-            </associationDefinesSourceProperty>
-          </sourceNavigationalProperty>
-        </Association>
-      </AssociationTargets>
-      <navigationalProperties>
-        <classHasNavigationalProperties Id="baccfc19-48e8-4bfc-b000-bec0e330ed4b">
-          <NavigationalProperty Id="a595701e-c2e3-41aa-82f5-dd1c3fc1452a" name="Witness" type="Witness" label="Witness : Witness" nullable="true" kind="Persistent" fieldName="_witness" isDependent="false" isManaged="false" />
-        </classHasNavigationalProperties>
-        <classHasNavigationalProperties Id="1dff87e5-ec81-40de-919b-f615673ea728">
-          <NavigationalProperty Id="05e7ca16-5efa-4712-939d-592c68cb57e1" name="Fact_Witness_Questions" type="IList&lt;Fact_Witness_Question&gt;" label="Fact_Witness_Questions : IList&lt;Fact_Witness_Question&gt;" nullable="true" kind="Persistent" fieldName="_fact_Witness_Questions" isDependent="false" isManaged="false" />
-        </classHasNavigationalProperties>
-      </navigationalProperties>
-    </DomainClass>
     <DomainClass Id="cf94ed26-2850-4755-b155-69a43e17f345" name="Exhibits_Fact" namespace="CaseXL.Data" showPropertiesCompartment="true" identityMechanism="DatabaseServerCalculated" concurrencyMode="Changed" showNavigationCompartment="true" showImplementationCompartment="true">
       <Property Id="d5c2324b-9d57-429d-b66a-8b70bbd1caf1" name="Id" type="Int32" label="Id : Int32" kind="Persistent" identity="true" fieldName="_id" />
       <Property Id="dfc99173-76bd-446c-a9a0-dfd19a0b84d0" name="CaseId" type="Int32" label="CaseId : Int32" nullable="true" kind="Persistent" fieldName="_caseId" />
@@ -1275,6 +1256,9 @@
         </classHasNavigationalProperties>
         <classHasNavigationalProperties Id="e570f894-d284-4ff3-bf05-930a271a5485">
           <NavigationalProperty Id="e46f4f4f-9b8f-4daf-b4ad-c8c4b38af5ac" name="Evaluation1" type="Evaluation" label="Evaluation1 : Evaluation" nullable="true" kind="Persistent" fieldName="_evaluation1" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+        <classHasNavigationalProperties Id="619ab9ba-2d84-49f0-add5-fd9b08eb9554">
+          <NavigationalProperty Id="88f95905-df0d-43b4-a776-eaf44631d17c" name="Witness_Facts" type="IList&lt;Witness_Fact&gt;" label="Witness_Facts : IList&lt;Witness_Fact&gt;" nullable="true" kind="Persistent" fieldName="_witness_Facts" isDependent="false" isManaged="false" />
         </classHasNavigationalProperties>
       </navigationalProperties>
     </DomainClass>
@@ -1391,24 +1375,46 @@
       <Property Id="23933f59-5d8a-4aaa-b58e-f0405a3a6af8" name="Question" label="Question : String" kind="Persistent" fieldName="_question" />
       <Property Id="78604eda-626a-430e-8471-25575e785a38" name="Question_Number" type="Double" label="Question_Number : Double" nullable="true" kind="Persistent" fieldName="_question_Number" />
       <Property Id="478c582a-4e02-4203-b86b-0b2e32848497" name="Witness_Fact_Id" type="Int32" label="Witness_Fact_Id : Int32" kind="Persistent" fieldName="_witness_Fact_Id" />
+    </DomainClass>
+    <DomainClass Id="e13667ea-cf19-4581-93f2-4434efeef8fc" name="Witness_Fact" namespace="CaseXL.Data" showPropertiesCompartment="true" identityMechanism="DatabaseServerCalculated" concurrencyMode="Changed" showNavigationCompartment="true" showImplementationCompartment="true">
+      <Property Id="59d6c031-5f17-4468-8b5c-e8bfbd5a678b" name="Id" type="Int32" label="Id : Int32" kind="Persistent" identity="true" fieldName="_id" />
+      <Property Id="0de48ebb-74dd-4d3d-8c2d-4a90e56e998a" name="CaseId" type="Int32" label="CaseId : Int32" nullable="true" kind="Persistent" fieldName="_caseId" />
+      <Property Id="9429a5b8-83a3-40fb-985c-eac9ec9a97af" name="FactId" type="Int32" label="FactId : Int32" nullable="true" kind="Persistent" fieldName="_factId" />
+      <Property Id="bc1cebda-25d1-46e7-89a1-b3e7d0ec3f7b" name="WitnessId" type="Int32" label="WitnessId : Int32" nullable="true" kind="Persistent" fieldName="_witnessId" />
       <AssociationTargets>
-        <Association Id="d881a42f-5cd2-4b66-875f-2ad71591ae4e" SourceMultiplicity="One" name="Fact_Witness_QuestionHasWitness_Fact">
-          <DomainClassMoniker name="/CaseXLEntities/Witness_Fact" />
+        <Association Id="8c9db35f-075f-47d0-887e-e5e72f8c8375" SourceMultiplicity="ZeroOne" name="Witness_FactHasWitness">
+          <DomainClassMoniker name="/CaseXLEntities/Witness" />
           <targetNavigationalProperty>
-            <associationDefinesTargetProperty Id="7b2a953a-1d1c-4159-aaec-c3a3898271f8">
-              <NavigationalPropertyMoniker name="/CaseXLEntities/Witness_Fact/Fact_Witness_Questions" />
+            <associationDefinesTargetProperty Id="6731edf5-64d0-4018-a194-23818c8db0e0">
+              <NavigationalPropertyMoniker name="/CaseXLEntities/Witness/Witness_Facts" />
             </associationDefinesTargetProperty>
           </targetNavigationalProperty>
           <sourceNavigationalProperty>
-            <associationDefinesSourceProperty Id="60650afe-12be-4be5-9d5f-85ff537e48a2">
-              <NavigationalPropertyMoniker name="/CaseXLEntities/Fact_Witness_Question/Witness_Fact" />
+            <associationDefinesSourceProperty Id="fa7992f7-dc5f-4794-b79d-ceb8eb32c70b">
+              <NavigationalPropertyMoniker name="/CaseXLEntities/Witness_Fact/Witness" />
+            </associationDefinesSourceProperty>
+          </sourceNavigationalProperty>
+        </Association>
+        <Association Id="7ca35b09-e72f-472b-890e-35ffc6745dbb" SourceMultiplicity="ZeroOne" name="Witness_FactHasFact">
+          <DomainClassMoniker name="/CaseXLEntities/Fact" />
+          <targetNavigationalProperty>
+            <associationDefinesTargetProperty Id="1fc0635f-4024-4332-b5e9-76b53ad1a96c">
+              <NavigationalPropertyMoniker name="/CaseXLEntities/Fact/Witness_Facts" />
+            </associationDefinesTargetProperty>
+          </targetNavigationalProperty>
+          <sourceNavigationalProperty>
+            <associationDefinesSourceProperty Id="aa425f30-023a-4f0e-b6df-637ae5198850">
+              <NavigationalPropertyMoniker name="/CaseXLEntities/Witness_Fact/Fact" />
             </associationDefinesSourceProperty>
           </sourceNavigationalProperty>
         </Association>
       </AssociationTargets>
       <navigationalProperties>
-        <classHasNavigationalProperties Id="acf7fc9d-3c0d-4e14-a415-242e0965a3cc">
-          <NavigationalProperty Id="fcf72ea9-3727-4fe9-b5b3-e69dfae520f0" name="Witness_Fact" type="Witness_Fact" label="Witness_Fact : Witness_Fact" nullable="true" kind="Persistent" fieldName="_witness_Fact" isDependent="false" isManaged="false" />
+        <classHasNavigationalProperties Id="5dabfa1a-c5ea-467a-a325-89f868ab3f2c">
+          <NavigationalProperty Id="a66f911e-f30f-4c01-8d9e-70e9c4e91358" name="Witness" type="Witness" label="Witness : Witness" nullable="true" kind="Persistent" fieldName="_witness" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+        <classHasNavigationalProperties Id="bdb853cf-d18c-4cc4-94b0-014b542de95b">
+          <NavigationalProperty Id="7d52bac8-9a35-47ad-8095-0c74e5c98602" name="Fact" type="Fact" label="Fact : Fact" nullable="true" kind="Persistent" fieldName="_fact" isDependent="false" isManaged="false" />
         </classHasNavigationalProperties>
       </navigationalProperties>
     </DomainClass>
@@ -1426,7 +1432,6 @@
         <entitySetProperty name="Exhibits" namespace="CaseXL.Data" type="Exhibit" label="Exhibits : IQueryable&lt;CaseXL.Data.Exhibit&gt;" />
         <entitySetProperty name="Evaluations" namespace="CaseXL.Data" type="Evaluation" label="Evaluations : IQueryable&lt;CaseXL.Data.Evaluation&gt;" />
         <entitySetProperty name="Issues_Facts" namespace="CaseXL.Data" type="Issues_Fact" label="Issues_Facts : IQueryable&lt;CaseXL.Data.Issues_Fact&gt;" />
-        <entitySetProperty name="Witness_Facts" namespace="CaseXL.Data" type="Witness_Fact" label="Witness_Facts : IQueryable&lt;CaseXL.Data.Witness_Fact&gt;" />
         <entitySetProperty name="Exhibits_Facts" namespace="CaseXL.Data" type="Exhibits_Fact" label="Exhibits_Facts : IQueryable&lt;CaseXL.Data.Exhibits_Fact&gt;" />
         <entitySetProperty name="Facts" namespace="CaseXL.Data" type="Fact" label="Facts : IQueryable&lt;CaseXL.Data.Fact&gt;" />
         <entitySetProperty name="Questions" namespace="CaseXL.Data" type="Question" label="Questions : IQueryable&lt;CaseXL.Data.Question&gt;" />
@@ -1436,6 +1441,7 @@
         <entitySetProperty name="RestPwds" namespace="CaseXL.Data" type="RestPwd" label="RestPwds : IQueryable&lt;CaseXL.Data.RestPwd&gt;" />
         <entitySetProperty name="Documents" namespace="CaseXL.Data" type="Document" label="Documents : IQueryable&lt;CaseXL.Data.Document&gt;" />
         <entitySetProperty name="Fact_Witness_Questions" namespace="CaseXL.Data" type="Fact_Witness_Question" label="Fact_Witness_Questions : IQueryable&lt;CaseXL.Data.Fact_Witness_Question&gt;" />
+        <entitySetProperty name="Witness_Facts" namespace="CaseXL.Data" type="Witness_Fact" label="Witness_Facts : IQueryable&lt;CaseXL.Data.Witness_Fact&gt;" />
       </domainContainer>
     </domainModelHasDomainContext>
   </domainContext>

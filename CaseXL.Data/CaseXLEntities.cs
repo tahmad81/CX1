@@ -130,14 +130,6 @@ namespace CaseXL.Data
 			}
 		}
 		
-		public IQueryable<Witness_Fact> Witness_Facts 
-		{
-			get
-			{
-				return this.GetAll<Witness_Fact>();
-			}
-		}
-		
 		public IQueryable<Exhibits_Fact> Exhibits_Facts 
 		{
 			get
@@ -210,6 +202,14 @@ namespace CaseXL.Data
 			}
 		}
 		
+		public IQueryable<Witness_Fact> Witness_Facts 
+		{
+			get
+			{
+				return this.GetAll<Witness_Fact>();
+			}
+		}
+		
 		public static BackendConfiguration GetBackendConfiguration()
 		{
 			BackendConfiguration backend = new BackendConfiguration();
@@ -261,10 +261,6 @@ namespace CaseXL.Data
 		{
 			get;
 		}
-		IQueryable<Witness_Fact> Witness_Facts
-		{
-			get;
-		}
 		IQueryable<Exhibits_Fact> Exhibits_Facts
 		{
 			get;
@@ -298,6 +294,10 @@ namespace CaseXL.Data
 			get;
 		}
 		IQueryable<Fact_Witness_Question> Fact_Witness_Questions
+		{
+			get;
+		}
+		IQueryable<Witness_Fact> Witness_Facts
 		{
 			get;
 		}

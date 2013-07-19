@@ -89,12 +89,16 @@ namespace CaseXL.Data
 			}
 		}
 		
-		private IList<Fact_Witness_Question> _fact_Witness_Questions = new List<Fact_Witness_Question>();
-		public virtual IList<Fact_Witness_Question> Fact_Witness_Questions
+		private Fact _fact;
+		public virtual Fact Fact
 		{
 			get
 			{
-				return this._fact_Witness_Questions;
+				return this._fact;
+			}
+			set
+			{
+				this._fact = value;
 			}
 		}
 		

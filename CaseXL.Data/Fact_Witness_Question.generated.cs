@@ -18,7 +18,6 @@ using Telerik.OpenAccess.Metadata;
 using Telerik.OpenAccess.Data.Common;
 using Telerik.OpenAccess.Metadata.Fluent;
 using Telerik.OpenAccess.Metadata.Fluent.Advanced;
-using CaseXL.Data;
 
 namespace CaseXL.Data	
 {
@@ -99,19 +98,6 @@ namespace CaseXL.Data
 			set
 			{
 				this._question_Number = value;
-			}
-		}
-		
-		private Witness_Fact _witness_Fact;
-		public virtual Witness_Fact Witness_Fact
-		{
-			get
-			{
-				return this._witness_Fact;
-			}
-			set
-			{
-				this._witness_Fact = value;
 			}
 		}
 		

@@ -76,21 +76,21 @@ namespace CaseXL.Data
 			}
 		}
 		
-		private IList<Witness_Fact> _witness_Facts = new List<Witness_Fact>();
-		public virtual IList<Witness_Fact> Witness_Facts
-		{
-			get
-			{
-				return this._witness_Facts;
-			}
-		}
-		
 		private IList<Question> _questions = new List<Question>();
 		public virtual IList<Question> Questions
 		{
 			get
 			{
 				return this._questions;
+			}
+		}
+		
+		private IList<Witness_Fact> _witness_Facts = new List<Witness_Fact>();
+		public virtual IList<Witness_Fact> Witness_Facts
+		{
+			get
+			{
+				return this._witness_Facts;
 			}
 		}
 		
