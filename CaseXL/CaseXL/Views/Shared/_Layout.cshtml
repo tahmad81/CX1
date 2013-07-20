@@ -39,15 +39,8 @@
     @Html.Hidden("hdmsg", ViewData["OperationMsg"])
     <div class="page">
         <header>
-            <div id="title">
-                @if (Request.IsAuthenticated && CaseXL.Infrastructure.SessionBase.Firm != null)
-                {
-                    <h1>Caselinq (@CaseXL.Infrastructure.SessionBase.Firm.Firm_Name)</h1>
-                }
-                else
-                {
-                    <h1>Caselinq</h1>
-                }
+            <div style="width:100%; background:white; margin-top:3px; border-radius:3px">
+                <img src="~/Images/case_rgb_MVC_logo.png" style="margin-left:10px" />
             </div>
             <div id="dvMsg" style="background: lightgreen; display: none; text-align: center; padding-top: 10px; height: 30px; width: 300px; margin-left: 40%; border-radius: 3px; color: White; margin-bottom: 20px; box-shadow: 3px 3px 3px #333333">
             </div>

@@ -386,6 +386,7 @@
     <Content Include="Content\kendo\2012.3.1315\images\KendoUI.woff" />
     <None Include="Properties\PublishProfiles\Test.pubxml" />
     <None Include="Scripts\jquery-1.7.1.intellisense.js" />
+    <Content Include="Images\case_rgb_MVC_logo.png" />
     <Content Include="Images\delete-icon.png" />
     <Content Include="Images\Issues-transparent.gif" />
     <Content Include="Scripts\jquery-1.7.1.js" />
@@ -620,6 +621,10 @@
     <Content Include="Views\Shared\EditorTemplates\CaseVM.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\FactWitnessQuestionVM.cshtml" />
     <Content Include="Views\Shared\_Trialinq.cshtml" />
+    <Content Include="Views\Account\ChangePassword.cshtml" />
+    <Content Include="Views\Account\ChangePasswordSuccess.cshtml" />
+    <Content Include="Views\Account\EmailSent.cshtml" />
+    <Content Include="Views\Account\ResetPassword.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

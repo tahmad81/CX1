@@ -1534,9 +1534,7 @@ p.count {
     float: left;
     margin: 0 10px;
   }
- .aligment-left-part tr td{
-	vertical-align:top;
-}
+
   /* Coupon settings limits */
 .coupon-limits .span1 {
   height: 34px;
@@ -2326,3 +2324,6 @@ h4 .info-box {
     -o-user-select: none;
     -khtml-user-select: none;
   }
+  .aligment-left-part tr td{
+	vertical-align:top;
+}
