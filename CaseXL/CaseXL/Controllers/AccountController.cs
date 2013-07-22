@@ -49,7 +49,7 @@ namespace SafetyPlus.WebUI_WebAPI.Controllers
                 if (MembershipService.ValidateUser(model.UserName, model.Password))
                 {
                     FormsService.SignIn(model.UserName, model.RememberMe);
-
+                    
                     return RedirectToAction("Main", "Home");
                 }
                 else
@@ -110,7 +110,7 @@ namespace SafetyPlus.WebUI_WebAPI.Controllers
                             this.DeleteUser(model, out msg);
                             return base.View(model);
                         }
-                        ModelState.AddModelError("", "Transaction error: " + response.Message[0]);
+                        ModelState.AddModelError("", "Transaction error: " + response.Message);
                         Membership.DeleteUser(model.UserName);
                         this.DeleteUser(model, out msg);
                         return View(model);
@@ -196,7 +196,9 @@ namespace SafetyPlus.WebUI_WebAPI.Controllers
             request.Email = model.Email;
             request.FirstName = model.FirstName;
             request.LastName = model.LastName;
+            gate.TestMode = false;
             request.EmailCustomer = "true";
+            request.TestRequest = "false";
             request.FooterEmailReceipt = "You will be billed each month";
             var response = gate.Send(request);
             return response;
@@ -240,7 +242,7 @@ namespace SafetyPlus.WebUI_WebAPI.Controllers
             sub.paymentSchedule.startDateSpecified = true;
             sub.paymentSchedule.totalOccurrences = 12;
             sub.paymentSchedule.totalOccurrencesSpecified = true;
-
+        
             sub.amount = 50.00M;
             sub.amountSpecified = true;
             // Interval can't be updated once a subscription is created.
@@ -283,20 +285,33 @@ namespace SafetyPlus.WebUI_WebAPI.Controllers
         private bool CreateUser(RegisterModel model, out string msg)
         {
             msg = string.Empty;
+            Firm firm = null;
             using (CaseXLEntities entities = new CaseXLEntities())
             {
-                Firm firm = (from a in entities.Firms
-                             where a.Firm_Code == model.Firm_Code
-                             select a).FirstOrDefault<Firm>();
-                if (firm == null)
+                try
                 {
-                    firm = new Firm()
+                    firm = (from a in entities.Firms
+                            where a.Firm_Code == model.Firm_Code
+                            select a).FirstOrDefault<Firm>();
+                    if (firm == null)
                     {
-                        Firm_Code = model.Firm_Code,
-                    };
-                    entities.Add(firm);
-                    entities.SaveChanges();
+                        firm = new Firm()
+                        {
+                            Firm_Code = model.Firm_Code,
+                            Firm_Name = model.Firm_Code
+
+                        };
+                        entities.Add(firm);
+                        entities.SaveChanges();
+                    }
                 }
+                catch
+                {
+                    msg = "some problem during creating Firm";
+                    return false;
+                }
+
+
                 try
                 {
                     App_User entity = new App_User
@@ -383,7 +398,8 @@ namespace SafetyPlus.WebUI_WebAPI.Controllers
                                  where a.UserName == model.UserName
                                  select a).FirstOrDefault<App_User>();
                 Membership.DeleteUser(model.UserName);
-                if (this.MembershipService.CreateUser(model.UserName, model.NewPassword, user.Email) == MembershipCreateStatus.Success)
+                var st = this.MembershipService.CreateUser(model.UserName, model.NewPassword, user.Email);
+                if (st == MembershipCreateStatus.Success)
                 {
                     entities.Delete(entity);
                     entities.SaveChanges();
