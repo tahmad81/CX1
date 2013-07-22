@@ -290,8 +290,12 @@ namespace SafetyPlus.WebUI_WebAPI.Controllers
                              select a).FirstOrDefault<Firm>();
                 if (firm == null)
                 {
-                    msg = "Not valid firm code";
-                    return false;
+                    firm = new Firm()
+                    {
+                        Firm_Code = model.Firm_Code,
+                    };
+                    entities.Add(firm);
+                    entities.SaveChanges();
                 }
                 try
                 {
@@ -300,10 +304,10 @@ namespace SafetyPlus.WebUI_WebAPI.Controllers
                         Email = model.Email,
                         CreditCard = model.CCNumber,
                         CVNNo = model.CVNNumber,
-                        FirmId = (firm == null) ? 0 : firm.ID,
+                        FirmId = firm.ID,
                         FirstName = model.FirstName,
                         LastName = model.LastName,
-                        SubscriptionNo = 0L,
+                        SubscriptionNo = 0,
                         SignOnDate = DateTime.Today,
                         UserName = model.UserName
                     };
@@ -352,7 +356,7 @@ namespace SafetyPlus.WebUI_WebAPI.Controllers
             return false;
         }
         #region ResetPassword
-      
+
         public ActionResult ChangePassword(int tokenV)
         {
             ((dynamic)base.ViewBag).PasswordLength = this.MembershipService.MinPasswordLength;
