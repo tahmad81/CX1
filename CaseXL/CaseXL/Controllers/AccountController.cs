@@ -48,14 +48,22 @@ namespace SafetyPlus.WebUI_WebAPI.Controllers
             {
                 if (MembershipService.ValidateUser(model.UserName, model.Password))
                 {
-                    FormsService.SignIn(model.UserName, model.RememberMe);
-                    
-                    return RedirectToAction("Main", "Home");
+                    if (ValidateSubscription(model))
+                    {
+                        FormsService.SignIn(model.UserName, model.RememberMe);
+                        return RedirectToAction("Main", "Home");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", "Not valid subscription");
+                    }
+
                 }
                 else
                 {
                     ModelState.AddModelError("", "The user name or password provided is incorrect.");
                 }
+
             }
             // If we got this far, something failed, redisplay form
             return View(model);
@@ -242,7 +250,7 @@ namespace SafetyPlus.WebUI_WebAPI.Controllers
             sub.paymentSchedule.startDateSpecified = true;
             sub.paymentSchedule.totalOccurrences = 12;
             sub.paymentSchedule.totalOccurrencesSpecified = true;
-        
+
             sub.amount = 50.00M;
             sub.amountSpecified = true;
             // Interval can't be updated once a subscription is created.
@@ -251,6 +259,17 @@ namespace SafetyPlus.WebUI_WebAPI.Controllers
             sub.paymentSchedule.interval.unit = ARBSubscriptionUnitEnum.months;
 
         }
+        private bool ValidateSubscription(LogOnModel model)
+        {
+            using (CaseXL.Data.CaseXLEntities context = new CaseXLEntities())
+            {
+
+                long subId = context.App_Users.Where(a => a.UserName == model.UserName).FirstOrDefault().SubscriptionNo;
+                CaseXL.Auth_Service.ARBGetSubscriptionStatusResponseType result = _webservice.ARBGetSubscriptionStatus(PopulateMerchantAuthentication(), subId);
+                return (result.status == ARBSubscriptionStatusEnum.active && result.resultCode != MessageTypeEnum.Error) ? true : false;
+            }
+        }
+
         private static MerchantAuthenticationType PopulateMerchantAuthentication()
         {
             MerchantAuthenticationType authentication = new MerchantAuthenticationType();
