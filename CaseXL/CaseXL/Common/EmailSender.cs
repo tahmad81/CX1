@@ -160,10 +160,9 @@ namespace CaseXL.Common
                     EnableSSL = true;
                     break;
                 case EmailProviderType.CaseLinq:
-                    Host = "smtpout.secureserver.net";
-                    //Host = "68.178.252.101";
-                    Port = 80;
-                    EnableSSL = false;
+                    this.Host = "smtpout.secureserver.net";
+                    this.Port = 80;
+                    this.EnableSSL = false;
                     break;
                 default:
                     break;

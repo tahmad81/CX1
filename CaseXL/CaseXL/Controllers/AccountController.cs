@@ -15,6 +15,7 @@ using AuthorizeNet;
 using CaseXL.Auth_Service;
 using CaseXL.Infrastructure;
 using CaseXL.Data;
+using CaseXL.Common;
 namespace SafetyPlus.WebUI_WebAPI.Controllers
 {
     public class AccountController : Controller
@@ -178,42 +179,6 @@ namespace SafetyPlus.WebUI_WebAPI.Controllers
         // URL: /Account/ChangePassword
         // **************************************
 
-        [Authorize]
-        public ActionResult ChangePassword()
-        {
-            ViewBag.PasswordLength = MembershipService.MinPasswordLength;
-            return View();
-        }
-
-        [Authorize]
-        [HttpPost]
-        public ActionResult ChangePassword(ChangePasswordModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                if (MembershipService.ChangePassword(User.Identity.Name, model.OldPassword, model.NewPassword))
-                {
-                    return RedirectToAction("ChangePasswordSuccess");
-                }
-                else
-                {
-                    ModelState.AddModelError("", "The current password is incorrect or the new password is invalid.");
-                }
-            }
-
-            // If we got this far, something failed, redisplay form
-            ViewBag.PasswordLength = MembershipService.MinPasswordLength;
-            return View(model);
-        }
-
-        // **************************************
-        // URL: /Account/ChangePasswordSuccess
-        // **************************************
-
-        public ActionResult ChangePasswordSuccess()
-        {
-            return View();
-        }
 
         #region Subscription
         private IGatewayResponse CreateTransaction(RegisterModel model)
@@ -386,6 +351,98 @@ namespace SafetyPlus.WebUI_WebAPI.Controllers
             }
             return false;
         }
+        #region ResetPassword
+      
+        public ActionResult ChangePassword(int tokenV)
+        {
+            ((dynamic)base.ViewBag).PasswordLength = this.MembershipService.MinPasswordLength;
+            ChangePasswordModel model = new ChangePasswordModel
+            {
+                PwdKey = tokenV
+            };
+            return base.View(model);
+        }
+        [HttpPost]
+        public ActionResult ChangePassword(ChangePasswordModel model)
+        {
+            using (CaseXLEntities entities = new CaseXLEntities())
+            {
+                RestPwd entity = (from a in entities.RestPwds
+                                  where ((a.UserName == model.UserName) && (a.RandomCode == model.PwdToken)) && (a.Id == model.PwdKey)
+                                  select a).FirstOrDefault<RestPwd>();
+                if (entity == null)
+                {
+                    base.ModelState.AddModelError("", "Information provided is not correct");
+                    return base.View(model);
+                }
+                App_User user = (from a in entities.App_Users
+                                 where a.UserName == model.UserName
+                                 select a).FirstOrDefault<App_User>();
+                Membership.DeleteUser(model.UserName);
+                if (this.MembershipService.CreateUser(model.UserName, model.NewPassword, user.Email) == MembershipCreateStatus.Success)
+                {
+                    entities.Delete(entity);
+                    entities.SaveChanges();
+                    return base.RedirectToAction("ChangePasswordSuccess");
+                }
+                ModelState.AddModelError("", "The current password is incorrect or the new password is invalid.");
+            }
+            ViewBag.PasswordLength = this.MembershipService.MinPasswordLength;
+            return base.View(model);
+        }
+
+
+
+
+        // **************************************
+        // URL: /Account/ChangePasswordSuccess
+        // **************************************
+
+        public ActionResult ChangePasswordSuccess()
+        {
+            return View();
+        }
+
+        public ActionResult ResetPassword()
+        {
+            ViewBag.PasswordLength = this.MembershipService.MinPasswordLength;
+            return base.View();
+        }
+        [HttpPost]
+        public ActionResult ResetPassword(ResetPasswordModel model)
+        {
+            string email = model.Email;
+            using (CaseXLEntities entities = new CaseXLEntities())
+            {
+                App_User user = (from a in entities.App_Users
+                                 where a.Email == email
+                                 select a).FirstOrDefault<App_User>();
+                if (user == null)
+                {
+                    base.ModelState.AddModelError("", "No user exsists with the provided email");
+                    return base.View(model);
+                }
+                int num = new Random().Next(40, 97876);
+                RestPwd entity = new RestPwd
+                {
+                    RandomCode = new int?(num),
+                    UserName = user.UserName
+                };
+                entities.Add(entity);
+                entities.SaveChanges();
+                string str = "http://www.caselinq.com/Account/ChangePassword?tokenV=" + entity.Id;
+                string str2 = "<div style='height:20px; background:blue;color:white;border-radius:4px;text-align:center;font-weight:bold'>Do not reply to this email </div><br/><br/><br/>";
+                string str3 = string.Concat(new object[] { str2, "Dear ", user.UserName, ",<br/><br/>Your password token is ", num, ".<br/>Please click on the link below for further instructions<br/>", str, "<br/><br/>thanks,<br/>Caselinq Team .<br/><br/><br/>" });
+                new EmailSender { To = user.Email, Body = str3 }.Send();
+                return base.RedirectToAction("EmailSent", new { email = user.Email });
+            }
+        }
+        public ActionResult EmailSent(string email)
+        {
+            ViewBag.data = email;
+            return base.View();
+        }
+        #endregion
 
 
 
