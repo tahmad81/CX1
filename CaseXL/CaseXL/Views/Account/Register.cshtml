@@ -8,10 +8,10 @@
 @Html.ValidationSummary(true, "Signup was unsuccessful. Please correct the errors and try again.")
 @using (Html.BeginForm())
 {
-    <div>
+    <div class="reg-fileds-set">
+	<div class="heading-common">Account Information</div>
         <fieldset>
-            <legend>Account Information</legend>
-
+		
             <div class="editor-label">
                 @Html.LabelFor(m => m.UserName)
             </div>
@@ -66,11 +66,19 @@
                 @Html.LabelFor(m => m.CCNumber)
             </div>
             <div class="editor-label">
-                @Html.TextBoxFor(m => m.CCNumber)
-                @Html.LabelFor(m => m.CVNNumber)
+              @Html.TextBoxFor(m => m.CCNumber)
+              @Html.ValidationMessageFor(m => m.CCNumber)
+            </div>            
+            <div class="editor-label">
+                  @Html.LabelFor(m => m.CVNNumber)
+            </div>
+
+            <div class="editor-label">
+             
+             
                 @Html.TextBoxFor(m => m.CVNNumber, new { @style = "width:50px" })
                 @Html.ValidationMessageFor(m => m.CVNNumber)<br />
-                @Html.ValidationMessageFor(m => m.CCNumber)
+             
             </div>
 
             <div class="editor-label">
@@ -95,6 +103,39 @@
 
         </fieldset>
     </div>
+	<div class="reg-data">
+<div class="heading-common">Common Questions</div>
+<h1>Is Caselinq secure?</h1>
+<p>Caselinq ensures strict communication security using bank-grade 256-bit SSL encryption. All of Caselinq's infrastructure is hosted using physically secure, managed datacenters that meet the rigid SAS70 Type II specifications. Geo-redundant backups are performed daily, and site security and privacy are routinely audited by respected 3rd parties, Authorize.net and Go-Daddy.</p>
+
+<h1>Do you offer a free trial period?</h1>
+<p>Absolutely. Go to first page and click "Trial." You can test out Caselinq to your heart's content.</p>
+
+<h1>How often are new features added to the product?</h1>
+<p>We are continually working to ensure that Caselinq remains the leading and most innovative cloud-based trial preparation systems available. Thanks to the valued feedback of our many active subscribers, product improvements and updates are integrated seamlessly several times per month.</p>
+
+<h1>How many attorneys are currently using Caselinq?</h1>
+<p>As the leading cloud-based trial preparation system, we're pleased to have a global subscriber base.</p>
+
+<h1>What is the pricing history for your product? How often have rates been increased? </h1>
+<p>We continually strive to ensure that Caselinq provides exceptional value and return on investment. Although the product has continually evolved and expanded since launching our pricing has remained the same.</p>
+
+<h1>What training options are available for customers?</h1>
+<p>We're pleased to provide unlimited free access to live training and comprehensive support resources. Our extensive knowledgebase is complete with helpful walk-throughs, short training videos and accessible answers to frequently asked questions. We are also happy to schedule additional one-on-one training as needed at no additional cost.</p>
+
+<h1>What hours is your tech support available?</h1>
+<p>Our Chicago-based support team is available from 8 a.m. to 8 p.m. Central Standard Time (6am to 6pm Pacific Time), Monday to Friday and can be reached by email at <span>support@caselinq.com </span>or by phone at <span>1-800-946-8122</span>.</p>
+
+<h1>Can I cancel at any time?</h1>
+<p>Absolutely. Although we hope you'll find Caselinq is a good fit with your trial preparation needs, subscribers are welcomed to discontinue a subscription at any time without risk or penalty.</p>
+
+<h1>What is the cost?</h1>
+<p>Designed to be an affordable option for small to mid-sized firms to large firms, Caselinq is priced at $49/month per user. Interested subscribers are also welcomed to contact our sales team to inquire about available offers for educational and non-profit customers.</p>
+
+<h1>Are there any incidental costs I should be aware of?</h1>
+<p>Caselinq's pricing has been designed to be easy to understand and free of incidental or surprise charges. Each additional attorney or support staff member can be added at a cost of $49.00/month. Product updates, new features, unlimited document storage and access to technical support and training is included at no additional cost.</p>
+</div> 
+<div style="clear:both;">&nbsp;</div>
 }
 
 <script type="text/javascript">
