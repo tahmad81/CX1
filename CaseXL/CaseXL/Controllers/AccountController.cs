@@ -41,6 +41,7 @@ namespace SafetyPlus.WebUI_WebAPI.Controllers
             return View();
         }
         [HttpPost]
+
         public ActionResult LogOn(LogOnModel model, string returnUrl)
         {
 
@@ -48,6 +49,7 @@ namespace SafetyPlus.WebUI_WebAPI.Controllers
             {
                 if (MembershipService.ValidateUser(model.UserName, model.Password))
                 {
+                   
                     if (ValidateSubscription(model))
                     {
                         FormsService.SignIn(model.UserName, model.RememberMe);

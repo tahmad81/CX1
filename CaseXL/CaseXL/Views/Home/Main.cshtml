@@ -15,9 +15,11 @@
 </div>
 <table style="border: none" class="aligment-left-part">
     <tr>
-        <td width="17%" style="padding-left:0;">
+        <td width="17%" style="padding-left: 0;">
             <div class="left-menu">
                 <div class="padding10">
+
+
                     <a onclick="MenuSelected(this)" id="1" class="btn btn-block btn-large btn-primary">Facts</a>
                     <a class="btn btn-block btn-large btn-primary" onclick="MenuSelected(this)" id="2">Witnesses</a>
                     <a class="btn btn-block btn-large btn-primary" onclick="MenuSelected(this)" id="3">Exhibits</a>
@@ -27,7 +29,7 @@
                 </div>
             </div>
         </td>
-        <td rowspan="2" id="dvCenter" style=" padding-left:0;">
+        <td rowspan="2" id="dvCenter" style="padding-left: 0;">
             @*<div id="dvCenter"  style="vertical-align:top; background:green">
             </div>*@
 
@@ -51,7 +53,7 @@
     });
     $("#treeview").kendoTreeView();
 
-	</script>
+</script>
 
 <style scoped>
     #treeview .k-sprite {
@@ -315,12 +317,10 @@
     }
     function CaseChanged(e) {
         debugger;
-        var treeview = $("#tvLnks").data("kendoTreeView");
-        var tvItem = treeview.select();
         var dropdownlist = $("#Cases").data("kendoDropDownList");
         var id = dropdownlist.dataItem().Value;
-        if (tvItem != null) {
-            LoadData(id, tvItem.index() + 1);
+        if (cbtn != null) {
+            LoadData(id, cbtn.id);
         }
     }
     function LoadData(id, text) {
