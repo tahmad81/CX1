@@ -242,10 +242,10 @@
           <orm:column name="CaseId" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
         </orm:field>
         <orm:field name="_docs_Received" property="Docs_Received" behavior="readwrite" uniqueId="8311675f-fdf3-4f1e-a211-609e4165a6a2" type="System.String">
-          <orm:column nullable="true" length="10" name="Docs_Received" scale="0" sql-type="nvarchar" ado-type="UnicodeStringVariableLength" />
+          <orm:column name="Docs_Received" sql-type="nvarchar" nullable="true" length="10" scale="0" ado-type="UnicodeStringVariableLength" />
         </orm:field>
         <orm:field name="_docs_Authored" property="Docs_Authored" behavior="readwrite" uniqueId="7baacde8-2ea6-4d32-81b3-0d2918c11afd" type="System.String">
-          <orm:column nullable="true" length="10" name="Docs_Authored" scale="0" sql-type="nvarchar" ado-type="UnicodeStringVariableLength" />
+          <orm:column name="Docs_Authored" sql-type="nvarchar" nullable="true" length="10" scale="0" ado-type="UnicodeStringVariableLength" />
         </orm:field>
         <orm:field name="_questions" property="Questions" behavior="readwrite" uniqueId="71c3203e-655d-44e1-901c-5528be042a83" type="CaseXL.Data.Question">
           <orm:collection element-class="CaseXL.Data.Question" inverse-field="_witness" order-by="" uniqueId="cf1a6051-fee2-4c45-9f60-8256bd9341c1" />
@@ -538,8 +538,11 @@
         <orm:field name="_contactNo" property="ContactNo" behavior="readwrite" uniqueId="8f1f8937-50c9-4346-a36c-c6a84ff5739e" type="System.String">
           <orm:column name="ContactNo" sql-type="nvarchar" nullable="true" length="50" scale="0" ado-type="UnicodeStringVariableLength" />
         </orm:field>
-        <orm:field name="_signOnDate" property="SignOnDate" behavior="readwrite" uniqueId="3daff13f-e361-4652-b290-6a5df7644739" type="System.DateTime">
-          <orm:column name="SignOnDate" sql-type="date" nullable="false" length="0" scale="0" ado-type="Date" />
+        <orm:field name="_signupdate" property="Signupdate" behavior="readwrite" uniqueId="9309da61-3696-4253-85e5-2435469658d7" type="System.Nullable`1[[System.DateTime, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]">
+          <orm:column nullable="true" length="0" name="Signupdate" scale="0" sql-type="date" ado-type="Date" />
+        </orm:field>
+        <orm:field name="_is_Trial" property="Is_Trial" behavior="readwrite" uniqueId="7da37f7b-f5bd-4af1-a52b-27eed40311fc" type="System.Boolean">
+          <orm:column has-default-value="true" nullable="false" length="0" name="Is_Trial" scale="0" sql-type="bit" ado-type="Bit" />
         </orm:field>
         <orm:field name="_firm" property="Firm" behavior="readwrite" uniqueId="48ca9c5f-6054-415e-8a6e-dd2008e4b08b" type="CaseXL.Data.Firm">
           <orm:reference uniqueId="9c46bea4-ae9b-4454-94c3-76613d7cfcf5">
@@ -736,8 +739,8 @@
         <orm:column name="Name" sql-type="varchar" nullable="true" length="255" scale="0" ado-type="StringVariableLength" />
         <orm:column name="Email" sql-type="nvarchar" nullable="true" length="50" scale="0" ado-type="UnicodeStringVariableLength" />
         <orm:column name="CaseId" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
-        <orm:column nullable="true" length="10" name="Docs_Received" scale="0" sql-type="nvarchar" ado-type="UnicodeStringVariableLength" />
-        <orm:column nullable="true" length="10" name="Docs_Authored" scale="0" sql-type="nvarchar" ado-type="UnicodeStringVariableLength" />
+        <orm:column name="Docs_Received" sql-type="nvarchar" nullable="true" length="10" scale="0" ado-type="UnicodeStringVariableLength" />
+        <orm:column name="Docs_Authored" sql-type="nvarchar" nullable="true" length="10" scale="0" ado-type="UnicodeStringVariableLength" />
       </orm:table>
       <orm:table name="Exhibits">
         <orm:column name="Id" sql-type="int" nullable="false" length="0" scale="0" primary-key="true" backend-calculated="true" ado-type="Int32" />
@@ -838,7 +841,8 @@
         <orm:column name="CVNNo" sql-type="nvarchar" nullable="false" length="50" scale="0" ado-type="UnicodeStringVariableLength" />
         <orm:column name="Email" sql-type="nvarchar" nullable="false" length="50" scale="0" ado-type="UnicodeStringVariableLength" />
         <orm:column name="ContactNo" sql-type="nvarchar" nullable="true" length="50" scale="0" ado-type="UnicodeStringVariableLength" />
-        <orm:column name="SignOnDate" sql-type="date" nullable="false" length="0" scale="0" ado-type="Date" />
+        <orm:column nullable="true" length="0" name="Signupdate" scale="0" sql-type="date" ado-type="Date" />
+        <orm:column has-default-value="true" nullable="false" length="0" name="Is_Trial" scale="0" sql-type="bit" ado-type="Bit" />
         <orm:constraint name="FK_App_Users_Firm" destination-table="Firm">
           <orm:column name="FirmId" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
         </orm:constraint>
@@ -1342,9 +1346,10 @@
       <Property Id="76be44ca-1d45-45cf-9d47-63c2babc42ae" name="FirmId" type="Int32" label="FirmId : Int32" kind="Persistent" fieldName="_firmId" />
       <Property Id="a01c3bcd-5177-41b5-b499-1858c0cf6ed0" name="FirstName" label="FirstName : String" kind="Persistent" fieldName="_firstName" />
       <Property Id="e3aaebee-6d92-43a5-9ee3-c1bedb908ab2" name="LastName" label="LastName : String" kind="Persistent" fieldName="_lastName" />
-      <Property Id="3daff13f-e361-4652-b290-6a5df7644739" name="SignOnDate" type="DateTime" label="SignOnDate : DateTime" kind="Persistent" fieldName="_signOnDate" />
       <Property Id="d128d9b3-c5aa-47c1-af9c-63e2bdb3d540" name="SubscriptionNo" type="Int64" label="SubscriptionNo : Int64" kind="Persistent" fieldName="_subscriptionNo" />
       <Property Id="2dd33ad7-91a6-4ba6-9a81-72bc3c8f4d31" name="UserName" label="UserName : String" kind="Persistent" fieldName="_userName" />
+      <Property Id="9309da61-3696-4253-85e5-2435469658d7" name="Signupdate" type="DateTime" label="Signupdate : DateTime" nullable="true" kind="Persistent" fieldName="_signupdate" />
+      <Property Id="7da37f7b-f5bd-4af1-a52b-27eed40311fc" name="Is_Trial" type="Boolean" label="Is_Trial : Boolean" kind="Persistent" fieldName="_is_Trial" />
       <AssociationTargets>
         <Association Id="9c46bea4-ae9b-4454-94c3-76613d7cfcf5" SourceMultiplicity="ZeroOne" name="App_UserHasFirm">
           <DomainClassMoniker name="/CaseXLEntities/Firm" />

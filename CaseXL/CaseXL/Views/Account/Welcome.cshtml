@@ -4,5 +4,10 @@
 }
 
 <h2>Welcome  @ViewBag.name<br />
-    You subscription number is @ViewBag.subId</h2>
-<input type="button" onclick="window.location='/Home/Main';" value="Go to Application" />
+</h2>
+@if (ViewBag.trial == null)
+{    
+    <h2>Your subscription number is @ViewBag.subId</h2>
+}
+
+<input type="button" onclick="window.location = '/Home/Main';" value="Go to Application" />

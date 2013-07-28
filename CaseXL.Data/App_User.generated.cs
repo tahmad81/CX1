@@ -154,16 +154,29 @@ namespace CaseXL.Data
 			}
 		}
 		
-		private DateTime _signOnDate;
-		public virtual DateTime SignOnDate
+		private DateTime? _signupdate;
+		public virtual DateTime? Signupdate
 		{
 			get
 			{
-				return this._signOnDate;
+				return this._signupdate;
 			}
 			set
 			{
-				this._signOnDate = value;
+				this._signupdate = value;
+			}
+		}
+		
+		private bool _is_Trial;
+		public virtual bool Is_Trial
+		{
+			get
+			{
+				return this._is_Trial;
+			}
+			set
+			{
+				this._is_Trial = value;
 			}
 		}
 		

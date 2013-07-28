@@ -49,7 +49,7 @@ namespace SafetyPlus.WebUI_WebAPI.Controllers
             {
                 if (MembershipService.ValidateUser(model.UserName, model.Password))
                 {
-                   
+
                     if (ValidateSubscription(model))
                     {
                         FormsService.SignIn(model.UserName, model.RememberMe);
@@ -59,7 +59,6 @@ namespace SafetyPlus.WebUI_WebAPI.Controllers
                     {
                         ModelState.AddModelError("", "Not valid subscription");
                     }
-
                 }
                 else
                 {
@@ -87,17 +86,17 @@ namespace SafetyPlus.WebUI_WebAPI.Controllers
         {
             return View();
         }
-        public ActionResult Welcome(int? subId, string name)
+        public ActionResult Welcome(int? subId, string name,bool ? trial)
         {
             ViewBag.subId = subId;
             ViewBag.name = name;
+            ViewBag.trial = trial;
             return View();
         }
-
         [HttpPost]
         public ActionResult Register(RegisterModel model)
         {
-            if (base.ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 string msg = string.Empty;
                 MembershipCreateStatus createStatus = this.MembershipService.CreateUser(model.UserName, model.Password, model.Email);
@@ -113,28 +112,64 @@ namespace SafetyPlus.WebUI_WebAPI.Controllers
                             {
                                 this.FormsService.SignIn(model.UserName, false);
                                 this.AddSubscriptionNo(model, msg, type.subscriptionId);
-                                return base.RedirectToAction("Welcome", new { subId = type.subscriptionId, name = model.FirstName + " " + model.LastName });
+                                return RedirectToAction("Welcome", new { subId = type.subscriptionId, name = model.FirstName + " " + model.LastName });
                             }
                             ModelState.AddModelError("", "Subscription error: " + type.messages[0].text);
                             Membership.DeleteUser(model.UserName);
                             this.DeleteUser(model, out msg);
-                            return base.View(model);
+                            return View(model);
                         }
                         ModelState.AddModelError("", "Transaction error: " + response.Message);
                         Membership.DeleteUser(model.UserName);
                         this.DeleteUser(model, out msg);
                         return View(model);
                     }
-                    base.ModelState.AddModelError("", "Unable to create user (" + msg + ")");
+                    ModelState.AddModelError("", "Unable to create user (" + msg + ")");
                     Membership.DeleteUser(model.UserName);
                     return View(model);
                 }
                 ModelState.AddModelError("", AccountValidation.ErrorCodeToString(createStatus));
             }
-            ((dynamic)base.ViewBag).PasswordLength = this.MembershipService.MinPasswordLength;
+            ViewBag.PasswordLength = this.MembershipService.MinPasswordLength;
             return View(model);
         }
+        #region Trial
+        public ActionResult Trial_Register()
+        {
+            return View();
+        }
+        [HttpPost]
+        public ActionResult Trial_Register(RegisterModel model)
+        {
+               string msg = string.Empty;
+                model.IsTrial = true;
+                model.SignupDate = DateTime.Today;
 
+                MembershipCreateStatus createStatus = this.MembershipService.CreateUser(model.UserName, model.Password, model.Email);
+                if (createStatus == MembershipCreateStatus.Success)
+                {
+                    if (CreateUser(model, out msg))
+                    {
+                        FormsService.SignIn(model.UserName, false);
+                        return RedirectToAction("Welcome", new { subId = 0, name = model.FirstName + " " + model.LastName,trial=true });
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", AccountValidation.ErrorCodeToString(createStatus));
+                        Membership.DeleteUser(model.UserName);
+                        this.DeleteUser(model, out msg);
+                        return View(model);
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError("", AccountValidation.ErrorCodeToString(createStatus));
+
+                }
+          
+            return View(model);
+        }
+        #endregion
         //public ActionResult Register(RegisterModel model)
         //{
         //    if (ModelState.IsValid)
@@ -188,8 +223,6 @@ namespace SafetyPlus.WebUI_WebAPI.Controllers
         // **************************************
         // URL: /Account/ChangePassword
         // **************************************
-
-
         #region Subscription
         private IGatewayResponse CreateTransaction(RegisterModel model)
         {
@@ -280,6 +313,7 @@ namespace SafetyPlus.WebUI_WebAPI.Controllers
             return authentication;
         }
         #endregion
+        #region PrivateMethods
         private void CreateUser(RegisterModel model, long subId)
         {
             MembershipCreateStatus createStatus = MembershipService.CreateUser(model.UserName, model.Password, model.Email);
@@ -295,7 +329,7 @@ namespace SafetyPlus.WebUI_WebAPI.Controllers
                     FirstName = model.FirstName,
                     LastName = model.LastName,
                     SubscriptionNo = subId,
-                    SignOnDate = DateTime.Today,
+                    Signupdate = DateTime.Today,
                     UserName = model.UserName
                 };
                 context.Add(user);
@@ -338,13 +372,13 @@ namespace SafetyPlus.WebUI_WebAPI.Controllers
                     App_User entity = new App_User
                     {
                         Email = model.Email,
-                        CreditCard = model.CCNumber,
-                        CVNNo = model.CVNNumber,
+                        CreditCard = string.IsNullOrEmpty(model.CCNumber) ? "0" : model.CCNumber,
+                        CVNNo = string.IsNullOrEmpty(model.CVNNumber) ? "0" : model.CVNNumber,
                         FirmId = firm.ID,
                         FirstName = model.FirstName,
                         LastName = model.LastName,
                         SubscriptionNo = 0,
-                        SignOnDate = DateTime.Today,
+                        Signupdate = DateTime.Today,
                         UserName = model.UserName
                     };
                     entities.Add(entity);
@@ -391,6 +425,7 @@ namespace SafetyPlus.WebUI_WebAPI.Controllers
             }
             return false;
         }
+        #endregion
         #region ResetPassword
 
         public ActionResult ChangePassword(int tokenV)

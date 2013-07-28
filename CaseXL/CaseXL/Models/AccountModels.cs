@@ -102,6 +102,8 @@ namespace CaseXL.Models
         [Required(ErrorMessage = "Expiry date is required")]
         [Display(Name = "Expiry Date")]
         public DateTime Exp_Date { get; set; }
+        public bool IsTrial { get; set; }
+        public DateTime ? SignupDate { get; set; }
     }
     #endregion
 
