@@ -529,7 +529,20 @@ namespace CaseXL.Controllers
             using (CaseXL.Data.CaseXLEntities context = new CaseXL.Data.CaseXLEntities())
             {
                 var user = context.App_Users.Where(a => a.UserName == HttpContext.User.Identity.Name).FirstOrDefault();
-                SessionBase.Firm = user.Firm;
+                if (!user.Is_Trial)
+                    SessionBase.Firm = user.Firm;
+                else
+                {
+                    var firm = new Firm()
+                    {
+                        Firm_Code = "0",
+                        Firm_Name = "Trial_Firm",
+                        ID = 0,
+                      
+                    }; 
+                    SessionBase.Firm = firm;
+                    SessionBase.User  = user;
+                }
             }
         }
         #region REfactor

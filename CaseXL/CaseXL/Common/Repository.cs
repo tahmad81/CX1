@@ -93,15 +93,30 @@ namespace CaseXL.Common
         {
             using (CaseXL.Data.CaseXLEntities context = new Data.CaseXLEntities())
             {
-                var data = from cases in context.Cases
-                           where cases.Firm_ID == Infrastructure.SessionBase.Firm.ID
-                           select new Infrastructure.ComboModelBase
-                           {
-                               ID = cases.ID,
-                               Name = cases.Caption
+                if (SessionBase.Firm.ID != 0)
+                {
+                    var data = from cases in context.Cases
+                               where cases.Firm_ID == Infrastructure.SessionBase.Firm.ID
+                               select new Infrastructure.ComboModelBase
+                               {
+                                   ID = cases.ID,
+                                   Name = cases.Caption
 
-                           };
-                return data.ToList();
+                               };
+                    return data.ToList();
+                }
+                else
+                {
+                    var data = from cases in context.Cases
+                               where cases.Firm_ID == Infrastructure.SessionBase.User.Id
+                               select new Infrastructure.ComboModelBase
+                               {
+                                   ID = cases.ID,
+                                   Name = cases.Caption
+
+                               };
+                    return data.ToList();
+                }
             }
 
         }
@@ -375,10 +390,23 @@ namespace CaseXL.Common
         {
             using (CaseXLEntities entities = new CaseXLEntities())
             {
-                return (from cases in entities.Cases
-                        where cases.Firm_ID == SessionBase.Firm.ID
-                        select new CaseVM { Case_Id = cases.ID, Caption = cases.Caption, Case_Number = cases.Case_Number, Case_Type = cases.Case_Type_ID.Value }).ToList<CaseVM>();
+                if (SessionBase.Firm.ID != 0)
+                {
+
+                    return (from cases in entities.Cases
+                            where cases.Firm_ID == SessionBase.Firm.ID
+                            select new CaseVM { Case_Id = cases.ID, Caption = cases.Caption, Case_Number = cases.Case_Number, Case_Type = cases.Case_Type_ID.Value }).ToList();
+                }
+                else
+                {
+                    var data = (from cases in entities.Cases
+                               where cases.Firm_ID == Infrastructure.SessionBase.User.Id
+                            select new CaseVM { Case_Id = cases.ID, Caption = cases.Caption, Case_Number = cases.Case_Number, Case_Type = cases.Case_Type_ID.Value }).ToList();
+                    return data.ToList();
+                }
             }
+
+
         }
         public static List<FactWitnessQuestionVM> GetQuestionsByFact(int Id)
         {

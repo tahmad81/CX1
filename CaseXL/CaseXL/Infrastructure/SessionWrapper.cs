@@ -31,6 +31,17 @@ namespace CaseXL.Infrastructure
                 SessionWrapper.SetInSession<Firm>("firm", value);
             }
         }
+        public static App_User User
+        {
+            get
+            {
+                return SessionWrapper.GetFromSession<App_User>("user");
+            }
+            set
+            {
+                SessionWrapper.SetInSession<App_User>("user", value);
+            }
+        }
 
     }
     public static class SessionWrapper

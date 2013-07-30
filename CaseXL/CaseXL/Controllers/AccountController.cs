@@ -44,12 +44,10 @@ namespace SafetyPlus.WebUI_WebAPI.Controllers
 
         public ActionResult LogOn(LogOnModel model, string returnUrl)
         {
-
             if (ModelState.IsValid)
             {
                 if (MembershipService.ValidateUser(model.UserName, model.Password))
                 {
-
                     if (ValidateSubscription(model))
                     {
                         FormsService.SignIn(model.UserName, model.RememberMe);
@@ -86,7 +84,7 @@ namespace SafetyPlus.WebUI_WebAPI.Controllers
         {
             return View();
         }
-        public ActionResult Welcome(int? subId, string name,bool ? trial)
+        public ActionResult Welcome(int? subId, string name, bool? trial)
         {
             ViewBag.subId = subId;
             ViewBag.name = name;
@@ -141,32 +139,32 @@ namespace SafetyPlus.WebUI_WebAPI.Controllers
         [HttpPost]
         public ActionResult Trial_Register(RegisterModel model)
         {
-               string msg = string.Empty;
-                model.IsTrial = true;
-                model.SignupDate = DateTime.Today;
+            string msg = string.Empty;
+            model.IsTrial = true;
+            model.SignupDate = DateTime.Today;
 
-                MembershipCreateStatus createStatus = this.MembershipService.CreateUser(model.UserName, model.Password, model.Email);
-                if (createStatus == MembershipCreateStatus.Success)
+            MembershipCreateStatus createStatus = this.MembershipService.CreateUser(model.UserName, model.Password, model.Email);
+            if (createStatus == MembershipCreateStatus.Success)
+            {
+                if (Create_TrialUser(model, out msg))
                 {
-                    if (CreateUser(model, out msg))
-                    {
-                        FormsService.SignIn(model.UserName, false);
-                        return RedirectToAction("Welcome", new { subId = 0, name = model.FirstName + " " + model.LastName,trial=true });
-                    }
-                    else
-                    {
-                        ModelState.AddModelError("", AccountValidation.ErrorCodeToString(createStatus));
-                        Membership.DeleteUser(model.UserName);
-                        this.DeleteUser(model, out msg);
-                        return View(model);
-                    }
+                    FormsService.SignIn(model.UserName, false);
+                    return RedirectToAction("Welcome", new { subId = 0, name = model.FirstName + " " + model.LastName, trial = true });
                 }
                 else
                 {
                     ModelState.AddModelError("", AccountValidation.ErrorCodeToString(createStatus));
-
+                    Membership.DeleteUser(model.UserName);
+                    this.DeleteUser(model, out msg);
+                    return View(model);
                 }
-          
+            }
+            else
+            {
+                ModelState.AddModelError("", AccountValidation.ErrorCodeToString(createStatus));
+
+            }
+
             return View(model);
         }
         #endregion
@@ -379,7 +377,8 @@ namespace SafetyPlus.WebUI_WebAPI.Controllers
                         LastName = model.LastName,
                         SubscriptionNo = 0,
                         Signupdate = DateTime.Today,
-                        UserName = model.UserName
+                        UserName = model.UserName,
+                        Is_Trial = false
                     };
                     entities.Add(entity);
                     entities.SaveChanges();
@@ -425,6 +424,39 @@ namespace SafetyPlus.WebUI_WebAPI.Controllers
             }
             return false;
         }
+        private bool Create_TrialUser(RegisterModel model, out string msg)
+        {
+            try
+            {
+                msg = "";
+                using (CaseXLEntities entities = new CaseXLEntities())
+                {
+                    App_User entity = new App_User
+                    {
+                        Email = model.Email,
+                        CreditCard = string.IsNullOrEmpty(model.CCNumber) ? "0" : model.CCNumber,
+                        CVNNo = string.IsNullOrEmpty(model.CVNNumber) ? "0" : model.CVNNumber,
+                        FirmId = 0,
+                        FirstName = model.FirstName,
+                        LastName = model.LastName,
+                        SubscriptionNo = 0,
+                        Signupdate = DateTime.Today,
+                        UserName = model.UserName,
+                        Is_Trial = true
+                    };
+                    entities.Add(entity);
+                    entities.SaveChanges();
+                    return true;
+                }
+            }
+            catch
+            {
+                msg = "some problem during creating user";
+                return false;
+            }
+
+        }
+
         #endregion
         #region ResetPassword
 

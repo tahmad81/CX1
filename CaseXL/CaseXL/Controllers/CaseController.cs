@@ -37,7 +37,7 @@ namespace CaseXL.Controllers
                     Caption = model.Caption,
                     Case_Number = model.Case_Number,
                     Case_Type_ID = new int?(model.Case_Type),
-                    Firm_ID = SessionBase.Firm.ID
+                    Firm_ID = SessionBase.Firm.ID == 0 ? SessionBase.User.Id : SessionBase.Firm.ID
                 };
                 entities.Add(entity);
                 entities.SaveChanges();
