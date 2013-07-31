@@ -48,14 +48,30 @@ namespace SafetyPlus.WebUI_WebAPI.Controllers
             {
                 if (MembershipService.ValidateUser(model.UserName, model.Password))
                 {
-                    if (ValidateSubscription(model))
+                    if (IsTrial(model))
                     {
-                        FormsService.SignIn(model.UserName, model.RememberMe);
-                        return RedirectToAction("Main", "Home");
+                        if (IsTrialValid(model))
+                        {
+                            FormsService.SignIn(model.UserName, model.RememberMe);
+                            return RedirectToAction("Main", "Home");
+                        }
+                        else
+                        {
+                            ModelState.AddModelError("", "Dear user we are sorry but your trial period has expired");
+                        }
                     }
                     else
                     {
-                        ModelState.AddModelError("", "Not valid subscription");
+
+                        if (ValidateSubscription(model))
+                        {
+                            FormsService.SignIn(model.UserName, model.RememberMe);
+                            return RedirectToAction("Main", "Home");
+                        }
+                        else
+                        {
+                            ModelState.AddModelError("", "Not valid subscription");
+                        }
                     }
                 }
                 else
@@ -456,7 +472,28 @@ namespace SafetyPlus.WebUI_WebAPI.Controllers
             }
 
         }
-
+        private App_User user;
+        private bool IsTrial(LogOnModel model)
+        {
+            try
+            {
+                using (CaseXL.Data.CaseXLEntities context = new CaseXLEntities())
+                {
+                    user = context.App_Users.Where(a => a.UserName == model.UserName).FirstOrDefault();
+                    return user.Is_Trial;
+                }
+            }
+            catch { throw; }
+        }
+        private bool IsTrialValid(LogOnModel model)
+        {
+            if ((user.Signupdate.Value.AddDays(30)) >= DateTime.Today)
+            {
+                return true;
+            }
+            else
+                return false;
+        }
         #endregion
         #region ResetPassword
 
