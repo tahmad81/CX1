@@ -18,7 +18,7 @@ namespace CaseXL.Controllers
         }
         public ActionResult Index()
         {
-            //ViewBag.Partners = CaseXL.Common.Repository.GetPartners(1);
+            ViewBag.Partners = CaseXL.Common.Repository.GetPartners(1);
             return View();
         }
         public ActionResult _Staff([DataSourceRequest] DataSourceRequest request)
