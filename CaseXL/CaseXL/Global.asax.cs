@@ -28,7 +28,11 @@ namespace CaseXL
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
-
+            routes.MapRoute(
+                      "WebAdmin",//Route name
+                      "Admin",// URL with parameters
+                      new { controller = "WebAdmin", action = "Index" } // Parameter defaults
+  );
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",

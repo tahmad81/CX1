@@ -169,7 +169,7 @@ namespace SafetyPlus.WebUI_WebAPI.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError("", AccountValidation.ErrorCodeToString(createStatus));
+                    ModelState.AddModelError("", msg);
                     Membership.DeleteUser(model.UserName);
                     this.DeleteUser(model, out msg);
                     return View(model);
@@ -465,9 +465,9 @@ namespace SafetyPlus.WebUI_WebAPI.Controllers
                     return true;
                 }
             }
-            catch
+            catch (Exception exp)
             {
-                msg = "some problem during creating user";
+                msg = "some pr1oblem during creating user " + exp.Message;
                 return false;
             }
 
