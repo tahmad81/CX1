@@ -3,29 +3,23 @@
 }
 
 <h3>WebAdmin Portal</h3>
-@(Html.Kendo().Grid<CaseXL.ViewModels.CaseVM>().Name("grdcaseDetails")
+@(Html.Kendo().Grid<CaseXL.ViewModels.AppUserVM>().Name("grdusers")
 
     .Columns(columns =>
     {
-        columns.Bound(c => c.Case_Id).Visible(false);
-        columns.Bound(c => c.Caption).Template(@<text></text>)
-        .ClientTemplate(@"<a class=""k-button-icontext k-grid-edit"" href=""\#"">#=Caption#</a>");
-        columns.Bound(c => c.Case_Number).Visible(true).Title("Case Number");
-      
-        columns.ForeignKey(c => c.Case_Type, new SelectList(CaseXL.Common.Repository.CaseTypes(), "ID", "Name")).Title("Case Type");
+        columns.Bound(c => c.Id).Visible(false);
+        columns.Bound(c => c.Full_Name);
+        columns.Bound(c => c.Email);
+        columns.Bound(c => c.Signup_Date).Format("{0:dd/MMM/yyyy}");
 
-        columns.Bound(c => c.Case_Id).Title("").Width(38).Filterable(false).Sortable(false).Template(@<text></text>)
-        .ClientTemplate(@"<img src='../Images/delete-icon.png'  title=""Delete Case"" style='width:38px; height:20px;cursor:pointer' class=""k-button-icontext k-grid-delete""/>");
     })
-                .ToolBar(tol => tol.Create().Text("New Case"))
+
                 .DataSource(dataSource => dataSource
                     .Ajax()
-                    .Model(model => model.Id(m => m.Case_Id))
 
-                    .Read(read => read.Action("_Cases", "Case"))
-                       .Update(up => up.Action("_UpdateCase", "Case"))
-                       .Create(cr => cr.Action("_CreateCase", "Case"))
-                       .Destroy(des => des.Action("_DeleteCase", "Case"))
+
+                    .Read(read => read.Action("_Users", "WebAdmin"))
+
                 )
                   .Pageable()
                   .Groupable()
@@ -36,15 +30,6 @@
                 .Sortable()
                 .Selectable()
                 .Filterable()
-                .Editable(edit =>
-                edit.Mode(GridEditMode.PopUp)
+                )
 
-                ).Events(eve =>
-        {
-            eve.Edit("onEdit");
-
-
-        }
-            )
-
-            )
+<input type="button" class="k-button" onclick="BackToMain()" value="Home" />

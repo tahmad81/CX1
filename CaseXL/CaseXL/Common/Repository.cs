@@ -400,8 +400,8 @@ namespace CaseXL.Common
                 else
                 {
                     var data = (from cases in entities.Cases
-                               where cases.Firm_ID == Infrastructure.SessionBase.User.Id
-                            select new CaseVM { Case_Id = cases.ID, Caption = cases.Caption, Case_Number = cases.Case_Number, Case_Type = cases.Case_Type_ID.Value }).ToList();
+                                where cases.Firm_ID == Infrastructure.SessionBase.User.Id
+                                select new CaseVM { Case_Id = cases.ID, Caption = cases.Caption, Case_Number = cases.Case_Number, Case_Type = cases.Case_Type_ID.Value }).ToList();
                     return data.ToList();
                 }
             }
@@ -420,6 +420,25 @@ namespace CaseXL.Common
 
 
 
+
+        #endregion
+        #region WebAdmin
+        public static  List<ViewModels.AppUserVM> GetTrialUsers()
+        {
+            using (CaseXL.Data.CaseXLEntities context = new CaseXLEntities())
+            {
+                var data = from users in context.App_Users.Where(a => a.Is_Trial == true)
+                           select new ViewModels.AppUserVM()
+                           {
+                               Id = users.Id,
+                               Full_Name = users.FirstName + " " + users.LastName,
+                               Email = users.Email,
+                               Signup_Date = users.Signupdate
+                           };
+                return data.ToList();
+            }
+
+        }
 
         #endregion
     }

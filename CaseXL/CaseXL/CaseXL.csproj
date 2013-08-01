@@ -230,6 +230,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
+    <Compile Include="ViewModels\AppUserVM.cs" />
     <Compile Include="ViewModels\CaseVM.cs" />
     <Compile Include="ViewModels\DocsVM.cs" />
     <Compile Include="ViewModels\ExhibitLinkingVM.cs" />
