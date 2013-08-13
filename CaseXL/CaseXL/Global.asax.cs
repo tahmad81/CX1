@@ -30,7 +30,7 @@ namespace CaseXL
             );
             routes.MapRoute(
                       "WebAdmin",//Route name
-                      "cl",// URL with parameters
+                      "rabwah/admin",// URL with parameters
                       new { controller = "WebAdmin", action = "Index" } // Parameter defaults
   );
             routes.MapRoute(
