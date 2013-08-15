@@ -11,12 +11,17 @@
     .BindTo(ViewBag.Cases)
 
     )
-    <input type="button" class="k-button actionButton" onclick="window.location = '/Case/Index'" value="Manage Cases" />
+    <input type="button" style="width:120px" class="k-button actionButton" onclick="window.location = '/Case/Index'" value="Manage Cases" />
+    @if (!CaseXL.Infrastructure.SessionBase.User.Is_Client)
+    {
+        <input type="button" style="width:120px" class="k-button actionButton" onclick="window.location = '/Case/Index'" value="Clients" />
+
+    }
 </div>
 
 <div>
-	<strong style="color:#e74900;">Directions:</strong><br />
-Open a new case. Enter a fact then enter a witness. Then return to facts and link the witness to the fact. Now go to Trialinq and begin entering questions for the witness about the fact. This is the process. Now you can enter more facts, witnesses, exhibits, and issues and Trialinq questions. It's really that simple!
+    <strong style="color: #e74900;">Directions:</strong><br />
+    Open a new case. Enter a fact then enter a witness. Then return to facts and link the witness to the fact. Now go to Trialinq and begin entering questions for the witness about the fact. This is the process. Now you can enter more facts, witnesses, exhibits, and issues and Trialinq questions. It's really that simple!
 </div>
 
 <table style="border: none" class="aligment-left-part">
@@ -103,9 +108,9 @@ Open a new case. Enter a fact then enter a witness. Then return to facts and lin
     .Modal(true)
     .Draggable(true)
     .Events(eve =>
-        {
+    {
 
-        }
+    }
         )
    .Height(400).HtmlAttributes(new { @style = "background:lightgrey" })
     .Content(@<div id="dvpopup">

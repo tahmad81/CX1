@@ -180,6 +180,19 @@ namespace CaseXL.Data
 			}
 		}
 		
+		private bool _is_Client;
+		public virtual bool Is_Client
+		{
+			get
+			{
+				return this._is_Client;
+			}
+			set
+			{
+				this._is_Client = value;
+			}
+		}
+		
 		private Firm _firm;
 		public virtual Firm Firm
 		{

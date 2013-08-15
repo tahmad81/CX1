@@ -116,6 +116,11 @@ namespace SafetyPlus.WebUI_WebAPI.Controllers
                 MembershipCreateStatus createStatus = this.MembershipService.CreateUser(model.UserName, model.Password, model.Email);
                 if (createStatus == MembershipCreateStatus.Success)
                 {
+                    if (!Roles.GetAllRoles().Contains("Lawyer"))
+                    {
+                        Roles.CreateRole("Lawyer");
+                    }
+                    Roles.AddUserToRole(model.UserName, "Lawyer");
                     if (this.CreateUser(model, out msg))
                     {
                         IGatewayResponse response = this.CreateTransaction(model);
@@ -162,6 +167,7 @@ namespace SafetyPlus.WebUI_WebAPI.Controllers
             MembershipCreateStatus createStatus = this.MembershipService.CreateUser(model.UserName, model.Password, model.Email);
             if (createStatus == MembershipCreateStatus.Success)
             {
+               
                 if (Create_TrialUser(model, out msg))
                 {
                     FormsService.SignIn(model.UserName, false);
