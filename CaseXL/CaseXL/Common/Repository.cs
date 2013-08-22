@@ -423,11 +423,27 @@ namespace CaseXL.Common
 
         #endregion
         #region WebAdmin
-        public static  List<ViewModels.AppUserVM> GetTrialUsers()
+        public static List<ViewModels.AppUserVM> GetTrialUsers()
         {
             using (CaseXL.Data.CaseXLEntities context = new CaseXLEntities())
             {
-                var data = from users in context.App_Users.Where(a => a.Is_Trial == true)
+                var data = from users in context.App_Users.Where(a => a.Is_Trial == true && a.FirmId == SessionBase.Firm.ID)
+                           select new ViewModels.AppUserVM()
+                           {
+                               Id = users.Id,
+                               Full_Name = users.FirstName + " " + users.LastName,
+                               Email = users.Email,
+                               Signup_Date = users.Signupdate
+                           };
+                return data.ToList();
+            }
+
+        }
+        public static List<ViewModels.AppUserVM> GetClients()
+        {
+            using (CaseXL.Data.CaseXLEntities context = new CaseXLEntities())
+            {
+                var data = from users in context.App_Users.Where(a => a.Is_Client)
                            select new ViewModels.AppUserVM()
                            {
                                Id = users.Id,

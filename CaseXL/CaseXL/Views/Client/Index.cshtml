@@ -1,0 +1,29 @@
+﻿@{
+    ViewBag.Title = "Clients";
+}
+
+<h2>Clients</h2>
+@(Html.Kendo().Grid<CaseXL.ViewModels.AppUserVM>().Name("grdusers")
+
+    .Columns(columns =>
+    {
+        columns.Bound(c => c.Id).Visible(false);
+        columns.Bound(c => c.Full_Name);
+        columns.Bound(c => c.Email);
+        columns.Bound(c => c.Signup_Date).Format("{0:dd/MMM/yyyy}");
+
+    })
+         .DataSource(dataSource => dataSource
+         .Ajax()
+         .Read(read => read.Action("_Clients", "Client"))
+                )
+                  .Pageable()
+                  .Groupable()
+                  .Resizable(res => res.Columns(true)
+                  )
+                .Reorderable(red => red.Columns(true))
+                .Navigatable(nav => nav.Enabled(true))
+                .Sortable()
+                .Selectable()
+                .Filterable()
+                )
