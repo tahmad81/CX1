@@ -233,6 +233,7 @@
     </Compile>
     <Compile Include="ViewModels\AppUserVM.cs" />
     <Compile Include="ViewModels\CaseVM.cs" />
+    <Compile Include="ViewModels\ClientVM.cs" />
     <Compile Include="ViewModels\DocsVM.cs" />
     <Compile Include="ViewModels\ExhibitLinkingVM.cs" />
     <Compile Include="ViewModels\ExhibitVM.cs" />

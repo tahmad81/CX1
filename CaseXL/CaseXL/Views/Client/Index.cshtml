@@ -3,7 +3,7 @@
 }
 
 <h2>Clients</h2>
-@(Html.Kendo().Grid<CaseXL.ViewModels.AppUserVM>().Name("grdusers")
+@(Html.Kendo().Grid<CaseXL.ViewModels.ClientVM>().Name("grdusers")
 
     .Columns(columns =>
     {
@@ -26,4 +26,57 @@
                 .Sortable()
                 .Selectable()
                 .Filterable()
+                    .ClientDetailTemplateId("tmp_")
                 )
+<script id="tmp_Questions_Issues" type="text/kendo-tmpl">
+     <div style="padding:5px;border-radius:4px;background:lightgray">
+     <div style="border:1px solid gray;border-radius:3px;background:lightgray">
+     <div align="center" style="font-weight:bold">Questions</div>
+        @Html.Partial("_greenBar")
+@(Html.Kendo().Grid<CaseXL.ViewModels.CaseVM>().Name("grdcaseDetailsClients")
+
+    .Columns(columns =>
+    {
+        columns.Bound(c => c.Case_Id).Visible(false);
+        columns.Bound(c => c.Caption).Template(@<text></text>)
+        .ClientTemplate(@"<a class=""k-button-icontext k-grid-edit"" href=""\#"">#=Caption#</a>");
+        columns.Bound(c => c.Case_Number).Visible(true).Title("Case Number");
+
+        columns.ForeignKey(c => c.Case_Type, new SelectList(CaseXL.Common.Repository.CaseTypes(), "ID", "Name")).Title("Case Type");
+
+        columns.Bound(c => c.Case_Id).Title("").Width(38).Filterable(false).Sortable(false).Template(@<text></text>)
+        .ClientTemplate(@"<img src='../Images/delete-icon.png'  title=""Delete Case"" style='width:38px; height:20px;cursor:pointer' class=""k-button-icontext k-grid-delete""/>");
+    })
+                .ToolBar(tol => tol.Create().Text("New Case"))
+                .DataSource(dataSource => dataSource
+                    .Ajax()
+                    .Model(model => model.Id(m => m.Case_Id))
+
+                    .Read(read => read.Action("_Cases", "Case"))
+                       .Update(up => up.Action("_UpdateCase", "Case"))
+                       .Create(cr => cr.Action("_CreateCase", "Case"))
+                       .Destroy(des => des.Action("_DeleteCase", "Case"))
+                )
+                  .Pageable()
+                  .Groupable()
+                  .Resizable(res => res.Columns(true)
+                  )
+                .Reorderable(red => red.Columns(true))
+                .Navigatable(nav => nav.Enabled(true))
+                .Sortable()
+                .Selectable()
+                .Filterable()
+                .Editable(edit =>
+                edit.Mode(GridEditMode.PopUp)
+
+                ).Events(eve =>
+        {
+            eve.Edit("onEdit");
+
+
+        }
+            )
+
+            )
+    </div>
+</script>

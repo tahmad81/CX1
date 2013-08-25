@@ -439,12 +439,12 @@ namespace CaseXL.Common
             }
 
         }
-        public static List<ViewModels.AppUserVM> GetClients()
+        public static List<ViewModels.ClientVM> GetClients()
         {
             using (CaseXL.Data.CaseXLEntities context = new CaseXLEntities())
             {
                 var data = from users in context.App_Users.Where(a => a.Is_Client)
-                           select new ViewModels.AppUserVM()
+                           select new ViewModels.ClientVM()
                            {
                                Id = users.Id,
                                Full_Name = users.FirstName + " " + users.LastName,

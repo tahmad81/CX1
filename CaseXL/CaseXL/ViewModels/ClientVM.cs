@@ -5,7 +5,8 @@ using System.Web;
 
 namespace CaseXL.ViewModels
 {
-    public class ClientVM
+    public class ClientVM:AppUserVM
     {
+        public List<CaseVM> Cases { get; set; }
     }
 }
