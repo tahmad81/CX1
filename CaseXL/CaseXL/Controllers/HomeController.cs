@@ -523,16 +523,17 @@ namespace CaseXL.Controllers
             }
         }
         #endregion
+        [Authorize()]
         public ActionResult ClientSubscription()
         {
             return View();
-        
+
         }
         public ActionResult _GetClientModule()
         {
 
             return RedirectToAction("ClientSubscription");
-        
+
         }
         private void SetfirmInSession()
         {
@@ -548,10 +549,10 @@ namespace CaseXL.Controllers
                         Firm_Code = "0",
                         Firm_Name = "Trial_Firm",
                         ID = 0,
-                      
-                    }; 
+
+                    };
                     SessionBase.Firm = firm;
-                    SessionBase.User  = user;
+                    SessionBase.User = user;
                 }
             }
         }

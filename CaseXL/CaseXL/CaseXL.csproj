@@ -245,6 +245,7 @@
     <Compile Include="ViewModels\QuestionVM.cs" />
     <Compile Include="ViewModels\RegisterVM.cs" />
     <Compile Include="ViewModels\StaffVM.cs" />
+    <Compile Include="ViewModels\SubscriptionVM.cs" />
     <Compile Include="ViewModels\WitnessesLinkingVM.cs" />
     <Compile Include="ViewModels\WitnessVM.cs" />
   </ItemGroup>

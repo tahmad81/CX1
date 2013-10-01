@@ -87,7 +87,7 @@ namespace CaseXL.Models
 
         public string CCNumber { get; set; }
        // [Required(ErrorMessage = "CVN is required")]
-        [Display(Name = "CVN")]
+        [Display(Name = "CVV")]
         public string CVNNumber { get; set; }
         [Required(ErrorMessage = "First name is required")]
         [Display(Name = "First Name")]

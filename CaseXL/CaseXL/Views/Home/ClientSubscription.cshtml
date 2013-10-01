@@ -1,8 +1,72 @@
-﻿@{
+﻿@model CaseXL.ViewModels.SubscriptionVM
+@{
     ViewBag.Title = "Client Subscription";
 }
-
-<h3>  You have reached this page because you asked to collaborate with your client.  
+<div style="color: blue; font-style: italic; background-color: white; border-radius: 4px; vertical-align: top; padding: 9px">
+    <h7>You have reached this page because you asked to collaborate with your client.  
     There is a monthly charge for this service.  
     Please provide your credit card information for a charge of $19 dollars to be paid monthly while you are collaborating with clients.  
-    One payment covers an unlimited number of clients for collaboration.</h3>
+    One payment covers an unlimited number of clients for collaboration.</h7>
+
+</div>
+@Html.ValidationSummary(true, "Signup was unsuccessful. Please correct the errors and try again.")
+@using (Html.BeginForm())
+{
+    <div align="center" style="background-color: white; border-radius: 4px; padding: 6px; width: 300px; margin-top: 20px">
+        <div class="editor-label">
+            @Html.LabelFor(m => m.CCNumber)
+        </div>
+        <div class="editor-label" style="margin-top: 0px">
+            @Html.TextBoxFor(m => m.CCNumber)<br />
+
+        </div>
+        <div class="editor-label" style="margin-top: 0px">
+            @Html.ValidationMessageFor(m => m.CCNumber)
+        </div>
+        <div class="editor-label" style="margin-top: 0px">
+            @Html.LabelFor(m => m.CVNNumber)
+        </div>
+        <div class="editor-label" style="margin-top: 0px">
+            @Html.TextBoxFor(m => m.CVNNumber, new { @style = "width:50px" })
+
+        </div>
+        <div class="editor-label" style="margin-top: 0px">
+
+            @Html.ValidationMessageFor(m => m.CVNNumber)
+        </div>
+
+        <div class="editor-label" style="margin-top: 0px">
+            @Html.LabelFor(m => m.Exp_Date)
+        </div>
+        <div class="editor-label" style="margin-top: 0px">
+            @(Html.Kendo().DatePickerFor(m => m.Exp_Date).Format("{0:MMM/yyyy}").Depth(CalendarView.Year).Start(CalendarView.Year).HtmlAttributes(new { @id = "dt" })
+                )
+        </div>
+        <div class="editor-label" style="margin-top: 0px">
+            @Html.ValidationMessageFor(m => m.Exp_Date)
+        </div>
+
+        <div class="editor-label" style="margin-top: 3px">
+            @Html.CheckBoxFor(m => m.IsAgree.Value)
+             @Html.LabelFor(m => m.IsAgree)
+        </div>
+        <div class="editor-label" style="margin-top: 3px">
+            @Html.ValidationMessageFor(m => m.IsAgree.Value)
+        </div>
+        <p>
+
+
+            <input type="submit" value="Subscribe" style="width: 100px; margin-top: 10px" class="btn btn-block btn-large btn-primary" />
+            @*< onclick="MenuSelected(this)" id="btnSubscribe" class="btn btn-block btn-large btn-primary">Subscribe</>*@
+        </p>
+        <div class="AuthorizeNetSeal">
+            <script type="text/javascript" lang="javascript">var ANS_customer_id = "4ee51c21-88e6-407f-8dd6-c38594c9b793";</script>
+            <script type="text/javascript" lang="javascript" src="//verify.authorize.net/anetseal/seal.js"></script>
+            <a href="http://www.authorize.net/" id="AuthorizeNetText" target="_blank">Online Payment Service</a>
+            <br />
+            <script type="text/javascript" src="https://seal.godaddy.com/getSeal?sealID=leGL7JLTQNMYTkoM371RRCPe6cEX68yRc4oF7jziwqrVSJqe8X"></script>
+        </div>
+
+
+    </div>
+}
