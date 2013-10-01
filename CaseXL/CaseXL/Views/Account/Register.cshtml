@@ -62,7 +62,7 @@
                 @Html.TextBoxFor(m => m.Firm_Code)
                 @Html.ValidationMessageFor(m => m.Firm_Code)
             </div>
-            <div class="editor-label">
+           @* <div class="editor-label">
                 @Html.LabelFor(m => m.CCNumber)
             </div>
             <div class="editor-label">
@@ -71,24 +71,24 @@
             </div>            
             <div class="editor-label">
                   @Html.LabelFor(m => m.CVNNumber)
-            </div>
+            </div>*@
 
-            <div class="editor-label">
+           @* <div class="editor-label">
              
              
                 @Html.TextBoxFor(m => m.CVNNumber, new { @style = "width:50px" })
                 @Html.ValidationMessageFor(m => m.CVNNumber)<br />
              
-            </div>
+            </div>*@
 
-            <div class="editor-label">
+          @*  <div class="editor-label">
                 @Html.LabelFor(m => m.Exp_Date)
             </div>
             <div class="editor-label">
                 @(Html.Kendo().DatePickerFor(m => m.Exp_Date).Format("{0:MMM/yyyy}").Depth(CalendarView.Year).Start(CalendarView.Year).HtmlAttributes(new { @id = "dt" })
                 )
                 @Html.ValidationMessageFor(m => m.Exp_Date)
-            </div>
+            </div>*@
             <p>
 
                 <input type="submit" class="k-button actionButton" value="Signup" />

@@ -632,6 +632,7 @@
     <Content Include="Views\Account\Trial_Register.cshtml" />
     <Content Include="Views\WebAdmin\Index.cshtml" />
     <Content Include="Views\Client\Index.cshtml" />
+    <Content Include="Views\Home\ClientSubscription.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

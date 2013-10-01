@@ -48,31 +48,33 @@ namespace SafetyPlus.WebUI_WebAPI.Controllers
             {
                 if (MembershipService.ValidateUser(model.UserName, model.Password))
                 {
-                    if (IsTrial(model))
-                    {
-                        if (IsTrialValid(model))
-                        {
-                            FormsService.SignIn(model.UserName, model.RememberMe);
-                            return RedirectToAction("Main", "Home");
-                        }
-                        else
-                        {
-                            ModelState.AddModelError("", "Dear user we are sorry but your trial period has expired");
-                        }
-                    }
-                    else
-                    {
+                    //if (IsTrial(model))
+                    //{
+                    //    if (IsTrialValid(model))
+                    //    {
+                    //        FormsService.SignIn(model.UserName, model.RememberMe);
+                    //        return RedirectToAction("Main", "Home");
+                    //    }
+                    //    else
+                    //    {
+                    //        ModelState.AddModelError("", "Dear user we are sorry but your trial period has expired");
+                    //    }
+                    //}
+                    //else
+                    //{
 
-                        if (ValidateSubscription(model))
-                        {
-                            FormsService.SignIn(model.UserName, model.RememberMe);
-                            return RedirectToAction("Main", "Home");
-                        }
-                        else
-                        {
-                            ModelState.AddModelError("", "Not valid subscription");
-                        }
-                    }
+                    //    if (ValidateSubscription(model))
+                    //    {
+                    //        FormsService.SignIn(model.UserName, model.RememberMe);
+                    //        return RedirectToAction("Main", "Home");
+                    //    }
+                    //    else
+                    //    {
+                    //        ModelState.AddModelError("", "Not valid subscription");
+                    //    }
+                    //}
+                    FormsService.SignIn(model.UserName, model.RememberMe);
+                    return RedirectToAction("Main", "Home");
                 }
                 else
                 {
@@ -123,25 +125,27 @@ namespace SafetyPlus.WebUI_WebAPI.Controllers
                     Roles.AddUserToRole(model.UserName, "Lawyer");
                     if (this.CreateUser(model, out msg))
                     {
-                        IGatewayResponse response = this.CreateTransaction(model);
-                        if (response.Approved)
-                        {
-                            ARBCreateSubscriptionResponseType type = this.CreateSubscription(model);
-                            if (type.resultCode == MessageTypeEnum.Ok)
-                            {
-                                this.FormsService.SignIn(model.UserName, false);
-                                this.AddSubscriptionNo(model, msg, type.subscriptionId);
-                                return RedirectToAction("Welcome", new { subId = type.subscriptionId, name = model.FirstName + " " + model.LastName });
-                            }
-                            ModelState.AddModelError("", "Subscription error: " + type.messages[0].text);
-                            Membership.DeleteUser(model.UserName);
-                            this.DeleteUser(model, out msg);
-                            return View(model);
-                        }
-                        ModelState.AddModelError("", "Transaction error: " + response.Message);
-                        Membership.DeleteUser(model.UserName);
-                        this.DeleteUser(model, out msg);
-                        return View(model);
+                        // IGatewayResponse response = this.CreateTransaction(model);
+                        //if (response.Approved)
+                        //{
+                        //    ARBCreateSubscriptionResponseType type = this.CreateSubscription(model);
+                        //    if (type.resultCode == MessageTypeEnum.Ok)
+                        //    {
+                        //        this.FormsService.SignIn(model.UserName, false);
+                        //        this.AddSubscriptionNo(model, msg, type.subscriptionId);
+                        //        return RedirectToAction("Welcome", new { subId = type.subscriptionId, name = model.FirstName + " " + model.LastName });
+                        //    }
+                        //    ModelState.AddModelError("", "Subscription error: " + type.messages[0].text);
+                        //    Membership.DeleteUser(model.UserName);
+                        //    this.DeleteUser(model, out msg);
+                        //    return View(model);
+                        //}
+                        //ModelState.AddModelError("", "Transaction error: " + response.Message);
+                        //Membership.DeleteUser(model.UserName);
+                        //this.DeleteUser(model, out msg);
+                        //return View(model);
+                        this.FormsService.SignIn(model.UserName, false);
+                        return RedirectToAction("Welcome", new { name = model.FirstName + " " + model.LastName });
                     }
                     ModelState.AddModelError("", "Unable to create user (" + msg + ")");
                     Membership.DeleteUser(model.UserName);
@@ -167,7 +171,7 @@ namespace SafetyPlus.WebUI_WebAPI.Controllers
             MembershipCreateStatus createStatus = this.MembershipService.CreateUser(model.UserName, model.Password, model.Email);
             if (createStatus == MembershipCreateStatus.Success)
             {
-               
+
                 if (Create_TrialUser(model, out msg))
                 {
                     FormsService.SignIn(model.UserName, false);

@@ -83,10 +83,10 @@ namespace CaseXL.Models
         [System.ComponentModel.DataAnnotations.Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
         [Display(Name = "Credit Card")]
-        [Required(ErrorMessage = "Credit card number is required")]
+        //[Required(ErrorMessage = "Credit card number is required")]
 
         public string CCNumber { get; set; }
-        [Required(ErrorMessage = "CVN is required")]
+       // [Required(ErrorMessage = "CVN is required")]
         [Display(Name = "CVN")]
         public string CVNNumber { get; set; }
         [Required(ErrorMessage = "First name is required")]
@@ -99,7 +99,7 @@ namespace CaseXL.Models
         [Display(Name = "Firm Code")]
         public string Firm_Code { get; set; }
 
-        [Required(ErrorMessage = "Expiry date is required")]
+       // [Required(ErrorMessage = "Expiry date is required")]
         [Display(Name = "Expiry Date")]
         public DateTime Exp_Date { get; set; }
         public bool IsTrial { get; set; }

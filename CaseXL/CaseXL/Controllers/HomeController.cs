@@ -523,7 +523,17 @@ namespace CaseXL.Controllers
             }
         }
         #endregion
+        public ActionResult ClientSubscription()
+        {
+            return View();
+        
+        }
+        public ActionResult _GetClientModule()
+        {
 
+            return RedirectToAction("ClientSubscription");
+        
+        }
         private void SetfirmInSession()
         {
             using (CaseXL.Data.CaseXLEntities context = new CaseXL.Data.CaseXLEntities())
