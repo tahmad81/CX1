@@ -634,6 +634,7 @@
     <Content Include="Views\WebAdmin\Index.cshtml" />
     <Content Include="Views\Client\Index.cshtml" />
     <Content Include="Views\Home\ClientSubscription.cshtml" />
+    <Content Include="Views\Home\SubscriptionExpired.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

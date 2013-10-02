@@ -10,10 +10,14 @@ using CaseXL.Infrastructure;
 using CaseXL.Common;
 using CaseXL.Data;
 using CaseXL.ViewModels;
+using AuthorizeNet;
+using CaseXL.Auth_Service;
 namespace CaseXL.Controllers
 {
     public class HomeController : Controller
     {
+        public CaseXL.Auth_Service.ServiceSoapClient _webservice = new ServiceSoapClient();
+        private long _subscriptionId = 0;
         public ActionResult Index()
         {
             ViewBag.Message = "Welcome to ASP.NET MVC!";
@@ -537,8 +541,119 @@ namespace CaseXL.Controllers
         }
         #endregion
         #region Subscription
+        #region HelpingMethods
+        private IGatewayResponse CreateTransaction(SubscriptionVM model)
+        {
+            //4111111111111111
+            //1216 date.
+            var month = DateTime.Today.ToString("MMM");
+            var request = new AuthorizationRequest(model.CCNumber, model.Exp_Date.Month.ToString() + model.Exp_Date.Year.ToString(), 19.00M,
+                     "Transaction for the month " + month);
+            var appKey = System.Configuration.ConfigurationManager.AppSettings["appKey"];
+            var transid = System.Configuration.ConfigurationManager.AppSettings["transId"];
+            //step 2 - create the gateway, sending in your credentials
+            var gate = new Gateway(appKey, transid);
+            //step 3 - make some money
+            request.Email = SessionBase.User.Email;
+            request.FirstName = SessionBase.User.FirstName;
+            request.LastName = SessionBase.User.LastName;
+            gate.TestMode = false;
+            request.EmailCustomer = "true";
+            request.TestRequest = "false";
+            request.FooterEmailReceipt = "You will be billed each month";
+            var response = gate.Send(request);
+            return response;
+        }
+        private ARBCreateSubscriptionResponseType CreateSubscription(SubscriptionVM model)
+        {
+
+            MerchantAuthenticationType authentication = PopulateMerchantAuthentication();
+            ARBSubscriptionType subscription = new ARBSubscriptionType();
+            PopulateSubscription(subscription, false, model);
+            ARBCreateSubscriptionResponseType response;
+            response = _webservice.ARBCreateSubscription(authentication, subscription);
+
+            if (response.resultCode == MessageTypeEnum.Ok)
+            {
+                _subscriptionId = response.subscriptionId;
+
+                // Console.WriteLine("A subscription with an ID of '{0}' was successfully created.", _subscriptionId);
+            }
+
+
+            return response;
+        }
+        private void PopulateSubscription(ARBSubscriptionType sub, bool bForUpdate, SubscriptionVM model)
+        {
+            CreditCardType creditCard = new CreditCardType();
+            var user = SessionBase.User;
+            sub.name = user.FirstName + " " + user.LastName;
+
+            creditCard.cardNumber = model.CCNumber;
+            var year = model.Exp_Date.ToString("yyyy") + "-" + model.Exp_Date.ToString("MM");
+            creditCard.expirationDate = year;  // required format for API is YYYY-MM
+            sub.payment = new PaymentType();
+            sub.payment.Item = creditCard;
+            sub.billTo = new NameAndAddressType();
+            sub.billTo.firstName = user.FirstName;
+            sub.billTo.lastName = user.LastName;
+            // Create a subscription that is 12 monthly payments starting on Jan 1, 2019
+            sub.paymentSchedule = new PaymentScheduleType();
+            sub.paymentSchedule.startDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month + 1, DateTime.Today.Day);
+            sub.paymentSchedule.startDateSpecified = true;
+            sub.paymentSchedule.totalOccurrences = 12;
+            sub.paymentSchedule.totalOccurrencesSpecified = true;
+
+            sub.amount = 19.00M;
+            sub.amountSpecified = true;
+            // Interval can't be updated once a subscription is created.
+            sub.paymentSchedule.interval = new PaymentScheduleTypeInterval();
+            sub.paymentSchedule.interval.length = 1;
+            sub.paymentSchedule.interval.unit = ARBSubscriptionUnitEnum.months;
+
+        }
+        private bool ValidateSubscription()
+        {
+            var user = SessionBase.User;
+            using (CaseXL.Data.CaseXLEntities context = new CaseXLEntities())
+            {
+                long subId = context.App_Users.Where(a => a.UserName == user.UserName).FirstOrDefault().SubscriptionNo;
+                CaseXL.Auth_Service.ARBGetSubscriptionStatusResponseType result = _webservice.ARBGetSubscriptionStatus(PopulateMerchantAuthentication(), subId);
+                return (result.status == ARBSubscriptionStatusEnum.active && result.resultCode != MessageTypeEnum.Error) ? true : false;
+            }
+        }
+        private static MerchantAuthenticationType PopulateMerchantAuthentication()
+        {
+            MerchantAuthenticationType authentication = new MerchantAuthenticationType();
+            authentication.name = System.Configuration.ConfigurationManager.AppSettings["appKey"];
+            authentication.transactionKey = System.Configuration.ConfigurationManager.AppSettings["transId"];
+            return authentication;
+        }
+        private bool AddSubscriptionNo(SubscriptionVM model, string msg, long subId)
+        {
+            using (CaseXLEntities entities = new CaseXLEntities())
+            {
+                App_User user = (from a in entities.App_Users
+                                 where a.UserName == SessionBase.User.UserName
+                                 select a).FirstOrDefault<App_User>();
+                if (user != null)
+                {
+                    user.SubscriptionNo = subId;
+                    entities.SaveChanges();
+                    return true;
+                }
+            }
+            return false;
+        }
+        #endregion
         [Authorize()]
         public ActionResult ClientSubscription()
+        {
+            return View();
+
+        }
+        [Authorize()]
+        public ActionResult SubscriptionExpired()
         {
             return View();
 
@@ -547,15 +662,43 @@ namespace CaseXL.Controllers
         [Authorize()]
         public ActionResult ClientSubscription(ViewModels.SubscriptionVM model)
         {
+            string msg = null;
+            IGatewayResponse response = this.CreateTransaction(model);
+            if (response.Approved)
+            {
+                ARBCreateSubscriptionResponseType type = this.CreateSubscription(model);
+                if (type.resultCode == MessageTypeEnum.Ok)
+                {
+                    this.AddSubscriptionNo(model, msg, type.subscriptionId);
+                    return RedirectToAction("Index", "Client");
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Subscription error: " + type.messages[0].text);
+                    return View(model);
+                }
+            }
+            else
+            {
+                ModelState.AddModelError("", "Transaction error: " + response.Message);
+                return View(model);
+            }
 
-            return View();
 
         }
         public ActionResult _GetClientModule()
         {
+            if (SessionBase.User.SubscriptionNo != 0)
+            {
+                if (ValidateSubscription())
+                {
+                    return RedirectToAction("Index", "Client");
+                }
+                else
+                    return RedirectToAction("SubscriptionExpired");
 
+            }
             return RedirectToAction("ClientSubscription");
-
         }
         #endregion
         private void SetfirmInSession()
@@ -575,8 +718,9 @@ namespace CaseXL.Controllers
 
                     };
                     SessionBase.Firm = firm;
-                    SessionBase.User = user;
+
                 }
+                SessionBase.User = user;
             }
         }
         #region REfactor

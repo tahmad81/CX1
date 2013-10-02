@@ -2,6 +2,7 @@
 @{
     ViewBag.Title = "Client Subscription";
 }
+@Html.ValidationSummary(true, "Subscription was unsuccessful. Please correct the errors and try again.")
 <div style="color: blue; font-style: italic; background-color: white; border-radius: 4px; vertical-align: top; padding: 9px">
     <h7>You have reached this page because you asked to collaborate with your client.  
     There is a monthly charge for this service.  
@@ -9,7 +10,7 @@
     One payment covers an unlimited number of clients for collaboration.</h7>
 
 </div>
-@Html.ValidationSummary(true, "Signup was unsuccessful. Please correct the errors and try again.")
+
 @using (Html.BeginForm())
 {
     <div align="center" style="background-color: white; border-radius: 4px; padding: 6px; width: 300px; margin-top: 20px; margin-left:300px; border-style:inset">
@@ -46,13 +47,13 @@
             @Html.ValidationMessageFor(m => m.Exp_Date)
         </div>
 
-        <div class="editor-label" style="margin-top: 3px">
+       @* <div class="editor-label" style="margin-top: 3px">
             @Html.CheckBoxFor(m => m.IsAgree.Value)
              @Html.LabelFor(m => m.IsAgree)
         </div>
         <div class="editor-label" style="margin-top: 3px">
             @Html.ValidationMessageFor(m => m.IsAgree.Value)
-        </div>
+        </div>*@
         <p>
 
 

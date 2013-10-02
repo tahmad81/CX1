@@ -73,6 +73,7 @@ namespace SafetyPlus.WebUI_WebAPI.Controllers
                     //        ModelState.AddModelError("", "Not valid subscription");
                     //    }
                     //}
+                    var data=Roles.GetRolesForUser(model.UserName);
                     FormsService.SignIn(model.UserName, model.RememberMe);
                     return RedirectToAction("Main", "Home");
                 }
@@ -135,7 +136,7 @@ namespace SafetyPlus.WebUI_WebAPI.Controllers
                         //        this.AddSubscriptionNo(model, msg, type.subscriptionId);
                         //        return RedirectToAction("Welcome", new { subId = type.subscriptionId, name = model.FirstName + " " + model.LastName });
                         //    }
-                        //    ModelState.AddModelError("", "Subscription error: " + type.messages[0].text);
+                        //      
                         //    Membership.DeleteUser(model.UserName);
                         //    this.DeleteUser(model, out msg);
                         //    return View(model);
