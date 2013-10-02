@@ -37,38 +37,13 @@ namespace CaseXL.Controllers
 
             return View();
         }
-        public ActionResult _GetFacts(int caseid)
-        {
-            Session["caseid"] = caseid;
-            return PartialView("_Facts");
-        }
+
         public ActionResult Test(int? id)
         {
 
             return null;
         }
-        public ActionResult _Facts([DataSourceRequest] DataSourceRequest request)
-        {
-            using (CaseXL.Data.CaseXLEntities context = new CaseXL.Data.CaseXLEntities())
-            {
 
-                var data = (from facts in context.Facts.Where(a => a.Case_Id == int.Parse(Session["caseid"].ToString()))
-                            select new ViewModels.FactsVM
-                            {
-                                CaseID = facts.Case_Id,
-                                Date = facts.Date,
-                                Description = facts.Description,
-                                Evaluation = facts.Description,
-                                Source = facts.Source,
-                                ID = facts.Id,
-                                Evaluation_Id = facts.Evaluation1.Id,
-                                Evaluation_Text = facts.Evaluation1.Evaluation_Text
-                            }).OrderBy(o => o.Date).ToList();
-
-
-                return Json(data.ToDataSourceResult(request));
-            }
-        }
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Checkboxes(string[] checkedNodes, List<CaseXL.ViewModels.IssuesVM> model)
         {
@@ -93,32 +68,8 @@ namespace CaseXL.Controllers
             return PartialView("_ExhibitLinking", new ViewModels.ExhibitLinkingVM() { CaseID = caseid, FactID = factID });
 
         }
-        public ActionResult _Exhibits([DataSourceRequest] DataSourceRequest request, int? caseid, int? factID)
-        {
-            var issues = Common.Repository.GetExhibitsByFactCase(caseid.Value, factID.Value);
 
-            return Json(issues.ToDataSourceResult(request), JsonRequestBehavior.AllowGet);
-
-        }
-        public ActionResult _UpdateExhibits(int? factID, int? caseid, [DataSourceRequest] DataSourceRequest request, [Bind(Prefix = "models")]IEnumerable<CaseXL.ViewModels.ExhibitVM> updated)
-        {
-            using (CaseXL.Data.CaseXLEntities context = new Data.CaseXLEntities())
-            {
-                var delObjects = updated.Where(a => a.IsSelected == false && a.Fact_Exhibit != null).Select(a => a.Fact_Exhibit).ToList();
-                context.Delete(context.Exhibits_Facts.Where(a => delObjects.Contains(a.Id)));
-                var addObjects = (from addobj in updated.Where(a => a.IsSelected == true && a.Fact_Exhibit == null)
-                                  select new CaseXL.Data.Exhibits_Fact
-                                  {
-                                      CaseId = caseid,
-                                      FactId = factID,
-                                      ExhibitId = addobj.Exhibit_Id
-
-                                  }).ToList();
-                context.Add(addObjects);
-                context.SaveChanges();
-            }
-            return Json(true);
-        }
+        #region Issues
         public ActionResult _Issues([DataSourceRequest] DataSourceRequest request, int? caseid, int? factID)
         {
             var issues = Common.Repository.GetIssuesByFactCase(caseid.Value, factID.Value);
@@ -126,30 +77,7 @@ namespace CaseXL.Controllers
             return Json(issues.ToDataSourceResult(request));
 
         }
-        public ActionResult _Witnesses([DataSourceRequest] DataSourceRequest request, int? caseid, int? factID)
-        {
-            var witnesses = Common.Repository.GetWitnessesByCaseFact(caseid.Value, factID.Value);
-            return Json(witnesses.ToDataSourceResult(request));
-        }
-        public ActionResult _UpdateWitnesses(int? factID, int? caseid, [DataSourceRequest] DataSourceRequest request, [Bind(Prefix = "models")]IEnumerable<CaseXL.ViewModels.WitnessVM> updated)
-        {
-            using (CaseXL.Data.CaseXLEntities context = new Data.CaseXLEntities())
-            {
-                var delObjects = updated.Where(a => a.IsSelected == false && a.Issue_Witness_Id != null).Select(a => a.ID).ToList();
-                context.Delete(context.Witness_Facts.Where(a => delObjects.Contains(a.Id)));
-                var addObjects = (from addobj in updated.Where(a => a.IsSelected == true && a.Issue_Witness_Id == null)
-                                  select new CaseXL.Data.Witness_Fact
-                                  {
-                                      CaseId = caseid,
-                                      FactId = factID,
-                                      WitnessId = addobj.WitnessId
-                                  }).ToList();
 
-                context.Add(addObjects);
-                context.SaveChanges();
-            }
-            return Json(true);
-        }
         public ActionResult _UpdateIssues(int? factID, int? caseid, [DataSourceRequest] DataSourceRequest request, [Bind(Prefix = "models")]IEnumerable<CaseXL.ViewModels.IssuesVM> updated)
         {
             using (CaseXL.Data.CaseXLEntities context = new Data.CaseXLEntities())
@@ -169,6 +97,36 @@ namespace CaseXL.Controllers
                 context.SaveChanges();
             }
             return Json(true);
+        }
+        #endregion
+
+        #region Facts
+        public ActionResult _GetFacts(int caseid)
+        {
+            Session["caseid"] = caseid;
+            return PartialView("_Facts");
+        }
+        public ActionResult _Facts([DataSourceRequest] DataSourceRequest request)
+        {
+            using (CaseXL.Data.CaseXLEntities context = new CaseXL.Data.CaseXLEntities())
+            {
+
+                var data = (from facts in context.Facts.Where(a => a.Case_Id == int.Parse(Session["caseid"].ToString()))
+                            select new ViewModels.FactsVM
+                            {
+                                CaseID = facts.Case_Id,
+                                Date = facts.Date,
+                                Description = facts.Description,
+                                Evaluation = facts.Description,
+                                Source = facts.Source,
+                                ID = facts.Id,
+                                Evaluation_Id = facts.Evaluation1.Id,
+                                Evaluation_Text = facts.Evaluation1.Evaluation_Text
+                            }).OrderBy(o => o.Date).ToList();
+
+
+                return Json(data.ToDataSourceResult(request));
+            }
         }
         public ActionResult _FactDelete([DataSourceRequest] DataSourceRequest request, ViewModels.FactsVM model)
         {
@@ -225,6 +183,32 @@ namespace CaseXL.Controllers
                 return Json(new[] { model }.ToDataSourceResult(request, ModelState), JsonRequestBehavior.AllowGet);
             }
 
+        }
+        #endregion
+        #region Witness
+        public ActionResult _Witnesses([DataSourceRequest] DataSourceRequest request, int? caseid, int? factID)
+        {
+            var witnesses = Common.Repository.GetWitnessesByCaseFact(caseid.Value, factID.Value);
+            return Json(witnesses.ToDataSourceResult(request));
+        }
+        public ActionResult _UpdateWitnesses(int? factID, int? caseid, [DataSourceRequest] DataSourceRequest request, [Bind(Prefix = "models")]IEnumerable<CaseXL.ViewModels.WitnessVM> updated)
+        {
+            using (CaseXL.Data.CaseXLEntities context = new Data.CaseXLEntities())
+            {
+                var delObjects = updated.Where(a => a.IsSelected == false && a.Issue_Witness_Id != null).Select(a => a.ID).ToList();
+                context.Delete(context.Witness_Facts.Where(a => delObjects.Contains(a.Id)));
+                var addObjects = (from addobj in updated.Where(a => a.IsSelected == true && a.Issue_Witness_Id == null)
+                                  select new CaseXL.Data.Witness_Fact
+                                  {
+                                      CaseId = caseid,
+                                      FactId = factID,
+                                      WitnessId = addobj.WitnessId
+                                  }).ToList();
+
+                context.Add(addObjects);
+                context.SaveChanges();
+            }
+            return Json(true);
         }
         public ActionResult _GetWitnesses(int? caseid)
         {
@@ -321,6 +305,35 @@ namespace CaseXL.Controllers
             }
             return Json(new[] { model }.ToDataSourceResult(request, ModelState));
         }
+        #endregion
+        #region Exhibits
+        public ActionResult _Exhibits([DataSourceRequest] DataSourceRequest request, int? caseid, int? factID)
+        {
+            var issues = Common.Repository.GetExhibitsByFactCase(caseid.Value, factID.Value);
+
+            return Json(issues.ToDataSourceResult(request), JsonRequestBehavior.AllowGet);
+
+        }
+        public ActionResult _UpdateExhibits(int? factID, int? caseid, [DataSourceRequest] DataSourceRequest request, [Bind(Prefix = "models")]IEnumerable<CaseXL.ViewModels.ExhibitVM> updated)
+        {
+            using (CaseXL.Data.CaseXLEntities context = new Data.CaseXLEntities())
+            {
+                var delObjects = updated.Where(a => a.IsSelected == false && a.Fact_Exhibit != null).Select(a => a.Fact_Exhibit).ToList();
+                context.Delete(context.Exhibits_Facts.Where(a => delObjects.Contains(a.Id)));
+                var addObjects = (from addobj in updated.Where(a => a.IsSelected == true && a.Fact_Exhibit == null)
+                                  select new CaseXL.Data.Exhibits_Fact
+                                  {
+                                      CaseId = caseid,
+                                      FactId = factID,
+                                      ExhibitId = addobj.Exhibit_Id
+
+                                  }).ToList();
+                context.Add(addObjects);
+                context.SaveChanges();
+            }
+            return Json(true);
+        }
+
         public ActionResult _GetExhibits(int? caseid)
         {
             Session["caseid"] = caseid;
@@ -385,7 +398,7 @@ namespace CaseXL.Controllers
             }
             return Json(new[] { model }.ToDataSourceResult(request, ModelState));
         }
-
+        #endregion
         #region IssuesByCase
         public ActionResult _GetIssues(int? caseid)
         {
@@ -523,9 +536,18 @@ namespace CaseXL.Controllers
             }
         }
         #endregion
+        #region Subscription
         [Authorize()]
         public ActionResult ClientSubscription()
         {
+            return View();
+
+        }
+        [HttpPost()]
+        [Authorize()]
+        public ActionResult ClientSubscription(ViewModels.SubscriptionVM model)
+        {
+
             return View();
 
         }
@@ -535,6 +557,7 @@ namespace CaseXL.Controllers
             return RedirectToAction("ClientSubscription");
 
         }
+        #endregion
         private void SetfirmInSession()
         {
             using (CaseXL.Data.CaseXLEntities context = new CaseXL.Data.CaseXLEntities())
