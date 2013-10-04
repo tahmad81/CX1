@@ -15,7 +15,7 @@ namespace CaseXL.Controllers
     public class ClientController : Controller
     {
         [Authorize(Roles = "Lawyer")]
-        public ActionResult Index()
+        public ActionResult Index(string returnUrl)
         {
             return View();
         }

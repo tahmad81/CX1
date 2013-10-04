@@ -562,6 +562,7 @@ namespace CaseXL.Controllers
             request.TestRequest = "false";
             request.FooterEmailReceipt = "You will be billed each month";
             var response = gate.Send(request);
+
             return response;
         }
         private ARBCreateSubscriptionResponseType CreateSubscription(SubscriptionVM model)
@@ -572,15 +573,10 @@ namespace CaseXL.Controllers
             PopulateSubscription(subscription, false, model);
             ARBCreateSubscriptionResponseType response;
             response = _webservice.ARBCreateSubscription(authentication, subscription);
-
             if (response.resultCode == MessageTypeEnum.Ok)
             {
                 _subscriptionId = response.subscriptionId;
-
-                // Console.WriteLine("A subscription with an ID of '{0}' was successfully created.", _subscriptionId);
             }
-
-
             return response;
         }
         private void PopulateSubscription(ARBSubscriptionType sub, bool bForUpdate, SubscriptionVM model)
