@@ -427,7 +427,7 @@ namespace CaseXL.Common
         {
             using (CaseXL.Data.CaseXLEntities context = new CaseXLEntities())
             {
-                var data = from users in context.App_Users.Where(a => a.Is_Trial == true && a.FirmId == SessionBase.Firm.ID)
+                var data = from users in context.App_Users.Where(a=> a.FirmId == SessionBase.Firm.ID)
                            select new ViewModels.AppUserVM()
                            {
                                Id = users.Id,

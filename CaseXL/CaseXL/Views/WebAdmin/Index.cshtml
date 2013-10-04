@@ -3,33 +3,31 @@
 }
 
 <h3>WebAdmin Portal</h3>
-@(Html.Kendo().Grid<CaseXL.ViewModels.AppUserVM>().Name("grdusers")
+@(Html.Kendo().Grid<CaseXL.ViewModels.AppUserVM>().Name("gridusers")
+    .DataSource(dataSource => dataSource
+        .Ajax()
+        .Model(model => model.Id(m => m.Id))
+        .Read(read => read.Action("_Users", "WebAdmin"))
 
+
+
+    )
     .Columns(columns =>
     {
+
         columns.Bound(c => c.Id).Visible(false);
-        columns.Bound(c => c.Full_Name);
         columns.Bound(c => c.Email);
-        columns.Bound(c => c.Signup_Date).Format("{0:dd/MMM/yyyy}");
+        columns.Bound(c => c.Signup_Date).Format("{0:MM/dd/yyyy}"); 
 
- 
-        
-                .DataSource(dataSource => dataSource
-                    .Ajax()
+    })
 
+    .Pageable()
+    .Sortable()
+    .Groupable()
+    .Filterable()
+    .Editable(ed => ed.Mode(GridEditMode.PopUp)
 
-                    .Read(read => read.Action("_Users", "WebAdmin"))
+))
 
-                )
-                  .Pageable()
-                  .Groupable()
-                  .Resizable(res => res.Columns(true)
-                  )
-                .Reorderable(red => red.Columns(true))
-                .Navigatable(nav => nav.Enabled(true))
-                .Sortable()
-                .Selectable()
-                .Filterable()
-                )
 
 <input type="button" class="k-button" onclick="BackToMain()" value="Home" />

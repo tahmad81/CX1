@@ -635,6 +635,12 @@ namespace CaseXL.Controllers
                 if (user != null)
                 {
                     user.SubscriptionNo = subId;
+                    user.CreditCard = model.CCNumber;
+                    user.CVNNo = model.CVNNumber;
+                    user.Exp_Date = model.Exp_Date; 
+                     //user.ex = model.Exp_Date,
+                    
+
                     entities.SaveChanges();
                     return true;
                 }

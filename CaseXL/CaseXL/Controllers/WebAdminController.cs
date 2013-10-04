@@ -11,6 +11,7 @@ namespace CaseXL.Controllers
     {
         //
         // GET: /WebAdmin/
+        [Authorize()]
         public ActionResult Index()
         {
             return View();

@@ -545,7 +545,10 @@
           <orm:column name="Is_Trial" sql-type="bit" nullable="false" length="0" scale="0" has-default-value="true" ado-type="Bit" />
         </orm:field>
         <orm:field name="_is_Client" property="Is_Client" behavior="readwrite" uniqueId="5f9847b6-38b2-4dc7-bc24-a0856287c1dc" type="System.Boolean">
-          <orm:column has-default-value="true" nullable="false" length="0" name="Is_Client" scale="0" sql-type="bit" ado-type="Bit" />
+          <orm:column name="Is_Client" sql-type="bit" nullable="false" length="0" scale="0" has-default-value="true" ado-type="Bit" />
+        </orm:field>
+        <orm:field name="_exp_Date" property="Exp_Date" behavior="readwrite" uniqueId="aa177621-190a-478a-a821-769e7ed13ee6" type="System.Nullable`1[[System.DateTime, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]">
+          <orm:column nullable="true" length="0" name="Exp_Date" scale="0" sql-type="datetime" ado-type="DateTime" />
         </orm:field>
         <orm:field name="_firm" property="Firm" behavior="readwrite" uniqueId="48ca9c5f-6054-415e-8a6e-dd2008e4b08b" type="CaseXL.Data.Firm">
           <orm:reference uniqueId="9c46bea4-ae9b-4454-94c3-76613d7cfcf5">
@@ -846,7 +849,8 @@
         <orm:column name="ContactNo" sql-type="nvarchar" nullable="true" length="50" scale="0" ado-type="UnicodeStringVariableLength" />
         <orm:column name="Signupdate" sql-type="date" nullable="true" length="0" scale="0" ado-type="Date" />
         <orm:column name="Is_Trial" sql-type="bit" nullable="false" length="0" scale="0" has-default-value="true" ado-type="Bit" />
-        <orm:column has-default-value="true" nullable="false" length="0" name="Is_Client" scale="0" sql-type="bit" ado-type="Bit" />
+        <orm:column name="Is_Client" sql-type="bit" nullable="false" length="0" scale="0" has-default-value="true" ado-type="Bit" />
+        <orm:column nullable="true" length="0" name="Exp_Date" scale="0" sql-type="datetime" ado-type="DateTime" />
         <orm:constraint name="FK_App_Users_Firm" destination-table="Firm">
           <orm:column name="FirmId" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
         </orm:constraint>
@@ -1355,6 +1359,7 @@
       <Property Id="9309da61-3696-4253-85e5-2435469658d7" name="Signupdate" type="DateTime" label="Signupdate : DateTime" nullable="true" kind="Persistent" fieldName="_signupdate" />
       <Property Id="7da37f7b-f5bd-4af1-a52b-27eed40311fc" name="Is_Trial" type="Boolean" label="Is_Trial : Boolean" kind="Persistent" fieldName="_is_Trial" />
       <Property Id="5f9847b6-38b2-4dc7-bc24-a0856287c1dc" name="Is_Client" type="Boolean" label="Is_Client : Boolean" kind="Persistent" fieldName="_is_Client" />
+      <Property Id="aa177621-190a-478a-a821-769e7ed13ee6" name="Exp_Date" type="DateTime" label="Exp_Date : DateTime" nullable="true" kind="Persistent" fieldName="_exp_Date" />
       <AssociationTargets>
         <Association Id="9c46bea4-ae9b-4454-94c3-76613d7cfcf5" SourceMultiplicity="ZeroOne" name="App_UserHasFirm">
           <DomainClassMoniker name="/CaseXLEntities/Firm" />

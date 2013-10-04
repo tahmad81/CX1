@@ -193,6 +193,19 @@ namespace CaseXL.Data
 			}
 		}
 		
+		private DateTime? _exp_Date;
+		public virtual DateTime? Exp_Date
+		{
+			get
+			{
+				return this._exp_Date;
+			}
+			set
+			{
+				this._exp_Date = value;
+			}
+		}
+		
 		private Firm _firm;
 		public virtual Firm Firm
 		{
