@@ -11,15 +11,14 @@ namespace CaseXL.Controllers
     {
         //
         // GET: /WebAdmin/
-        [Authorize()]
+        // [Authorize()]
         public ActionResult Index()
         {
             return View();
         }
-
         public ActionResult _Users([DataSourceRequest] DataSourceRequest request)
         {
-           return Json(Common.Repository.GetTrialUsers().ToDataSourceResult(request));
+            return Json(Common.Repository.GetTrialUsers().ToDataSourceResult(request));
         }
 
     }

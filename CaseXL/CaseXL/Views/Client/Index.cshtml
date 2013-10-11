@@ -16,6 +16,8 @@
          .DataSource(dataSource => dataSource
          .Ajax()
          .Read(read => read.Action("_Clients", "Client"))
+         .Create(create => create.Action("_ClientCreate", "Client"))
+         .Update(update => update.Action("_ClientUpdate", "Client"))
                 )
                   .Pageable()
                   .Groupable()
@@ -26,9 +28,9 @@
                 .Sortable()
                 .Selectable()
                 .Filterable()
-                    .ClientDetailTemplateId("tmp_")
+                    .ClientDetailTemplateId("tmp_clientCase")
                 )
-<script id="tmp_Questions_Issues" type="text/kendo-tmpl">
+<script id="tmp_clientCase" type="text/kendo-tmpl">
      <div style="padding:5px;border-radius:4px;background:lightgray">
      <div style="border:1px solid gray;border-radius:3px;background:lightgray">
      <div align="center" style="font-weight:bold">Questions</div>

@@ -7,6 +7,8 @@ using System.Net;
 
 namespace CaseXL.Common
 {
+    //IF YOU WANT YOU CAN HAVE CONTROL AND SEE CODE YOURSELF 
+    // can you please show me the app running? 
     public class Util
     {
         public const string DATEFORMAT_FORGRIDS = "{0:MM/dd/yyyy}";

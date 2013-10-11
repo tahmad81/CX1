@@ -210,6 +210,14 @@ namespace CaseXL.Data
 			}
 		}
 		
+		public IQueryable<Client_Case> Client_Cases 
+		{
+			get
+			{
+				return this.GetAll<Client_Case>();
+			}
+		}
+		
 		public static BackendConfiguration GetBackendConfiguration()
 		{
 			BackendConfiguration backend = new BackendConfiguration();
@@ -298,6 +306,10 @@ namespace CaseXL.Data
 			get;
 		}
 		IQueryable<Witness_Fact> Witness_Facts
+		{
+			get;
+		}
+		IQueryable<Client_Case> Client_Cases
 		{
 			get;
 		}

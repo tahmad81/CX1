@@ -12,11 +12,14 @@ using CaseXL.ViewModels;
 
 namespace CaseXL.Controllers
 {
+    //I AM GOING TO SHOW YOU CODE OF MY 4 CURRENT PROJECTS, I JUST FINISHED . 
+    //THIS IS A LAWFIRM APP, BASING ON MVC, MVVM, AND KENO UI. 
+    
     public class CaseController : Controller
     {
         //
         // GET: /Case/
-        [Authorize()]
+        [Authorize(Roles = "Lawyer")]
         public ActionResult Index()
         {
 

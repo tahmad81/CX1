@@ -219,6 +219,15 @@ namespace CaseXL.Data
 			}
 		}
 		
+		private IList<Client_Case> _client_Cases = new List<Client_Case>();
+		public virtual IList<Client_Case> Client_Cases
+		{
+			get
+			{
+				return this._client_Cases;
+			}
+		}
+		
 	}
 }
 #pragma warning restore 1591

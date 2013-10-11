@@ -221,6 +221,9 @@
         <orm:field name="_facts" property="Facts" behavior="readwrite" uniqueId="4bf6e4a2-de97-4d3b-b351-5be9d0b39d1c" type="CaseXL.Data.Fact">
           <orm:collection element-class="CaseXL.Data.Fact" inverse-field="_case" order-by="" uniqueId="540c1d60-e96f-46a4-9290-87a20a8d8316" />
         </orm:field>
+        <orm:field name="_client_Cases" property="Client_Cases" behavior="readwrite" uniqueId="c0d7d4c0-b37c-47f0-9e79-886e71815629" type="CaseXL.Data.Client_Case">
+          <orm:collection element-class="CaseXL.Data.Client_Case" inverse-field="_case" order-by="" uniqueId="7ed05f4f-95ef-459a-8d82-0c3b4de82022" />
+        </orm:field>
       </orm:class>
       <orm:class name="Witness" uniqueId="14aa327d-de7d-4314-98d7-1989a23c77e6">
         <orm:table name="Witnesses" />
@@ -548,13 +551,16 @@
           <orm:column name="Is_Client" sql-type="bit" nullable="false" length="0" scale="0" has-default-value="true" ado-type="Bit" />
         </orm:field>
         <orm:field name="_exp_Date" property="Exp_Date" behavior="readwrite" uniqueId="aa177621-190a-478a-a821-769e7ed13ee6" type="System.Nullable`1[[System.DateTime, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]">
-          <orm:column nullable="true" length="0" name="Exp_Date" scale="0" sql-type="datetime" ado-type="DateTime" />
+          <orm:column name="Exp_Date" sql-type="datetime" nullable="true" length="0" scale="0" ado-type="DateTime" />
         </orm:field>
         <orm:field name="_firm" property="Firm" behavior="readwrite" uniqueId="48ca9c5f-6054-415e-8a6e-dd2008e4b08b" type="CaseXL.Data.Firm">
           <orm:reference uniqueId="9c46bea4-ae9b-4454-94c3-76613d7cfcf5">
             <orm:sharedfield name="_firmId" target-class="CaseXL.Data.Firm" target-field="_iD" />
             <orm:constraint name="FK_App_Users_Firm" destination-table="Firm" />
           </orm:reference>
+        </orm:field>
+        <orm:field name="_client_Cases" property="Client_Cases" behavior="readwrite" uniqueId="fde1eabe-1fda-4302-b766-b1f41248d0b3" type="CaseXL.Data.Client_Case">
+          <orm:collection element-class="CaseXL.Data.Client_Case" inverse-field="_app_User" order-by="" uniqueId="c7a0700b-b3f7-4965-bf54-a7f4e9580102" />
         </orm:field>
       </orm:class>
       <orm:class name="RestPwd" uniqueId="500d1cb8-1119-402b-9496-490c782366a2">
@@ -659,6 +665,35 @@
             <orm:column name="WitnessId" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
           </orm:columnMapping>
         </orm:index>
+      </orm:class>
+      <orm:class name="Client_Case" uniqueId="749cf8f7-3922-43b5-9618-6af6d1b2c6b2">
+        <orm:table name="Client_Cases" />
+        <orm:identity>
+          <orm:key-generator name="autoinc" />
+          <orm:single-field field-name="_id" />
+        </orm:identity>
+        <orm:concurrency strategy="changed" />
+        <orm:field name="_id" property="Id" behavior="readwrite" uniqueId="d2a59fa4-85c4-4f64-bea8-3b201586b859" type="System.Int32">
+          <orm:column nullable="false" primary-key="true" length="0" name="Id" scale="0" sql-type="int" backend-calculated="true" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_caseId" property="CaseId" behavior="readwrite" uniqueId="47634b2d-bbd7-40f8-ad0e-64eaa13a0116" type="System.Nullable`1[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]">
+          <orm:column nullable="true" length="0" name="CaseId" scale="0" sql-type="int" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_clientId" property="ClientId" behavior="readwrite" uniqueId="6888f11e-a607-459d-b2bf-7ae961bf1030" type="System.Nullable`1[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]">
+          <orm:column nullable="true" length="0" name="ClientId" scale="0" sql-type="int" ado-type="Int32" />
+        </orm:field>
+        <orm:field name="_case" property="Case" behavior="readwrite" uniqueId="d52a169d-1582-4192-b272-c7384edb8f12" type="CaseXL.Data.Case">
+          <orm:reference uniqueId="7ed05f4f-95ef-459a-8d82-0c3b4de82022">
+            <orm:sharedfield name="_caseId" target-class="CaseXL.Data.Case" target-field="_iD" />
+            <orm:constraint name="FK_Client_Cases_Case" destination-table="Case" />
+          </orm:reference>
+        </orm:field>
+        <orm:field name="_app_User" property="App_User" behavior="readwrite" uniqueId="7c5fde1a-e1e4-4870-9d17-bc523085dedb" type="CaseXL.Data.App_User">
+          <orm:reference uniqueId="c7a0700b-b3f7-4965-bf54-a7f4e9580102">
+            <orm:sharedfield name="_clientId" target-class="CaseXL.Data.App_User" target-field="_id" />
+            <orm:constraint name="FK_Client_Cases_App_Users" destination-table="App_Users" />
+          </orm:reference>
+        </orm:field>
       </orm:class>
     </orm:namespace>
     <orm:schema schema="">
@@ -850,7 +885,7 @@
         <orm:column name="Signupdate" sql-type="date" nullable="true" length="0" scale="0" ado-type="Date" />
         <orm:column name="Is_Trial" sql-type="bit" nullable="false" length="0" scale="0" has-default-value="true" ado-type="Bit" />
         <orm:column name="Is_Client" sql-type="bit" nullable="false" length="0" scale="0" has-default-value="true" ado-type="Bit" />
-        <orm:column nullable="true" length="0" name="Exp_Date" scale="0" sql-type="datetime" ado-type="DateTime" />
+        <orm:column name="Exp_Date" sql-type="datetime" nullable="true" length="0" scale="0" ado-type="DateTime" />
         <orm:constraint name="FK_App_Users_Firm" destination-table="Firm">
           <orm:column name="FirmId" sql-type="int" nullable="false" length="0" scale="0" ado-type="Int32" />
         </orm:constraint>
@@ -893,6 +928,17 @@
         </orm:constraint>
         <orm:constraint name="FK_Witness_Facts_Facts" destination-table="Facts">
           <orm:column name="FactId" sql-type="int" nullable="true" length="0" scale="0" ado-type="Int32" />
+        </orm:constraint>
+      </orm:table>
+      <orm:table name="Client_Cases">
+        <orm:column nullable="false" primary-key="true" length="0" name="Id" scale="0" sql-type="int" backend-calculated="true" ado-type="Int32" />
+        <orm:column nullable="true" length="0" name="CaseId" scale="0" sql-type="int" ado-type="Int32" />
+        <orm:column nullable="true" length="0" name="ClientId" scale="0" sql-type="int" ado-type="Int32" />
+        <orm:constraint name="FK_Client_Cases_Case" destination-table="Case">
+          <orm:column nullable="true" length="0" name="CaseId" scale="0" sql-type="int" ado-type="Int32" />
+        </orm:constraint>
+        <orm:constraint name="FK_Client_Cases_App_Users" destination-table="App_Users">
+          <orm:column nullable="true" length="0" name="ClientId" scale="0" sql-type="int" ado-type="Int32" />
         </orm:constraint>
       </orm:table>
     </orm:schema>
@@ -1087,6 +1133,9 @@
         </classHasNavigationalProperties>
         <classHasNavigationalProperties Id="7b0d49a5-512d-4b60-a16f-6959b2da0c78">
           <NavigationalProperty Id="4bf6e4a2-de97-4d3b-b351-5be9d0b39d1c" name="Facts" type="IList&lt;Fact&gt;" label="Facts : IList&lt;Fact&gt;" nullable="true" kind="Persistent" fieldName="_facts" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+        <classHasNavigationalProperties Id="eb7622e8-fb24-4f5a-afde-b97ffd2f0150">
+          <NavigationalProperty Id="c0d7d4c0-b37c-47f0-9e79-886e71815629" name="Client_Cases" type="IList&lt;Client_Case&gt;" label="Client_Cases : IList&lt;Client_Case&gt;" nullable="true" kind="Persistent" fieldName="_client_Cases" isDependent="false" isManaged="false" />
         </classHasNavigationalProperties>
       </navigationalProperties>
     </DomainClass>
@@ -1379,6 +1428,9 @@
         <classHasNavigationalProperties Id="2976788e-5d55-47c6-8151-8c86f4737e3a">
           <NavigationalProperty Id="48ca9c5f-6054-415e-8a6e-dd2008e4b08b" name="Firm" type="Firm" label="Firm : Firm" nullable="true" kind="Persistent" fieldName="_firm" isDependent="false" isManaged="false" />
         </classHasNavigationalProperties>
+        <classHasNavigationalProperties Id="79008815-8656-4840-9b32-e22213e4b994">
+          <NavigationalProperty Id="fde1eabe-1fda-4302-b766-b1f41248d0b3" name="Client_Cases" type="IList&lt;Client_Case&gt;" label="Client_Cases : IList&lt;Client_Case&gt;" nullable="true" kind="Persistent" fieldName="_client_Cases" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
       </navigationalProperties>
     </DomainClass>
     <DomainClass Id="500d1cb8-1119-402b-9496-490c782366a2" name="RestPwd" namespace="CaseXL.Data" showPropertiesCompartment="true" identityMechanism="DatabaseServerCalculated" concurrencyMode="Changed" showNavigationCompartment="true" showImplementationCompartment="true">
@@ -1443,6 +1495,47 @@
         </classHasNavigationalProperties>
       </navigationalProperties>
     </DomainClass>
+    <DomainClass Id="749cf8f7-3922-43b5-9618-6af6d1b2c6b2" name="Client_Case" namespace="CaseXL.Data" showPropertiesCompartment="true" identityMechanism="DatabaseServerCalculated" concurrencyMode="Changed" showNavigationCompartment="true" showImplementationCompartment="true">
+      <Property Id="d2a59fa4-85c4-4f64-bea8-3b201586b859" name="Id" type="Int32" label="Id : Int32" kind="Persistent" identity="true" fieldName="_id" />
+      <Property Id="47634b2d-bbd7-40f8-ad0e-64eaa13a0116" name="CaseId" type="Int32" label="CaseId : Int32" nullable="true" kind="Persistent" fieldName="_caseId" />
+      <Property Id="6888f11e-a607-459d-b2bf-7ae961bf1030" name="ClientId" type="Int32" label="ClientId : Int32" nullable="true" kind="Persistent" fieldName="_clientId" />
+      <AssociationTargets>
+        <Association Id="7ed05f4f-95ef-459a-8d82-0c3b4de82022" SourceMultiplicity="ZeroOne" name="Client_CaseHasCase">
+          <DomainClassMoniker name="/CaseXLEntities/Case" />
+          <targetNavigationalProperty>
+            <associationDefinesTargetProperty Id="da34ef2f-ed75-4e82-8e36-248729e103c0">
+              <NavigationalPropertyMoniker name="/CaseXLEntities/Case/Client_Cases" />
+            </associationDefinesTargetProperty>
+          </targetNavigationalProperty>
+          <sourceNavigationalProperty>
+            <associationDefinesSourceProperty Id="8ffc46c4-2a68-4751-9a26-1d358078aea8">
+              <NavigationalPropertyMoniker name="/CaseXLEntities/Client_Case/Case" />
+            </associationDefinesSourceProperty>
+          </sourceNavigationalProperty>
+        </Association>
+        <Association Id="c7a0700b-b3f7-4965-bf54-a7f4e9580102" SourceMultiplicity="ZeroOne" name="Client_CaseHasApp_User">
+          <DomainClassMoniker name="/CaseXLEntities/App_User" />
+          <targetNavigationalProperty>
+            <associationDefinesTargetProperty Id="2286dfae-8ea9-4114-aa23-34c3d345d4dd">
+              <NavigationalPropertyMoniker name="/CaseXLEntities/App_User/Client_Cases" />
+            </associationDefinesTargetProperty>
+          </targetNavigationalProperty>
+          <sourceNavigationalProperty>
+            <associationDefinesSourceProperty Id="658cdd04-1522-464e-99a7-0d5dbec5d9ec">
+              <NavigationalPropertyMoniker name="/CaseXLEntities/Client_Case/App_User" />
+            </associationDefinesSourceProperty>
+          </sourceNavigationalProperty>
+        </Association>
+      </AssociationTargets>
+      <navigationalProperties>
+        <classHasNavigationalProperties Id="f2d1757d-1540-48be-8ee5-b5735e80996b">
+          <NavigationalProperty Id="d52a169d-1582-4192-b272-c7384edb8f12" name="Case" type="Case" label="Case : Case" nullable="true" kind="Persistent" fieldName="_case" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+        <classHasNavigationalProperties Id="4e291cc6-de25-4f5e-ab7d-10b3d8ffc8ba">
+          <NavigationalProperty Id="7c5fde1a-e1e4-4870-9d17-bc523085dedb" name="App_User" type="App_User" label="App_User : App_User" nullable="true" kind="Persistent" fieldName="_app_User" isDependent="false" isManaged="false" />
+        </classHasNavigationalProperties>
+      </navigationalProperties>
+    </DomainClass>
   </Types>
   <domainContext>
     <domainModelHasDomainContext Id="9c4833b4-7b09-4a1a-af28-4cc45c5d8fa9">
@@ -1467,6 +1560,7 @@
         <entitySetProperty name="Documents" namespace="CaseXL.Data" type="Document" label="Documents : IQueryable&lt;CaseXL.Data.Document&gt;" />
         <entitySetProperty name="Fact_Witness_Questions" namespace="CaseXL.Data" type="Fact_Witness_Question" label="Fact_Witness_Questions : IQueryable&lt;CaseXL.Data.Fact_Witness_Question&gt;" />
         <entitySetProperty name="Witness_Facts" namespace="CaseXL.Data" type="Witness_Fact" label="Witness_Facts : IQueryable&lt;CaseXL.Data.Witness_Fact&gt;" />
+        <entitySetProperty name="Client_Cases" namespace="CaseXL.Data" type="Client_Case" label="Client_Cases : IQueryable&lt;CaseXL.Data.Client_Case&gt;" />
       </domainContainer>
     </domainModelHasDomainContext>
   </domainContext>

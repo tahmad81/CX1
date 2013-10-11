@@ -80,6 +80,9 @@
     <Compile Include="Case_Type.generated.cs">
       <DependentUpon>CaseXLEntities.rlinq</DependentUpon>
     </Compile>
+    <Compile Include="Client_Case.generated.cs">
+      <DependentUpon>CaseXLEntities.rlinq</DependentUpon>
+    </Compile>
     <Compile Include="Document.generated.cs">
       <DependentUpon>CaseXLEntities.rlinq</DependentUpon>
     </Compile>
