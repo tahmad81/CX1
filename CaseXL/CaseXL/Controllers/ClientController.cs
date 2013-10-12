@@ -50,5 +50,11 @@ namespace CaseXL.Controllers
             }
             return Json(new[] { model }.ToDataSourceResult(request, ModelState));
         }
+        public ActionResult _IssueLinking(int? caseid, int? factID)
+        {
+
+            return PartialView("_CaseLinking", new ViewModels.IssueLinkingVM() { CaseID = caseid, FactID = factID });
+
+        }
     }
 }

@@ -134,6 +134,10 @@
         class="centered" />
 </div>
 <script type="text/javascript">
+    $(document).ready(
+       function () {
+           $('#busyLoading').hide();
+       });
     function UnblockUI() {
         $.unblockUI();
     }
@@ -148,7 +152,7 @@
         });
     }
     function CaseLink(e) {
-        alert("data");
+
         debugger;
         var grid = $('#grdusers').data().kendoGrid;
         var dataItem = grid.dataItem($(e).closest('tr'));
@@ -162,7 +166,7 @@
         url = "/Home/_IssueLinking/?caseid=1" + "&factID=" + dataItem.Id;
         width = 500;
 
-        var window = $("#windowCaseS"),
+        var window = $("#windowCase"),
         wndObject;
         if (!(wndObject = window.data("kendoWindow"))) {
             wndObject = window.kendoWindow({
