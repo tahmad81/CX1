@@ -21,7 +21,7 @@ namespace CaseXL.Controllers
         }
         public ActionResult _Clients([DataSourceRequest] DataSourceRequest request)
         {
-            return Json(Common.Repository.GetClients().ToDataSourceResult(request));
+            return Json(Common.Repository.GetClients().ToDataSourceResult(request), JsonRequestBehavior.AllowGet);
         }
         public ActionResult _ClientCreate([DataSourceRequest] DataSourceRequest request, ClientVM model)
         {
@@ -34,19 +34,17 @@ namespace CaseXL.Controllers
                     FirstName = model.First_Name,
                     LastName = model.Last_Name,
                     Is_Client = true,
+                    CVNNo = string.Empty,
+                    CreditCard = string.Empty,
+                    Exp_Date = DateTime.Today,
+                    UserName = model.UserName,
+
 
                 };
                 context.Add(user);
-                model.Cases.ForEach(cas =>
-                {
-                    Data.Client_Case clCase = new Client_Case()
-                    {
-                        CaseId = cas.ID,
-                        ClientId = user.Id
-                    };
-
-                });
+                context.SaveChanges();
             }
+            ModelState.AddModelError("", "message");
             return Json(new[] { model }.ToDataSourceResult(request, ModelState));
         }
     }

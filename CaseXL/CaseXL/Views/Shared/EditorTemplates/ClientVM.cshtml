@@ -1,0 +1,52 @@
+﻿@model CaseXL.ViewModels.ClientVM
+<table>
+    <tr>
+        <td>
+            @Html.LabelFor(m => m.UserName)
+
+        </td>
+        <td>
+            @Html.TextBoxFor(m => m.UserName)
+        </td>
+    </tr>
+    <tr>
+        <td>
+            @Html.LabelFor(m => m.Password)
+        </td>
+        <td>
+            @Html.TextBoxFor(m => m.Password)
+
+        </td>
+    </tr>
+      <tr>
+        <td>
+            @Html.LabelFor(m => m.First_Name)
+        </td>
+        <td>
+            @Html.TextBoxFor(m => m.First_Name)
+        </td>
+    </tr>
+      <tr>
+        <td>
+            @Html.LabelFor(m => m.Last_Name)
+        </td>
+        <td>
+            @Html.TextBoxFor(m => m.Last_Name)
+        </td>
+    </tr>
+    <tr>
+        <td>
+            @Html.LabelFor(m => m.Email)
+        </td>
+        <td>
+            @Html.TextBoxFor(m => m.Email)
+        </td>
+    </tr>
+
+</table>
+
+<style>
+    .k-widget.k-window {
+        width: 420px;
+    }
+</style>

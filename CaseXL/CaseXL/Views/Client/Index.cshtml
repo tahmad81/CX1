@@ -8,13 +8,16 @@
     .Columns(columns =>
     {
         columns.Bound(c => c.Id).Visible(false);
-        columns.Bound(c => c.Full_Name);
-        columns.Bound(c => c.Email);
-        columns.Bound(c => c.Signup_Date).Format("{0:dd/MMM/yyyy}");
+        columns.Bound(c => c.UserName);
+        columns.Bound(c => c.First_Name);
+        columns.Bound(c => c.Last_Name).Format("{0:dd/MMM/yyyy}");
 
     })
+            .ToolBar(tol => tol.Create().Text("New Client"))
+
          .DataSource(dataSource => dataSource
          .Ajax()
+         .Model(model => model.Id(m => m.Id))
          .Read(read => read.Action("_Clients", "Client"))
          .Create(create => create.Action("_ClientCreate", "Client"))
          .Update(update => update.Action("_ClientUpdate", "Client"))
@@ -28,7 +31,18 @@
                 .Sortable()
                 .Selectable()
                 .Filterable()
-                    .ClientDetailTemplateId("tmp_clientCase")
+                    .Reorderable(red => red.Columns(true))
+                .Navigatable(nav => nav.Enabled(true))
+                .Sortable()
+                .Selectable()
+                .Filterable()
+                .Editable(edit =>
+                edit.Mode(GridEditMode.PopUp)
+
+
+                    //.ClientDetailTemplateId("tmp_clientCase")
+                ).Events(eve => eve.Edit("onEdit"))
+
                 )
 <script id="tmp_clientCase" type="text/kendo-tmpl">
      <div style="padding:5px;border-radius:4px;background:lightgray">
@@ -73,7 +87,7 @@
 
                 ).Events(eve =>
         {
-            eve.Edit("onEdit");
+            eve.Edit("onEditt");
 
 
         }
@@ -81,4 +95,17 @@
 
             )
     </div>
+</script>
+
+<script type="text/javascript">
+    function onEdit(e) {
+        debugger;
+       // alert("t");
+        if (e.model.isNew()) {
+            // e.container.find('[data-role=combobox]').data().kendoComboBox.select(0);
+            e.container.kendoWindow("title", "New Client");
+        }
+        else
+            e.container.kendoWindow("title", "Edit Client");
+    }
 </script>
