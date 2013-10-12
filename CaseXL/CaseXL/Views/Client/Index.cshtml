@@ -8,42 +8,58 @@
     .Columns(columns =>
     {
         columns.Bound(c => c.Id).Visible(false);
-        columns.Bound(c => c.UserName);
+        columns.Bound(c => c.UserName).Template(@<text></text>)
+        .ClientTemplate(@"<a class=""k-button-icontext k-grid-edit"" href=""\#"">#=UserName#</a>"); ;
         columns.Bound(c => c.First_Name);
-        columns.Bound(c => c.Last_Name).Format("{0:dd/MMM/yyyy}");
+        columns.Bound(c => c.Last_Name);
+        columns.Bound(c => c.Id).Template(@<text></text>)
+             .Title("Cases").Width(142)
+             .ClientTemplate(@"<a href=""\#"" onclick='CaseLink(this)'>Cases</a>");
+        columns.Bound(c => c.Id).Title("").Width(38).Filterable(false).Sortable(false).Template(@<text></text>)
+
+                     .ClientTemplate(@"<img src='../Images/delete-icon.png' style='width:38px; height:20px;cursor:pointer' class=""k-button-icontext k-grid-delete""/>")
+                    ;
 
     })
-            .ToolBar(tol => tol.Create().Text("New Client"))
+                        .ToolBar(tol => tol.Create().Text("New Client"))
 
-         .DataSource(dataSource => dataSource
-         .Ajax()
-         .Model(model => model.Id(m => m.Id))
-         .Read(read => read.Action("_Clients", "Client"))
-         .Create(create => create.Action("_ClientCreate", "Client"))
-         .Update(update => update.Action("_ClientUpdate", "Client"))
-                )
-                  .Pageable()
-                  .Groupable()
-                  .Resizable(res => res.Columns(true)
-                  )
-                .Reorderable(red => red.Columns(true))
-                .Navigatable(nav => nav.Enabled(true))
-                .Sortable()
-                .Selectable()
-                .Filterable()
-                    .Reorderable(red => red.Columns(true))
-                .Navigatable(nav => nav.Enabled(true))
-                .Sortable()
-                .Selectable()
-                .Filterable()
-                .Editable(edit =>
-                edit.Mode(GridEditMode.PopUp)
+                     .DataSource(dataSource => dataSource
+                     .Ajax()
+                     .Model(model => model.Id(m => m.Id))
+                     .Read(read => read.Action("_Clients", "Client"))
+                     .Create(create => create.Action("_ClientCreate", "Client"))
+                     .Update(update => update.Action("_ClientUpdate", "Client"))
+                            )
+                              .Pageable()
+                              .Groupable()
+                              .Resizable(res => res.Columns(true)
+                              )
+                            .Reorderable(red => red.Columns(true))
+                            .Navigatable(nav => nav.Enabled(true))
+                            .Sortable()
+
+                            .Filterable()
+                                .Reorderable(red => red.Columns(true))
+                            .Navigatable(nav => nav.Enabled(true))
+                            .Sortable()
+
+                            .Filterable()
+                            .Editable(edit =>
+                            edit.Mode(GridEditMode.PopUp)
 
 
-                    //.ClientDetailTemplateId("tmp_clientCase")
-                ).Events(eve => eve.Edit("onEdit"))
+                                //.ClientDetailTemplateId("tmp_clientCase")
+                            ).Events(eve =>
 
-                )
+
+                                eve.Edit("onEdit")
+
+                                )
+
+
+                            )
+
+
 <script id="tmp_clientCase" type="text/kendo-tmpl">
      <div style="padding:5px;border-radius:4px;background:lightgray">
      <div style="border:1px solid gray;border-radius:3px;background:lightgray">
@@ -96,11 +112,90 @@
             )
     </div>
 </script>
+<div id="windowCase"></div>
+@(Html.Kendo().Window().Name("Details")
+    .Title("Issue Linking")
+    .Visible(false)
+    .Modal(true)
+    .Draggable(true)
+    .Events(eve =>
+    {
 
+    }
+        )
+   .Height(400).HtmlAttributes(new { @style = "background:lightgrey" })
+    .Content(@<div id="dvpopup">
+    </div>
+
+)
+   )
+<div id="dialog">
+    <img id="busyLoading" src="../../Content/kendo/2012.3.1315/Black/loading-image.gif"
+        class="centered" />
+</div>
 <script type="text/javascript">
+    function UnblockUI() {
+        $.unblockUI();
+    }
+    function BlockUI() {
+        $.blockUI({
+            message: $('#busyLoading'),
+            css: {
+                top: '44%',
+                left: '50%',
+                width: '0px'
+            }
+        });
+    }
+    function CaseLink(e) {
+        alert("data");
+        debugger;
+        var grid = $('#grdusers').data().kendoGrid;
+        var dataItem = grid.dataItem($(e).closest('tr'));
+        var wnd = $("#Details").data("kendoWindow");
+        var row = $("#grdusers").data("kendoGrid").tbody.find("tr[data-uid='" + dataItem.uid + "']");
+        var url;
+        var title;
+        var width;
+        debugger;
+        title = "Case Linking";
+        url = "/Home/_IssueLinking/?caseid=1" + "&factID=" + dataItem.Id;
+        width = 500;
+
+        var window = $("#windowCaseS"),
+        wndObject;
+        if (!(wndObject = window.data("kendoWindow"))) {
+            wndObject = window.kendoWindow({
+                modal: true,
+                height: 400,
+                close: function (data) {
+                    // alert(e.id);
+                    $(e).val("0");
+                    return true;
+                }
+            }).data("kendoWindow");
+        }
+        window.width(width);
+        wndObject.title(title);
+        $.ajax({
+            type: "GET",
+            url: url,
+            dataType: "html",
+            success: function (evt) {
+                UnblockUI();
+
+                wndObject.center().open();
+                wndObject.content(evt);
+            },
+            error: function (req, status, error) {
+                UnblockUI();
+                alert("Error!Occured");
+            }
+        });
+    }
     function onEdit(e) {
         debugger;
-       // alert("t");
+        // alert("t");
         if (e.model.isNew()) {
             // e.container.find('[data-role=combobox]').data().kendoComboBox.select(0);
             e.container.kendoWindow("title", "New Client");

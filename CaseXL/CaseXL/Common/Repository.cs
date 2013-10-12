@@ -447,9 +447,11 @@ namespace CaseXL.Common
                            select new ViewModels.ClientVM()
                            {
                                Id = users.Id,
-                               Full_Name = users.FirstName + " " + users.LastName,
+                               UserName = users.UserName,
                                Email = users.Email,
-                               Signup_Date = users.Signupdate
+                               First_Name = users.FirstName,
+                               Last_Name = users.LastName,
+
                            };
                 return data.ToList();
             }

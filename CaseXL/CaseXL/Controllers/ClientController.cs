@@ -43,8 +43,11 @@ namespace CaseXL.Controllers
                 };
                 context.Add(user);
                 context.SaveChanges();
+                Common.EmailSender email = new EmailSender();
+                string header = "<div style='height:20px; background:blue;color:white;border-radius:4px;text-align:center;font-weight:bold'>Do not reply to this email </div><br/><br/><br/>";
+                string message = "Dear " + model.First_Name + " " + model.Last_Name + "<br/>" + "You have been subscribed to caseLinq, You username and passowrd is below" + "<br/>" + "Username = " + model.UserName + " " + "Password = " + " " + model.Password + "<br/> thanks,<br/>CaseLinq.";
+                new EmailSender { To = user.Email, Body = header + message }.Send();
             }
-            ModelState.AddModelError("", "message");
             return Json(new[] { model }.ToDataSourceResult(request, ModelState));
         }
     }

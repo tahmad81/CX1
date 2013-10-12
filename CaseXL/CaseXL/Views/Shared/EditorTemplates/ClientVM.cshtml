@@ -7,6 +7,7 @@
         </td>
         <td>
             @Html.TextBoxFor(m => m.UserName)
+            @Html.ValidationMessageFor(m => m.UserName)
         </td>
     </tr>
     <tr>
@@ -18,7 +19,7 @@
 
         </td>
     </tr>
-      <tr>
+    <tr>
         <td>
             @Html.LabelFor(m => m.First_Name)
         </td>
@@ -26,7 +27,7 @@
             @Html.TextBoxFor(m => m.First_Name)
         </td>
     </tr>
-      <tr>
+    <tr>
         <td>
             @Html.LabelFor(m => m.Last_Name)
         </td>

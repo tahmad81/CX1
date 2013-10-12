@@ -10,7 +10,9 @@ namespace CaseXL.ViewModels
     {
         public int Id { get; set; }
         [Display(Name = "First Name")]
+        [Required( ErrorMessage= "First Name is required")]
         public string First_Name { get; set; }
+        [Required(ErrorMessage = "Last Name is required")]
         [Display(Name = "Last Name")]
         public string Last_Name { get; set; }
         [Display(Name = "Full Name")]
