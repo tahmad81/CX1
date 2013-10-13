@@ -59,7 +59,7 @@
 
                             )
 
-
+<input type="button" class="k-button" onclick= "window.location = '/Home/Main'" value="Home" />
 <script id="tmp_clientCase" type="text/kendo-tmpl">
      <div style="padding:5px;border-radius:4px;background:lightgray">
      <div style="border:1px solid gray;border-radius:3px;background:lightgray">
@@ -129,6 +129,7 @@
 
 )
    )
+
 <div id="dialog">
     <img id="busyLoading" src="../../Content/kendo/2012.3.1315/Black/loading-image.gif"
         class="centered" />
@@ -151,6 +152,20 @@
             }
         });
     }
+    function Change(e) {
+        debugger;
+        var row = this.select();
+        var id = row.data("uid");
+        $("#log").html("<input name='rowid' type='hidden' id='rowid' value='" + id + "' />");
+    }
+    function SaveChanges(e) {
+        debugger;
+        //  kendo.ui.progress($(this), true);
+        this.dataSource.one("change", function (e, data) {
+            var wnd = $("#windowCase").data("kendoWindow");
+            wnd.close();
+        });
+    }
     function CaseLink(e) {
 
         debugger;
@@ -162,9 +177,9 @@
         var title;
         var width;
         debugger;
-        title = "Case Linking";
-        url = "/Home/_IssueLinking/?caseid=1" + "&factID=" + dataItem.Id;
-        width = 500;
+        title = "Associate Case(s) with Client";
+        url = "/Client/_CaseLinking/?clientid="+ dataItem.Id;
+        width = 900;
 
         var window = $("#windowCase"),
         wndObject;

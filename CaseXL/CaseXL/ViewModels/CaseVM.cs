@@ -19,6 +19,9 @@ namespace CaseXL.ViewModels
         [Required(ErrorMessage = "Case Type is required"), Display(Name = "Case Type")]
         public int Case_Type { get; set; }
 
+        public bool IsSelected { get; set; }
 
+        public string CaseType { get; set; }
+        public int ? CaseClientId { get; set; }
     }
 }

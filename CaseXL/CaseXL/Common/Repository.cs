@@ -457,7 +457,40 @@ namespace CaseXL.Common
             }
 
         }
+        public static List<ViewModels.CaseVM> GetCasesByClient(int userid)
+        {
+            using (CaseXLEntities context = new CaseXLEntities())
+            {
 
+                var usercases = (from cases in context.Client_Cases.Where(a => a.ClientId == userid)
+                                 select new ViewModels.CaseVM
+                                 {
+                                     ID = cases.Id,
+                                     Caption = cases.Case.Caption,
+                                     Case_Number = cases.Case.Case_Number,
+                                     IsSelected = true,
+                                     CaseType = CaseTypes().Where(a => a.ID == cases.Case.Case_Type_ID).Select(a => a.Name).FirstOrDefault(),
+                                     CaseClientId = cases.Id,
+                                     Case_Id = cases.Case.ID
+                                    
+                                 }).ToList();
+                var ids = usercases.Select(a => a.Case_Id).ToList();
+                var allcases = (from cases in context.Cases.Where(a => a.Firm_ID == SessionBase.Firm.ID && !ids.Contains(a.ID))
+                                select new ViewModels.CaseVM
+                                {
+                                    ID = cases.ID,
+                                    Caption = cases.Caption,
+                                    Case_Number = cases.Case_Number,
+                                    IsSelected = false,
+                                    CaseType = CaseTypes().Where(a => a.ID == cases.Case_Type_ID).Select(a => a.Name).FirstOrDefault(),
+                                     Case_Id = cases.ID
+                                }).ToList();
+
+                usercases.AddRange(allcases);
+                return usercases;
+
+            }
+        }
         #endregion
     }
 }

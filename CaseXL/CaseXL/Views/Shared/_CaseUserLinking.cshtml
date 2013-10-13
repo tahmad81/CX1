@@ -1,0 +1,59 @@
+﻿@model CaseXL.ViewModels.CaseLinkingVM
+<div style="background: lightgrey">
+    @(Html.Kendo().Grid<CaseXL.ViewModels.CaseVM>().Name("userCaseGrid")
+    .Columns(col =>
+    {
+        col.Bound(b => b.ID).Visible(false);
+        col.Bound(b => b.Caption).Width(200);
+        col.Bound(b => b.Case_Number).Width(200);
+        col.Bound(b => b.CaseType).Width(200);
+
+
+        col.Template(@<text></text>).ClientTemplate("<input type='checkbox' #= IsSelected ? checked='checked':'' # class='chkbx' style='cursor:pointer' />")
+        .HeaderTemplate("<input type='checkbox' id='masterCheckBox' style='cursor:pointer' onclick='checkAll(this)'/>").Width(50);
+    }
+    )
+       .DataSource(dataSource => dataSource
+       .Ajax()
+       .Model(model => model.Id(m => m.ID))
+       .Batch(true)
+       .Read(read => read.Action("_UserCases", "Client", new { @userid = Model.UserId }))
+       .Update(up => up.Action("_UpdateUserCases", "Client", new { @userid = Model.UserId }))
+    )
+     .Editable(ed => ed.Mode(GridEditMode.InCell))
+     .ToolBar(tb => tb.Save())
+     .Events(eve =>
+      {
+          eve.SaveChanges("SaveChanges");
+          eve.Change("Change");
+      }
+      )
+      .Filterable()
+    )
+</div>
+<script type="text/javascript">
+
+    $(function () {
+        $('#userCaseGrid').on('click', '.chkbx', function () {
+
+            kendo.ui.progress($("#userCaseGrid"), true);
+            var checked = $(this).is(':checked');
+            var grid = $('#userCaseGrid').data().kendoGrid;
+            var dataItem = grid.dataItem($(this).closest('tr'));
+            dataItem.set('IsSelected', checked);
+        })
+    })
+    function checkAll(ele) {
+        var state = $(ele).is(':checked');
+        var grid = $('#userCaseGrid').data().kendoGrid;
+        $.each(grid.dataSource.view(), function () {
+            if (this['IsSelected'] != state)
+                this.dirty = true;
+            this['IsSelected'] = state;
+        });
+        var data = grid.dataSource.data();
+        var grid = $("#userCaseGrid").data("kendoGrid");
+        var data = grid.dataSource.data();
+        grid.refresh();
+    }
+</script>

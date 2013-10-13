@@ -232,6 +232,7 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\AppUserVM.cs" />
+    <Compile Include="ViewModels\CaseLinkingVM.cs" />
     <Compile Include="ViewModels\CaseVM.cs" />
     <Compile Include="ViewModels\ClientVM.cs" />
     <Compile Include="ViewModels\DocsVM.cs" />
@@ -636,6 +637,7 @@
     <Content Include="Views\Home\ClientSubscription.cshtml" />
     <Content Include="Views\Home\SubscriptionExpired.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\ClientVM.cshtml" />
+    <Content Include="Views\Shared\_CaseUserLinking.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

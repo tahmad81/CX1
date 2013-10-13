@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CaseXL.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -14,6 +15,9 @@ namespace CaseXL.ViewModels
         public string UserName { get; set; }
         [Required(ErrorMessage = "Password is required")]
         [Display(Name = "Password")]
+        [Required]
+        [ValidatePasswordLength]
+        [DataType(DataType.Password)]
         public string Password { get; set; }
     }
 }
