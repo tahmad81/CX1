@@ -17,10 +17,7 @@ namespace CaseXL.Controllers
 {
     public class ClientController : Controller
     {
-        // [Authorize(Roles = "Lawyer")]
-
         public IMembershipService MembershipService { get; set; }
-
         protected override void Initialize(RequestContext requestContext)
         {
 
@@ -29,9 +26,19 @@ namespace CaseXL.Controllers
         }
 
 
+        [Authorize(Roles = "Lawyer")]
         public ActionResult Index(string returnUrl)
         {
-            return View();
+            if (SessionBase.User.SubscriptionNo == 0)
+            return    RedirectToAction("ClientSubscription", "Home");
+            else
+            {
+                if (Common.Util.ValidateSubscription())
+                    return View();
+                else
+                    return RedirectToAction("ClientSubscription", "Home");
+            }
+            
         }
         public ActionResult _Clients([DataSourceRequest] DataSourceRequest request)
         {
@@ -70,8 +77,8 @@ namespace CaseXL.Controllers
                 };
                 context.Add(user);
                 context.SaveChanges();
-           
-               
+
+
                 Common.EmailSender email = new EmailSender();
                 string header = "<div style='height:20px; background:blue;color:white;border-radius:4px;text-align:center;font-weight:bold'>Do not reply to this email </div><br/><br/><br/>";
                 string message = "Dear " + model.First_Name + " " + model.Last_Name + "<br/>" + "You have been subscribed to caseLinq, You username and passowrd is below" + "<br/>" + "Username = " + model.UserName + " " + "Password = " + " " + model.Password + "<br/> thanks,<br/>CaseLinq.";
@@ -79,6 +86,21 @@ namespace CaseXL.Controllers
             }
             return Json(new[] { model }.ToDataSourceResult(request, ModelState));
         }
+        public ActionResult _ClientDelete([DataSourceRequest] DataSourceRequest request, ClientVM model)
+        {
+
+            using (Data.CaseXLEntities context = new CaseXLEntities())
+            {
+                var obj = context.App_Users.Where(a => a.Id == model.Id).FirstOrDefault();
+                if (obj != null)
+                {
+                    context.Delete(obj);
+                    context.SaveChanges();
+                }
+            }
+            return Json(new[] { model }.ToDataSourceResult(request, ModelState));
+        }
+
         public ActionResult _CaseLinking(int? clientid)
         {
             return PartialView("_CaseUserLinking", new ViewModels.CaseLinkingVM() { UserId = clientid.GetValueOrDefault() });

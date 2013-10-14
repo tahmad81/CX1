@@ -29,6 +29,7 @@
                      .Read(read => read.Action("_Clients", "Client"))
                      .Create(create => create.Action("_ClientCreate", "Client"))
                      .Update(update => update.Action("_ClientUpdate", "Client"))
+                     .Destroy(destroy=>destroy.Action("_ClientDelete","Client"))
                      .Events(eve => eve.Error("error"))
                      )
                               .Pageable()

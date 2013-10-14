@@ -11,8 +11,11 @@
     .BindTo(ViewBag.Cases)
 
     )
-    <input type="button" style="width:120px" class="k-button actionButton" onclick="window.location = '/Case/Index'" value="Manage Cases" />
-  @*  @if (!CaseXL.Infrastructure.SessionBase.User.Is_Client)
+    @if (!CaseXL.Infrastructure.SessionBase.User.Is_Client)
+    {
+        <input type="button" style="width: 120px" class="k-button actionButton" onclick="window.location = '/Case/Index'" value="Manage Cases" />
+    }
+@*  @if (!CaseXL.Infrastructure.SessionBase.User.Is_Client)
     {
         <input type="button" style="width:120px" class="k-button actionButton" onclick="window.location = '/Client/Index'" value="Clients" />
 
@@ -36,8 +39,10 @@
                     <a class="btn btn-block btn-large btn-primary" onclick="MenuSelected(this)" id="3">Exhibits</a>
                     <a class="btn btn-block btn-large btn-primary" onclick="MenuSelected(this)" id="4">Issues</a>
                     <a class="btn btn-block btn-large btn-primary" onclick="MenuSelected(this)" id="5">Trialinq</a>
-                     <a class="btn btn-block btn-large btn-primary" onclick="MenuSelected(this)" id="6">Client Collaboration</a>
-
+                    @if (!CaseXL.Infrastructure.SessionBase.User.Is_Client)
+                    { 
+                        <a class="btn btn-block btn-large btn-primary" onclick="MenuSelected(this)" id="6">Client Collaboration</a>
+                    }
                 </div>
             </div>
         </td>
@@ -210,7 +215,7 @@
         var id = row.data("uid");
         $("#log").html("<input name='rowid' type='hidden' id='rowid' value='" + id + "' />");
     }
-  
+
 
     function Linking(e) {
 
@@ -456,10 +461,9 @@
             }
         });
     }
-   function LoadClientModule(id)
-    {
+    function LoadClientModule(id) {
 
-       window.location = "/Home/_GetClientModule";
+        window.location = "/Home/_GetClientModule";
 
 
     }

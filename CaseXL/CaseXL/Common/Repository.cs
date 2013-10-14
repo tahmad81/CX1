@@ -91,24 +91,28 @@ namespace CaseXL.Common
         }
         public static List<Infrastructure.ComboModelBase> GetCases()
         {
-            using (CaseXL.Data.CaseXLEntities context = new Data.CaseXLEntities())
+            if (SessionBase.User.Is_Client)
             {
-                if (SessionBase.Firm.ID != 0)
+                using (CaseXL.Data.CaseXLEntities context = new Data.CaseXLEntities())
                 {
-                    var data = from cases in context.Cases
-                               where cases.Firm_ID == Infrastructure.SessionBase.Firm.ID
+
+                    var data = from cases in context.Client_Cases.Where(a => a.ClientId == SessionBase.User.Id)
                                select new Infrastructure.ComboModelBase
                                {
-                                   ID = cases.ID,
-                                   Name = cases.Caption
+                                   ID = cases.Case.ID,
+                                   Name = cases.Case.Caption
 
                                };
                     return data.ToList();
                 }
-                else
+            }
+            else
+            {
+                using (CaseXL.Data.CaseXLEntities context = new Data.CaseXLEntities())
                 {
+
                     var data = from cases in context.Cases
-                               where cases.Firm_ID == Infrastructure.SessionBase.User.Id
+                               where cases.Firm_ID == Infrastructure.SessionBase.Firm.ID
                                select new Infrastructure.ComboModelBase
                                {
                                    ID = cases.ID,
@@ -443,7 +447,7 @@ namespace CaseXL.Common
         {
             using (CaseXL.Data.CaseXLEntities context = new CaseXLEntities())
             {
-                var data = from users in context.App_Users.Where(a => a.Is_Client)
+                var data = from users in context.App_Users.Where(a => a.Is_Client && a.FirmId == SessionBase.Firm.ID)
                            select new ViewModels.ClientVM()
                            {
                                Id = users.Id,
@@ -472,7 +476,7 @@ namespace CaseXL.Common
                                      CaseType = CaseTypes().Where(a => a.ID == cases.Case.Case_Type_ID).Select(a => a.Name).FirstOrDefault(),
                                      CaseClientId = cases.Id,
                                      Case_Id = cases.Case.ID
-                                    
+
                                  }).ToList();
                 var ids = usercases.Select(a => a.Case_Id).ToList();
                 var allcases = (from cases in context.Cases.Where(a => a.Firm_ID == SessionBase.Firm.ID && !ids.Contains(a.ID))
@@ -483,7 +487,7 @@ namespace CaseXL.Common
                                     Case_Number = cases.Case_Number,
                                     IsSelected = false,
                                     CaseType = CaseTypes().Where(a => a.ID == cases.Case_Type_ID).Select(a => a.Name).FirstOrDefault(),
-                                     Case_Id = cases.ID
+                                    Case_Id = cases.ID
                                 }).ToList();
 
                 usercases.AddRange(allcases);
