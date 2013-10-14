@@ -15,7 +15,7 @@ namespace CaseXL.ViewModels
         public string UserName { get; set; }
         [Required(ErrorMessage = "Password is required")]
         [Display(Name = "Password")]
-        [Required]
+       // [Required(ErrorMessage = "Password is required")]
         [ValidatePasswordLength]
         [DataType(DataType.Password)]
         public string Password { get; set; }

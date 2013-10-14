@@ -39,6 +39,20 @@ namespace CaseXL.Controllers
         }
         public ActionResult _ClientCreate([DataSourceRequest] DataSourceRequest request, ClientVM model)
         {
+            MembershipCreateStatus createStatus = this.MembershipService.CreateUser(model.UserName, model.Password, model.Email);
+            if (createStatus == MembershipCreateStatus.Success)
+            {
+                if (!Roles.GetAllRoles().Contains("Client"))
+                {
+                    Roles.CreateRole("Client");
+                }
+                Roles.AddUserToRole(model.UserName, "Client");
+            }
+            else
+            {
+                ModelState.AddModelError("", AccountValidation.ErrorCodeToString(createStatus));
+                return Json(ModelState.ToDataSourceResult());
+            }
             using (CaseXL.Data.CaseXLEntities context = new CaseXLEntities())
             {
                 App_User user = new App_User()
@@ -56,15 +70,8 @@ namespace CaseXL.Controllers
                 };
                 context.Add(user);
                 context.SaveChanges();
-                MembershipCreateStatus createStatus = this.MembershipService.CreateUser(model.UserName, model.Password, model.Email);
-                if (createStatus == MembershipCreateStatus.Success)
-                {
-                    if (!Roles.GetAllRoles().Contains("Client"))
-                    {
-                        Roles.CreateRole("Client");
-                    }
-                    Roles.AddUserToRole(model.UserName, "Client");
-                }
+           
+               
                 Common.EmailSender email = new EmailSender();
                 string header = "<div style='height:20px; background:blue;color:white;border-radius:4px;text-align:center;font-weight:bold'>Do not reply to this email </div><br/><br/><br/>";
                 string message = "Dear " + model.First_Name + " " + model.Last_Name + "<br/>" + "You have been subscribed to caseLinq, You username and passowrd is below" + "<br/>" + "Username = " + model.UserName + " " + "Password = " + " " + model.Password + "<br/> thanks,<br/>CaseLinq.";

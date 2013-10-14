@@ -17,7 +17,7 @@ namespace CaseXL.ViewModels
         public string Last_Name { get; set; }
         [Display(Name = "Full Name")]
         public string Full_Name { get; set; }
-        [RegularExpression(Common.Util.EMAIL_REGEX, ErrorMessage = "Not valid email address")]
+       // [RegularExpression(Common.Util.EMAIL_REGEX, ErrorMessage = "Not valid email address")]
         [Required(ErrorMessage = "Email is required")]
         public string Email { get; set; }
         [Display(Name = "Signup Date")]

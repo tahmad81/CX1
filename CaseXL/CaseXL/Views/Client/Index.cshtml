@@ -29,7 +29,8 @@
                      .Read(read => read.Action("_Clients", "Client"))
                      .Create(create => create.Action("_ClientCreate", "Client"))
                      .Update(update => update.Action("_ClientUpdate", "Client"))
-                            )
+                     .Events(eve => eve.Error("error"))
+                     )
                               .Pageable()
                               .Groupable()
                               .Resizable(res => res.Columns(true)
@@ -48,18 +49,52 @@
                             edit.Mode(GridEditMode.PopUp)
 
 
-                                //.ClientDetailTemplateId("tmp_clientCase")
+                                
                             ).Events(eve =>
+                                {
+                                    eve.Edit("onEdit");
 
-
-                                eve.Edit("onEdit")
-
+                                }
                                 )
 
 
                             )
+<script type="text/kendo-template" id="message">
+<div class="k-widget k-tooltip k-tooltip-validation k-invalid-msg field-validation-error" style="margin: 0.5em;  " data-for="#=field#" data-valmsg-for="#=field#" id="#=field#_validationMessage">
+            <span class="k-icon k-warning"> </span>#=message#<div class="k-callout k-callout-n"></div></div>
+</script>
+<input type="button" class="k-button" onclick="window.location = '/Home/Main'" value="Home" />
 
-<input type="button" class="k-button" onclick= "window.location = '/Home/Main'" value="Home" />
+
+<script type="text/javascript">
+    var validationMessageTmpl = kendo.template($("#message").html());
+
+    function error(args) {
+        debugger;
+        if (args.errors) {
+            var grid = $("#grdusers").data("kendoGrid");
+            grid.one("dataBinding", function (e) {
+                debugger;
+                e.preventDefault();   // cancel grid rebind if error occurs                             
+
+                for (var error in args.errors) {
+                    var data = args.errors[error].errors+ "\n";
+                    
+                    showMessage(grid.editable.element, error, args.errors[error].errors);
+                }
+                alert(data);
+
+            });
+        }
+    }
+
+    function showMessage(container, name, errors) {
+        //add the validation message to the form
+        container.find("[data-valmsg-for=" + name + "]")
+            .replaceWith($(validationMessageTmpl({ field: name, message: errors[0] })))
+    }
+</script>
+
 <script id="tmp_clientCase" type="text/kendo-tmpl">
      <div style="padding:5px;border-radius:4px;background:lightgray">
      <div style="border:1px solid gray;border-radius:3px;background:lightgray">
@@ -178,7 +213,7 @@
         var width;
         debugger;
         title = "Associate Case(s) with Client";
-        url = "/Client/_CaseLinking/?clientid="+ dataItem.Id;
+        url = "/Client/_CaseLinking/?clientid=" + dataItem.Id;
         width = 900;
 
         var window = $("#windowCase"),

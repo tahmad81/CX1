@@ -48,31 +48,7 @@ namespace SafetyPlus.WebUI_WebAPI.Controllers
             {
                 if (MembershipService.ValidateUser(model.UserName, model.Password))
                 {
-                    //if (IsTrial(model))
-                    //{
-                    //    if (IsTrialValid(model))
-                    //    {
-                    //        FormsService.SignIn(model.UserName, model.RememberMe);
-                    //        return RedirectToAction("Main", "Home");
-                    //    }
-                    //    else
-                    //    {
-                    //        ModelState.AddModelError("", "Dear user we are sorry but your trial period has expired");
-                    //    }
-                    //}
-                    //else
-                    //{
-
-                    //    if (ValidateSubscription(model))
-                    //    {
-                    //        FormsService.SignIn(model.UserName, model.RememberMe);
-                    //        return RedirectToAction("Main", "Home");
-                    //    }
-                    //    else
-                    //    {
-                    //        ModelState.AddModelError("", "Not valid subscription");
-                    //    }
-                    //}
+                    
                     var data=Roles.GetRolesForUser(model.UserName);
                     FormsService.SignIn(model.UserName, model.RememberMe);
                     return RedirectToAction("Main", "Home");

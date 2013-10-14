@@ -59,6 +59,8 @@ namespace CaseXL.Models
 
         [Display(Name = "Remember me?")]
         public bool RememberMe { get; set; }
+          [Display(Name = "I am the Client")]
+        public bool IsClient { get; set; }
     }
 
 
@@ -86,7 +88,7 @@ namespace CaseXL.Models
         //[Required(ErrorMessage = "Credit card number is required")]
 
         public string CCNumber { get; set; }
-       // [Required(ErrorMessage = "CVN is required")]
+        // [Required(ErrorMessage = "CVN is required")]
         [Display(Name = "CVV")]
         public string CVNNumber { get; set; }
         [Required(ErrorMessage = "First name is required")]
@@ -99,11 +101,11 @@ namespace CaseXL.Models
         [Display(Name = "Firm Code")]
         public string Firm_Code { get; set; }
 
-       // [Required(ErrorMessage = "Expiry date is required")]
+        // [Required(ErrorMessage = "Expiry date is required")]
         [Display(Name = "Expiry Date")]
         public DateTime Exp_Date { get; set; }
         public bool IsTrial { get; set; }
-        public DateTime ? SignupDate { get; set; }
+        public DateTime? SignupDate { get; set; }
     }
     #endregion
 
